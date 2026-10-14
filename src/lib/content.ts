@@ -12,7 +12,7 @@ export const contentSchema = z.object({
   brand: z.object({name:short, tagline:short, logoUrl:z.string().max(200).refine(v=>v===""||/^\/api\/media\/[a-zA-Z0-9_-]+\.(png|jpg|webp)$/.test(v)),primary:hex,dark:hex}),
   copy: z.object({eyebrow:short,heroTitle:short,heroAccent:short,heroDescription:text,ratesTitle:short,ratesDescription:text,offersTitle:short,offersDescription:text,howTitle:short,contactTitle:short,contactDescription:text,disclaimer:text}),
   contact:z.object({whatsapp:z.string().trim().refine(v=>v===""||/^[1-9]\d{7,14}$/.test(v),"Ingresá el número con código de país, solo dígitos."),location:short,address:z.string().trim().max(250),hours:short,email:z.union([z.literal(""),z.string().trim().email().max(200)])}),
-  currencies:z.array(z.object({id:currencyId,name:short,code:z.string().trim().min(1).max(12),symbol:z.string().trim().min(1).max(5),description:short,buy:z.number().positive().max(1e9),sell:z.number().positive().max(1e9),color:hex,active:z.boolean()}).refine(v=>v.sell>=v.buy,{message:"La venta debe ser igual o mayor que la compra.",path:["sell"]})).length(6).refine(v=>new Set(v.map(c=>c.id)).size===6,"Las divisas no pueden repetirse."),
+  currencies:z.array(z.object({id:currencyId,name:short,code:z.string().trim().min(1).max(12),symbol:z.string().trim().min(1).max(5),description:short,buy:z.number().positive().max(1e9),sell:z.number().positive().max(1e9),color:hex,active:z.boolean()})).length(6).refine(v=>new Set(v.map(c=>c.id)).size===6,"Las divisas no pueden repetirse."),
   offers:z.array(z.object({id:z.string().min(1).max(80),title:short,description:z.string().trim().max(250),from:exchangeId,to:exchangeId,amount:z.number().positive().max(1e12),receive:z.number().positive().max(1e12),active:z.boolean(),expiresAt:date}).refine(v=>v.from!==v.to,{message:"Elegí dos monedas distintas.",path:["to"]})).max(20).refine(v=>new Set(v.map(o=>o.id)).size===v.length,"Las ofertas no pueden repetirse."),
   steps:z.array(z.object({title:short,description:text})).length(3),
   faqs:z.array(z.object({id:z.string().min(1).max(80),question:short,answer:text,keywords:z.string().max(300)})).min(1).max(20),
@@ -27,7 +27,7 @@ export const defaultContent:SiteContent={
   demo:true,
   brand:{name:"Divisas Posadas",tagline:"Tu cambio, más cerca.",logoUrl:"",primary:"#087F65",dark:"#132E32"},
   copy:{eyebrow:"DIVISAS EN POSADAS, MISIONES",heroTitle:"Tu próximo cambio,",heroAccent:"empieza acá.",heroDescription:"Dólares, euros, reales, guaraníes y saldo PayPal. Consultá las cotizaciones, hacé tus cuentas y coordiná con nosotros.",ratesTitle:"Cada divisa. Todo claro.",ratesDescription:"Compará nuestros valores de compra y venta en pesos argentinos.",offersTitle:"Un buen cambio empieza con una oferta.",offersDescription:"Encontrá una propuesta para vos y consultá su disponibilidad.",howTitle:"Cambiar, así de simple.",contactTitle:"Hablemos de tu próximo cambio.",contactDescription:"¿Viajás, necesitás divisas o querés cambiar tu saldo PayPal? Contanos qué necesitás y coordinamos los detalles.",disclaimer:"Las cotizaciones son orientativas y están sujetas a confirmación, disponibilidad y condiciones de la operación. El conversor no reserva una cotización ni realiza transferencias."},
-  contact:{whatsapp:"",location:"Posadas, Misiones",address:"",hours:"Consultá nuestros horarios de atención",email:""},
+  contact:{whatsapp:"5493764271559",location:"Posadas, Misiones",address:"",hours:"Consultá nuestros horarios de atención",email:""},
   currencies:[
     {id:"azul",name:"Dólar Azul",code:"USD",symbol:"US$",description:"Efectivo · Dólar Azul",buy:1200,sell:1240,color:"#3269C4",active:true},
     {id:"verde",name:"Dólar Verde",code:"USD",symbol:"US$",description:"Efectivo · Dólar Verde",buy:1180,sell:1220,color:"#198458",active:true},
@@ -63,7 +63,8 @@ export function convert(content:SiteContent,amount:number,from:ExchangeId,to:Exc
 export function formatNumber(value:number,decimals=2){return new Intl.NumberFormat("es-AR",{minimumFractionDigits:decimals,maximumFractionDigits:decimals}).format(value);}
 export function rateNumber(value:number){return new Intl.NumberFormat("es-AR",{minimumFractionDigits:value<1?3:0,maximumFractionDigits:value<1?6:2}).format(value);}
 export function activeOffers(content:SiteContent,now=Date.now()){return content.offers.filter(o=>o.active&&(!o.expiresAt||new Date(o.expiresAt).getTime()>now)&&getCurrency(content,o.from)?.active&&getCurrency(content,o.to)?.active);}
-export function whatsappLink(content:SiteContent,message:string){return content.contact.whatsapp?`https://wa.me/${content.contact.whatsapp}?text=${encodeURIComponent(message)}`:null;}
+export const operationWhatsapp="5493764271559";
+export function whatsappLink(content:SiteContent,message:string){const number=content.contact.whatsapp||operationWhatsapp;return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;}
 const normalize=(s:string)=>s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
 export function botReply(content:SiteContent,message:string){
   const q=normalize(message);
