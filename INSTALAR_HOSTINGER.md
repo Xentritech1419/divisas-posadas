@@ -32,7 +32,7 @@ El código de instalación no es la contraseña del administrador. No se publica
 
 El WhatsApp predeterminado es **+54 9 376 427-1559**; podés cambiarlo en **Contacto** con el código de país y solo números. Cargá tus horarios, cotizaciones y ofertas reales, y guardá. Después desactivá **Modo de ejemplo** y guardá nuevamente.
 
-Para dar acceso a otras personas, abrí **Administradores** desde el panel, creá una cuenta con nombre, correo y contraseña temporal segura (mínimo 12 caracteres), y comunicá esos datos por un medio privado. Podés revocar el acceso de otro administrador desde la misma sección. No se permite eliminar la propia cuenta mientras está iniciada.
+Para dar acceso a otras personas, abrí **Administradores** desde el panel, creá una cuenta con nombre, correo y contraseña temporal segura (mínimo 12 caracteres), y comunicá esos datos por un medio privado. Solo la cuenta propietaria puede dar o revocar accesos. Los usuarios creados pueden editar cotizaciones y contenido, pero no administrar otras cuentas. No se permite eliminar la propia cuenta mientras está iniciada.
 
 El WhatsApp, el logo, las cotizaciones, las ofertas, los textos, los colores y las respuestas del asistente quedan editables en el panel.
 
