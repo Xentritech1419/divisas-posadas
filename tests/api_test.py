@@ -111,13 +111,14 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
         assert admin.request("/api/content", "PUT", payload, csrf=False)[0] == 403
         assert admin.request("/api/content", "PUT", payload, headers={"Origin": "https://foreign.example"})[0] == 403
         broken = copy.deepcopy(payload)
-        broken["content"]["currencies"][4]["buy"] = 9000
+        broken["content"]["currencies"][4]["buy"] = 0
         assert admin.request("/api/content", "PUT", broken)[0] == 400
         broken = copy.deepcopy(payload)
         broken["content"]["brand"]["logoUrl"] = "javascript:alert(1)"
         assert admin.request("/api/content", "PUT", broken)[0] == 400
         broken = copy.deepcopy(payload)
         broken["content"]["demo"] = False
+        broken["content"]["contact"]["whatsapp"] = ""
         assert admin.request("/api/content", "PUT", broken)[0] == 400
         code, saved, _ = admin.request("/api/content", "PUT", payload)
         assert code == 200 and saved["revision"] == 1, (code, saved)
@@ -125,8 +126,20 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
         assert visitor.request("/api/content")[1]["content"]["currencies"][4]["buy"] == 0.156
         assert admin.request("/api/backup")[1]["revision"] == 1
         assert (work / "divisas-posadas-data/content-backup.json").is_file()
-        credentials = json.loads((work / "divisas-posadas-data/admin.json").read_text())
+        accounts = json.loads((work / "divisas-posadas-data/admins.json").read_text())
+        credentials = accounts["users"][0]
         assert "password" not in credentials and credentials["passwordHash"] != fields["password"]
+        code, listed, _ = admin.request("/api/users")
+        assert code == 200 and len(listed["users"]) == 1
+        teammate = {"email": "team@example.test", "displayName": "Equipo", "password": "Another-test-pass!42"}
+        code, created, _ = admin.request("/api/users", "POST", teammate)
+        assert code == 201 and created["user"]["email"] == teammate["email"]
+        second = Client(origin)
+        second.session()
+        assert second.request("/api/login", "POST", teammate)[0] == 200
+        assert second.session()[0]["user"]["email"] == teammate["email"]
+        assert admin.request("/api/users/" + created["user"]["id"], "DELETE")[0] == 200
+        assert second.session()[0]["user"] is None
         assert visitor.request("/api/admin.json")[0] == 404
         assert visitor.request("/config.local.php")[0] == 403
 
@@ -156,7 +169,7 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
         for _ in range(10):
             code, _, _ = visitor.request("/api/login", "POST", {"email": fields["email"], "password": "wrong"})
         assert code == 429, code
-        print("API PHP verificada: instalación, login, cookies, CSRF, validación, conflictos, persistencia tras reinicio, logos, respaldo, logout y límite de intentos.")
+        print("API PHP verificada: instalación, múltiples administradores, login, cookies, CSRF, validación, conflictos, persistencia tras reinicio, logos, respaldo, logout y límite de intentos.")
     except Exception:
         log.flush()
         log.seek(0)
