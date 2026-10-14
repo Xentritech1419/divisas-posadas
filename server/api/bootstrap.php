@@ -56,7 +56,26 @@ function write_json(string $name,array $value): void {
 function initial_state(): array {
     return ['content'=>json_decode(file_get_contents(__DIR__.'/default-content.json'),true,64,JSON_THROW_ON_ERROR),'revision'=>0,'updatedAt'=>null];
 }
-function read_state(): array { return locked(fn()=>read_json('content') ?? initial_state(),false); }
+// Conserva las cotizaciones y los cambios del cliente al actualizar una marca anterior.
+// Migra solamente los valores por defecto del diseño previo.
+function read_state(): array {
+    return locked(function() {
+        $saved=read_json('content');
+        $state=$saved ?? initial_state();
+        if (!$saved || !isset($state['content']['brand']) || !is_array($state['content']['brand'])) return $state;
+        $previous=$state['content']['brand']; $brand=$previous;
+        if (strcasecmp((string)($brand['primary'] ?? ''),'#087F65')===0) $brand['primary']='#18E5C1';
+        if (strcasecmp((string)($brand['dark'] ?? ''),'#132E32')===0) $brand['dark']='#2C3768';
+        if (($brand['logoUrl'] ?? '')==='') $brand['logoUrl']='/logo-divisas-posadas.svg';
+        if ($brand!==$previous) {
+            $state['content']['brand']=$brand;
+            $state['revision']=(int)$state['revision']+1;
+            write_json('content-backup',$saved);
+            write_json('content',$state);
+        }
+        return $state;
+    });
+}
 function accounts(): array {
     return locked(function() {
         $stored=read_json('admins');
