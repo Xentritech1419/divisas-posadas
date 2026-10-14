@@ -1,0 +1,42 @@
+name: Verificar y empaquetar Divisas Posadas
+on:
+  push:
+    branches:
+      - chatgpt/admin-users-rates-whatsapp
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  pruebas-y-paquete:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.16.0'
+          cache: npm
+      - name: PHP CLI
+        run: php --version
+      - name: Instalar dependencias
+        run: npm ci
+      - name: Pruebas de lógica
+        run: npm run test:logic
+      - name: Compilar el sitio
+        run: npm run build
+      - name: Pruebas de API PHP
+        run: npm run test:api
+      - name: Empaquetar para Hostinger
+        run: python3 scripts/make-zip.py
+      - name: Publicar ZIP de prueba
+        uses: actions/upload-artifact@v4
+        with:
+          name: divisas-posadas-hostinger
+          path: |
+            deploy/divisas-posadas-hostinger.zip
+            deploy/SHA256SUMS.txt
+          retention-days: 14
