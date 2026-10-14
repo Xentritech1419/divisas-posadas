@@ -92,6 +92,11 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
         code, initial, _ = admin.request("/api/content")
         assert code == 200 and initial["revision"] == 0 and initial["content"]["demo"]
         assert len(initial["content"]["currencies"]) == 6
+        assert initial["content"]["brand"]["logoUrl"] == "/logo-divisas-posadas.svg"
+        assert initial["content"]["brand"]["primary"] == "#18E5C1"
+        assert initial["content"]["brand"]["dark"] == "#2C3768"
+        assert visitor.request("/logo-divisas-posadas.svg")[0] == 200
+        assert visitor.request("/favicon.svg")[0] == 200
         assert initial["content"]["contact"]["whatsapp"] == "5493764271559"
         assert visitor.request("/api/content", "PUT", initial)[0] == 401
         assert visitor.request("/api/backup")[0] == 401
@@ -169,14 +174,24 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
         assert admin.request("/api/login", "POST", fields)[0] == 200
         assert admin.session()[0]["user"] is not None
 
-        # Simular una instalación antigua que solo dispone de admin.json.
+        # Simular una instalación antigua, con colores previos y su cuenta única.
         directory = work / "divisas-posadas-data"
+        old_state = json.loads((directory / "content.json").read_text())
+        old_state["content"]["brand"]["logoUrl"] = ""
+        old_state["content"]["brand"]["primary"] = "#087F65"
+        old_state["content"]["brand"]["dark"] = "#132E32"
+        (directory / "content.json").write_text(json.dumps(old_state))
         old_account = {field: credentials[field] for field in ("email", "displayName", "passwordHash", "version")}
         (directory / "admin.json").write_text(json.dumps(old_account))
         (directory / "admins.json").unlink()
         stop(process)
         process = start()
-        assert visitor.request("/api/content")[1]["revision"] == 1
+        current_state = visitor.request("/api/content")[1]
+        assert current_state["revision"] == 2
+        assert current_state["content"]["brand"]["logoUrl"] == "/logo-divisas-posadas.svg"
+        assert current_state["content"]["brand"]["primary"] == "#18E5C1"
+        assert current_state["content"]["brand"]["dark"] == "#2C3768"
+        assert current_state["content"]["currencies"][4]["buy"] == 0.180
         assert visitor.request(uploaded["url"])[1] == png
         assert visitor.session()[0]["configured"]
         migrated = json.loads((directory / "admins.json").read_text())
@@ -187,7 +202,7 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
         for _ in range(10):
             code, _, _ = visitor.request("/api/login", "POST", {"email": fields["email"], "password": "wrong"})
         assert code == 429, code
-        print("API PHP verificada: instalación, múltiples administradores, login, cookies, CSRF, validación, conflictos, persistencia tras reinicio, logos, respaldo, logout y límite de intentos.")
+        print("API PHP verificada: instalación, migración de identidad, múltiples administradores, login, CSRF, contenido persistente, logos, respaldo y límites de intentos.")
     except Exception:
         log.flush()
         log.seek(0)
