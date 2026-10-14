@@ -19,3 +19,99 @@
 .rates-grid .rate-actions .rate-action-buy:hover{background:color-mix(in srgb,var(--currency) 85%,black);color:white}
 .rates-grid .rate-actions .rate-action-sell:hover{background:color-mix(in srgb,var(--currency) 7%,white);color:var(--currency)}
 @media(max-width:390px){.rates-grid .rate-actions button{font-size:11px;padding:10px 8px}}
+
+
+/* Identidad Divisas Posadas · flechas circulares turquesa y azul marino */
+:root{
+  --primary:#18E5C1;
+  --ink:#2C3768;
+  --muted:#73819a;
+  --line:#dce8ee;
+  --mint:#defcf5;
+  --paper:#f7fbfd;
+  --brand-accent-dark:#087d75;
+}
+.brand{gap:13px}
+.brand-icon{
+  width:56px;height:56px;flex:none;display:grid;place-items:center;
+  border:1px solid #daebed;border-radius:17px;
+  background:linear-gradient(145deg,#f6fffd,#f0f5ff);
+  box-shadow:0 5px 14px #2c37680d;
+}
+.brand-icon .custom-logo{width:46px;height:46px;object-fit:contain;display:block}
+.brand-wordmark{min-width:0}
+.brand-wordmark strong{color:var(--ink);font-weight:800;letter-spacing:-.7px}
+.brand-wordmark small{color:#62738a;letter-spacing:.2px}
+.site-header{
+  border-bottom:1px solid #dde9ef;
+  background:rgba(255,255,255,.96);
+  box-shadow:0 6px 24px #2c376809;
+}
+.site-header .brand:hover .brand-icon{box-shadow:0 6px 20px #18e5c134;transform:translateY(-1px)}
+.site-header .nav-links a{color:#4a5d7c}
+.site-header .nav-links a:hover{color:var(--brand-accent-dark)}
+.site-header .header-contact,
+.site .button:not(.secondary):not(.rate-action-buy){
+  background:var(--primary);color:var(--ink);
+  box-shadow:0 5px 14px #18e5c127;
+}
+.site-header .header-contact:hover,
+.site .button:not(.secondary):not(.rate-action-buy):hover{
+  background:#0dd2ae;color:var(--ink);
+}
+.site .hero{
+  background:linear-gradient(118deg,#f1fcfa 0%,#f8fbff 58%,#eef5ff 100%);
+  border-color:#dcebe9;
+}
+.site .hero-copy h1 span{
+  color:var(--ink);
+  background:linear-gradient(to top,#18e5c14d 26%,transparent 26%);
+}
+.site .hero-link,.site .section-eyebrow{color:var(--brand-accent-dark)}
+.site .hero-link span{border-color:#a9e8dd;color:var(--ink)}
+.site .hero-link:hover span{background:#d8faf2}
+.site .status-dot{background:var(--primary);box-shadow:0 0 0 4px #18e5c120}
+.site .converter,.site .rate-card,.site .offer-card{
+  border-color:#dce9ef;box-shadow:0 8px 25px #2c37680b;
+}
+.site .rate-values>div:last-child strong{color:var(--ink)}
+.site .rates-grid .rate-actions .rate-action-buy{background:var(--currency);color:white}
+.site .rates-grid .rate-actions .rate-action-sell{background:white;color:var(--currency)}
+.site .contact-panel{
+  background:linear-gradient(120deg,#2c3768,#202b51 100%);
+  box-shadow:0 12px 35px #2c376822;
+}
+.site .contact-copy>.eyebrow{color:#9df9e6}
+.site .contact-copy p{color:#d1ddeb}
+.site .button-mint{background:var(--primary);color:var(--ink)}
+.site-footer{padding-top:35px;border-top:1px solid #deebee}
+.site-footer .footer-main{align-items:flex-start;gap:28px;padding-bottom:28px}
+.site-footer .footer-brand-block{display:flex;flex-direction:column;align-items:flex-start;gap:12px}
+.site-footer .footer-brand-block .brand{display:inline-flex}
+.site-footer .footer-brand-block p{max-width:350px;line-height:1.7;color:#66758e;font-size:12px}
+.site-footer .footer-links{display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:center;gap:12px 23px;padding-top:8px}
+.site-footer .footer-links a{color:#4f6180;font-size:12px;font-weight:650;display:inline-flex;gap:6px;align-items:center}
+.site-footer .footer-links a:hover{color:var(--brand-accent-dark)}
+.site-footer .footer-links a:last-child{
+  border:1px solid #8cebdc;padding:11px 14px;border-radius:9px;
+  background:#f0fffc;color:#176f6a;
+}
+.site-footer .disclaimer{color:#73819a;max-width:1100px}
+.site-footer .footer-bottom{color:#7886a0;font-size:10px}
+.site-footer .footer-location{display:inline-flex;align-items:center;gap:7px}
+.site-footer .footer-location svg{color:var(--brand-accent-dark)}
+.admin-app .brand-icon{width:45px;height:45px;border-radius:13px}
+.admin-app .brand-icon .custom-logo{width:37px;height:37px}
+.auth-page .brand-icon{width:53px;height:53px}
+.auth-page .brand-icon .custom-logo{width:44px;height:44px}
+.admin-app .button:not(.secondary),.auth-page .button:not(.secondary){color:var(--ink);background:var(--primary)}
+.admin-app .button:not(.secondary):hover,.auth-page .button:not(.secondary):hover{background:#0dd2ae;color:var(--ink)}
+@media(max-width:700px){
+  .site-header .brand-icon{width:46px;height:46px;border-radius:13px}
+  .site-header .brand-icon .custom-logo{width:37px;height:37px}
+  .site-footer .footer-main{flex-direction:column;gap:19px}
+  .site-footer .footer-links{justify-content:flex-start;padding-top:0}
+  .site-footer .footer-brand-block p{font-size:11px}
+  .site-footer .footer-links a{font-size:11px}
+  .site-footer .footer-bottom{gap:10px}
+}
