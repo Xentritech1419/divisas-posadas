@@ -107,6 +107,7 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
         assert admin.request("/api/setup", "POST", fields)[0] == 201
         state, _ = admin.session()
         assert state["user"]["email"] == fields["email"] and state["configured"]
+        assert state["user"]["role"] == "owner"
         assert admin.request("/api/setup", "POST", fields)[0] == 409
         payload = {"content": copy.deepcopy(initial["content"]), "revision": 0}
         payload["content"]["currencies"][4]["buy"] = 0.180
@@ -140,7 +141,11 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
         second.session()
         assert second.request("/api/login", "POST", teammate)[0] == 200
         assert second.session()[0]["user"]["email"] == teammate["email"]
+        assert second.session()[0]["user"]["role"] == "editor"
         assert second.request("/api/backup")[0] == 200
+        assert second.request("/api/users")[0] == 403
+        assert second.request("/api/users", "POST", teammate)[0] == 403
+        assert second.request("/api/users/" + created["user"]["id"], "DELETE")[0] == 403
         assert admin.request("/api/users/" + created["user"]["id"], "DELETE")[0] == 200
         assert second.session()[0]["user"] is None
         assert visitor.request("/api/admin.json")[0] == 404
@@ -176,6 +181,7 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
         assert visitor.session()[0]["configured"]
         migrated = json.loads((directory / "admins.json").read_text())
         assert len(migrated["users"]) == 1 and migrated["users"][0]["email"] == fields["email"]
+        assert migrated["users"][0]["role"] == "owner"
         admin.session()
         assert admin.request("/api/login", "POST", fields)[0] == 200
         for _ in range(10):
