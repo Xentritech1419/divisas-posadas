@@ -68,6 +68,7 @@ function accounts(): array {
                 'email'=>$legacy['email'],
                 'displayName'=>$legacy['displayName'],
                 'passwordHash'=>$legacy['passwordHash'],
+                'role'=>'owner',
                 'version'=>$legacy['version'],
                 'createdAt'=>gmdate('Y-m-d\\TH:i:s\\Z')
             ];
@@ -79,7 +80,7 @@ function accounts(): array {
     });
 }
 function public_user(array $user): array {
-    return ['id'=>$user['id'],'email'=>$user['email'],'displayName'=>$user['displayName'],'createdAt'=>$user['createdAt'] ?? null];
+    return ['id'=>$user['id'],'email'=>$user['email'],'displayName'=>$user['displayName'],'role'=>$user['role'] ?? 'owner','createdAt'=>$user['createdAt'] ?? null];
 }
 function find_user_by_email(array $accounts,string $email): ?array {
     foreach ($accounts['users'] as $user) if (($user['email'] ?? '')===$email) return $user;
@@ -109,6 +110,11 @@ function current_user(): ?array {
 function require_user(): array {
     $user=current_user();
     if (!$user) respond(['error'=>'Ingresá al panel para realizar esta acción.'],401);
+    return $user;
+}
+function require_owner(): array {
+    $user=require_user();
+    if (($user['role'] ?? '')!=='owner') respond(['error'=>'Solo la cuenta propietaria puede administrar usuarios.'],403);
     return $user;
 }
 function csrf_check(): void {
