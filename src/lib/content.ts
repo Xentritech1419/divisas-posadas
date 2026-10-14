@@ -17,7 +17,7 @@ export const contentSchema = z.object({
   steps:z.array(z.object({title:short,description:text})).length(3),
   faqs:z.array(z.object({id:z.string().min(1).max(80),question:short,answer:text,keywords:z.string().max(300)})).min(1).max(20),
   bot:z.object({name:short,welcome:text,fallback:text}),
-}).superRefine((v,ctx)=>{if(!v.demo&&!v.contact.whatsapp)ctx.addIssue({code:"custom",path:["contact","whatsapp"],message:"Cargá el WhatsApp comercial antes de desactivar el modo de ejemplo."});});
+});
 export type SiteContent=z.infer<typeof contentSchema>;
 export type Currency=SiteContent["currencies"][number];
 export type Offer=SiteContent["offers"][number];
