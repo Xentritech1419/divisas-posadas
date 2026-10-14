@@ -55,7 +55,6 @@ function validate_content(mixed $input): array {
         $c = object_value($raw,'divisa'); $id = currency_value($c['id'] ?? null,'divisa',false);
         if (in_array($id,$ids,true)) invalid('divisas repetidas'); $ids[]=$id;
         $buy=number_value($c['buy'] ?? null,'compra',1e9); $sell=number_value($c['sell'] ?? null,'venta',1e9);
-        if ($sell<$buy) invalid('venta: debe ser igual o mayor a la compra');
         $out['currencies'][]=['id'=>$id,'name'=>text_value($c['name'] ?? null,'nombre de divisa',180),'code'=>text_value($c['code'] ?? null,'código',12),'symbol'=>text_value($c['symbol'] ?? null,'símbolo',5),'description'=>text_value($c['description'] ?? null,'descripción',180),'buy'=>$buy,'sell'=>$sell,'color'=>color_value($c['color'] ?? null,'color de divisa'),'active'=>bool_value($c['active'] ?? null,'visibilidad')];
     }
     $out['offers']=[]; $ids=[];
