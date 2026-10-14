@@ -37,7 +37,7 @@ function validate_content(mixed $input): array {
     $out['demo'] = bool_value($v['demo'] ?? null, 'modo de ejemplo');
     $b = object_value($v['brand'] ?? null, 'marca');
     $logo = text_value($b['logoUrl'] ?? null, 'logo', 200, true);
-    if ($logo !== '' && !preg_match('~^/api/media/logo-[a-zA-Z0-9-]+\.(png|jpg|webp)$~D', $logo)) invalid('logo');
+    if ($logo !== '' && $logo !== '/logo-divisas-posadas.svg' && !preg_match('~^/api/media/logo-[a-zA-Z0-9-]+\.(png|jpg|webp)$~D', $logo)) invalid('logo');
     $out['brand'] = ['name' => text_value($b['name'] ?? null, 'marca', 180), 'tagline' => text_value($b['tagline'] ?? null, 'bajada', 180), 'logoUrl' => $logo, 'primary' => color_value($b['primary'] ?? null, 'color principal'), 'dark' => color_value($b['dark'] ?? null, 'color oscuro')];
     $copy = object_value($v['copy'] ?? null, 'textos'); $out['copy'] = [];
     foreach (['eyebrow','heroTitle','heroAccent','heroDescription','ratesTitle','ratesDescription','offersTitle','offersDescription','howTitle','contactTitle','contactDescription','disclaimer'] as $key) {
