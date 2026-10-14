@@ -2,7 +2,7 @@ export type Session = {
   configured: boolean;
   setupEnabled: boolean;
   csrf: string;
-  user: { displayName: string; email: string } | null;
+  user: { displayName: string; email: string; role: "owner" | "editor" } | null;
 };
 let csrf = "";
 export async function session(): Promise<Session> {
