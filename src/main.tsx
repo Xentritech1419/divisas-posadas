@@ -59,7 +59,7 @@ function App() {
   }, [isAdmin]);
   if (error) return <main className="access-error"><h1>No pudimos cargar el sitio</h1><p>{error}</p><button className="button" onClick={() => window.location.reload()}>Volver a intentar</button></main>;
   if (!state || (isAdmin && !access)) return <main className="access-error" role="status"><Loader2 className="spinning"/><p>Cargando Divisas Posadas…</p></main>;
-  if (isAdmin && access) return access.user ? <Admin initialState={state} displayName={access.user.displayName}/> : <Login access={access} onLogin={setAccess}/>;
+  if (isAdmin && access) return access.user ? <Admin initialState={state} displayName={access.user.displayName} role={access.user.role}/> : <Login access={access} onLogin={setAccess}/>;
   if (window.location.pathname !== "/") return <main className="access-error"><h1>Página no encontrada</h1><a className="button" href="/">Ir al inicio</a></main>;
   return <Landing initialState={state}/>;
 }
