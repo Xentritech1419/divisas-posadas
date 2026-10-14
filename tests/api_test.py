@@ -92,8 +92,10 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
         code, initial, _ = admin.request("/api/content")
         assert code == 200 and initial["revision"] == 0 and initial["content"]["demo"]
         assert len(initial["content"]["currencies"]) == 6
+        assert initial["content"]["contact"]["whatsapp"] == "5493764271559"
         assert visitor.request("/api/content", "PUT", initial)[0] == 401
         assert visitor.request("/api/backup")[0] == 401
+        assert visitor.request("/api/users")[0] == 401
         assert visitor.request("/api/upload", "POST", {})[0] == 401
         state, headers = admin.session()
         assert state["setupEnabled"] and not state["configured"]
@@ -130,6 +132,7 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
         assert "password" not in credentials and credentials["passwordHash"] != fields["password"]
         code, listed, _ = admin.request("/api/users")
         assert code == 200 and len(listed["users"]) == 1
+        assert admin.request("/api/users/" + listed["users"][0]["id"], "DELETE")[0] == 400
         teammate = {"email": "team@example.test", "displayName": "Equipo", "password": "Another-test-pass!42"}
         code, created, _ = admin.request("/api/users", "POST", teammate)
         assert code == 201 and created["user"]["email"] == teammate["email"]
@@ -137,6 +140,7 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
         second.session()
         assert second.request("/api/login", "POST", teammate)[0] == 200
         assert second.session()[0]["user"]["email"] == teammate["email"]
+        assert second.request("/api/backup")[0] == 200
         assert admin.request("/api/users/" + created["user"]["id"], "DELETE")[0] == 200
         assert second.session()[0]["user"] is None
         assert visitor.request("/api/admin.json")[0] == 404
@@ -160,11 +164,20 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
         assert admin.request("/api/login", "POST", fields)[0] == 200
         assert admin.session()[0]["user"] is not None
 
+        # Simular una instalación antigua que solo dispone de admin.json.
+        directory = work / "divisas-posadas-data"
+        old_account = {field: credentials[field] for field in ("email", "displayName", "passwordHash", "version")}
+        (directory / "admin.json").write_text(json.dumps(old_account))
+        (directory / "admins.json").unlink()
         stop(process)
         process = start()
         assert visitor.request("/api/content")[1]["revision"] == 1
         assert visitor.request(uploaded["url"])[1] == png
         assert visitor.session()[0]["configured"]
+        migrated = json.loads((directory / "admins.json").read_text())
+        assert len(migrated["users"]) == 1 and migrated["users"][0]["email"] == fields["email"]
+        admin.session()
+        assert admin.request("/api/login", "POST", fields)[0] == 200
         for _ in range(10):
             code, _, _ = visitor.request("/api/login", "POST", {"email": fields["email"], "password": "wrong"})
         assert code == 429, code
