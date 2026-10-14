@@ -3,9 +3,9 @@
   "brand": {
     "name": "Divisas Posadas",
     "tagline": "Tu cambio, más cerca.",
-    "logoUrl": "",
-    "primary": "#087F65",
-    "dark": "#132E32"
+    "logoUrl": "/logo-divisas-posadas.svg",
+    "primary": "#18E5C1",
+    "dark": "#2C3768"
   },
   "copy": {
     "eyebrow": "DIVISAS EN POSADAS, MISIONES",
