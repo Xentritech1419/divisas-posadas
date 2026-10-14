@@ -1,9 +1,17 @@
-import type {SiteContent,ExchangeId} from "@/lib/content";
+import {brandLogoUrl,type SiteContent,type ExchangeId} from "@/lib/content";
+
+// El mismo ícono optimizado identifica al sitio, al asistente y al favicon.
 export function Mark({className=""}:{className?:string}){
-  return <svg viewBox="0 0 48 48" className={className} fill="none" aria-hidden="true"><rect width="48" height="48" rx="15" fill="currentColor"/><path d="M12 18h21l-6-6M36 30H15l6 6" stroke="white" strokeWidth="3.3" strokeLinecap="round" strokeLinejoin="round"/><path d="M36 19v-1M12 29v1" stroke="#A6E3BD" strokeWidth="3.3" strokeLinecap="round"/></svg>;
+  return <img className={className} src={brandLogoUrl} alt="" aria-hidden="true" draggable={false} width={44} height={44}/>;
 }
 export function Brand({content,light=false}:{content:SiteContent;light?:boolean}){
-  return <a className={`brand ${light?"brand-light":""}`} href="/" aria-label={`${content.brand.name}, inicio`}>{content.brand.logoUrl?<img className="custom-logo" src={content.brand.logoUrl} alt={content.brand.name}/>:<Mark className="brand-mark"/>}<span><strong>{content.brand.name}</strong><small>{content.brand.tagline}</small></span></a>;
+  const logo = content.brand.logoUrl || brandLogoUrl;
+  return <a className={`brand ${light?"brand-light":""}`} href="/" aria-label={`${content.brand.name}, inicio`}>
+    <span className="brand-icon">
+      <img className="custom-logo" src={logo} alt="" aria-hidden="true" width={48} height={48} decoding="async"/>
+    </span>
+    <span className="brand-wordmark"><strong>{content.brand.name}</strong><small>{content.brand.tagline}</small></span>
+  </a>;
 }
 export function CurrencyIcon({id,color,small=false}:{id:ExchangeId;color?:string;small?:boolean}){
   return <span className={`currency-icon ${small?"currency-small":""} currency-${id}`} style={{"--coin":color||"#5685AA"} as React.CSSProperties} aria-hidden="true">
