@@ -10,3 +10,12 @@
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}
 
 .auth-page{min-height:100svh;display:grid;place-items:center;background:#f4f7f1;padding:32px 20px}.auth-card{width:100%;max-width:480px;padding:38px;background:white;border:1px solid var(--line);border-radius:20px;box-shadow:0 20px 60px #132e320a}.auth-card>.brand{margin-bottom:32px}.auth-emblem{display:grid;place-items:center;width:56px;height:56px;border-radius:16px;background:#edf5e9;color:var(--primary);margin-bottom:20px}.auth-card h1{font-size:26px;line-height:1.3;margin-bottom:12px;letter-spacing:-.8px}.auth-card>p{color:var(--muted);font-size:14px;line-height:1.7;margin-bottom:25px}.auth-card fieldset{border:0;padding:0;margin:0;display:grid;gap:18px}.auth-card .button{width:100%;margin-top:5px}.auth-back{display:flex;align-items:center;gap:8px;margin-top:26px;font-size:13px;color:var(--muted)}.auth-card .notice p{margin-top:10px;line-height:1.7}.admin-sidebar-bottom>.text-button{margin-top:15px;font-size:11px}.logout-button{font-size:12px}.access-error{min-height:80vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:32px;text-align:center}@media(max-width:600px){.auth-card{padding:28px 22px}.auth-card h1{font-size:24px}.save-controls{gap:10px}.logout-button{font-size:11px}}
+
+/* Acciones con el formato de tarjetas de referencia */
+.rates-grid .rate-actions{display:flex;flex-direction:column;gap:11px;padding-top:15px;padding-bottom:16px}
+.rates-grid .rate-actions button{display:flex;justify-content:center;align-items:center;width:100%;flex:none;min-height:42px;padding:11px 14px;border-radius:8px;border:1.5px solid var(--currency);font-size:12px;font-weight:700;line-height:1.3;white-space:normal;box-shadow:0 3px 7px #132e320d}
+.rates-grid .rate-actions .rate-action-buy{background:var(--currency);color:white}
+.rates-grid .rate-actions .rate-action-sell{background:white;color:var(--currency)}
+.rates-grid .rate-actions .rate-action-buy:hover{background:color-mix(in srgb,var(--currency) 85%,black);color:white}
+.rates-grid .rate-actions .rate-action-sell:hover{background:color-mix(in srgb,var(--currency) 7%,white);color:var(--currency)}
+@media(max-width:390px){.rates-grid .rate-actions button{font-size:11px;padding:10px 8px}}
