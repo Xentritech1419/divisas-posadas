@@ -7,9 +7,11 @@ const short = z.string().trim().min(1).max(180);
 const text = z.string().trim().min(1).max(1600);
 const hex = z.string().regex(/^#[0-9a-fA-F]{6}$/);
 const date = z.union([z.literal(""), z.string().datetime()]);
+export const brandLogoUrl = "/logo-divisas-posadas.svg";
+export const brandPalette = {primary:"#18E5C1",dark:"#2C3768"} as const;
 export const contentSchema = z.object({
   demo: z.boolean(),
-  brand: z.object({name:short, tagline:short, logoUrl:z.string().max(200).refine(v=>v===""||/^\/api\/media\/[a-zA-Z0-9_-]+\.(png|jpg|webp)$/.test(v)),primary:hex,dark:hex}),
+  brand: z.object({name:short, tagline:short, logoUrl:z.string().max(200).refine(v=>v===""||v===brandLogoUrl||/^\/api\/media\/[a-zA-Z0-9_-]+\.(png|jpg|webp)$/.test(v)),primary:hex,dark:hex}),
   copy: z.object({eyebrow:short,heroTitle:short,heroAccent:short,heroDescription:text,ratesTitle:short,ratesDescription:text,offersTitle:short,offersDescription:text,howTitle:short,contactTitle:short,contactDescription:text,disclaimer:text}),
   contact:z.object({whatsapp:z.string().trim().refine(v=>v===""||/^[1-9]\d{7,14}$/.test(v),"Ingresá el número con código de país, solo dígitos."),location:short,address:z.string().trim().max(250),hours:short,email:z.union([z.literal(""),z.string().trim().email().max(200)])}),
   currencies:z.array(z.object({id:currencyId,name:short,code:z.string().trim().min(1).max(12),symbol:z.string().trim().min(1).max(5),description:short,buy:z.number().positive().max(1e9),sell:z.number().positive().max(1e9),color:hex,active:z.boolean()})).length(6).refine(v=>new Set(v.map(c=>c.id)).size===6,"Las divisas no pueden repetirse."),
@@ -25,7 +27,7 @@ export type ExchangeId=CurrencyId|"ars";
 export type ContentState={content:SiteContent;revision:number;updatedAt:string|null};
 export const defaultContent:SiteContent={
   demo:true,
-  brand:{name:"Divisas Posadas",tagline:"Tu cambio, más cerca.",logoUrl:"",primary:"#087F65",dark:"#132E32"},
+  brand:{name:"Divisas Posadas",tagline:"Tu cambio, más cerca.",logoUrl:brandLogoUrl,primary:brandPalette.primary,dark:brandPalette.dark},
   copy:{eyebrow:"DIVISAS EN POSADAS, MISIONES",heroTitle:"Tu próximo cambio,",heroAccent:"empieza acá.",heroDescription:"Dólares, euros, reales, guaraníes y saldo PayPal. Consultá las cotizaciones, hacé tus cuentas y coordiná con nosotros.",ratesTitle:"Cada divisa. Todo claro.",ratesDescription:"Compará nuestros valores de compra y venta en pesos argentinos.",offersTitle:"Un buen cambio empieza con una oferta.",offersDescription:"Encontrá una propuesta para vos y consultá su disponibilidad.",howTitle:"Cambiar, así de simple.",contactTitle:"Hablemos de tu próximo cambio.",contactDescription:"¿Viajás, necesitás divisas o querés cambiar tu saldo PayPal? Contanos qué necesitás y coordinamos los detalles.",disclaimer:"Las cotizaciones son orientativas y están sujetas a confirmación, disponibilidad y condiciones de la operación. El conversor no reserva una cotización ni realiza transferencias."},
   contact:{whatsapp:"5493764271559",location:"Posadas, Misiones",address:"",hours:"Consultá nuestros horarios de atención",email:""},
   currencies:[
