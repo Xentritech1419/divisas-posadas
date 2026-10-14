@@ -4,6 +4,7 @@ DirectoryIndex index.html
 <IfModule mod_rewrite.c>
 RewriteEngine On
 RewriteRule ^(?:\.git|\.env|config(?:\.[^/]+)?\.php)(?:/|$) - [F,L,NC]
+RewriteRule ^api/index\.php$ - [L]
 RewriteRule ^api(?:/.*)?$ api/index.php [L,QSA]
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
