@@ -1,0 +1,9 @@
+node_modules
+dist/
+public_html/
+*.log
+.env*
+server/config.local.php
+divisas-posadas-data/
+.test-data/
+.DS_Store

@@ -1,0 +1,15 @@
+import assert from "node:assert/strict";
+import { defaultContent, convert, activeOffers, contentSchema, botReply } from "../src/lib/content.ts";
+assert(contentSchema.safeParse(defaultContent).success);
+assert.equal(convert(defaultContent, 100, "azul", "ars"), 120000);
+assert.equal(convert(defaultContent, 124000, "ars", "azul"), 100);
+assert.equal(convert(defaultContent, 1000000, "guarani", "ars"), 155000);
+assert(Math.abs(convert(defaultContent, 170000, "ars", "guarani") - 1000000) < 0.001);
+const paused = structuredClone(defaultContent); paused.currencies[0].active = false;
+assert.equal(convert(paused, 100, "azul", "ars"), 0);
+const expired = structuredClone(defaultContent); expired.offers[0].expiresAt = "2000-01-01T00:00:00Z";
+assert.equal(activeOffers(expired).length, 2);
+assert.match(botReply(defaultContent, "cotización guaraní"), /0,155/);
+assert.match(botReply(defaultContent, "cotización guaraní"), /ejemplo/);
+assert.equal(convert(defaultContent, Infinity, "azul", "ars"), 0);
+console.log("Compra, venta, guaraní, pausa, vencimiento y asistente verificados.");

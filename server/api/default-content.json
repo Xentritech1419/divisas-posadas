@@ -1,0 +1,185 @@
+{
+  "demo": true,
+  "brand": {
+    "name": "Divisas Posadas",
+    "tagline": "Tu cambio, más cerca.",
+    "logoUrl": "",
+    "primary": "#087F65",
+    "dark": "#132E32"
+  },
+  "copy": {
+    "eyebrow": "DIVISAS EN POSADAS, MISIONES",
+    "heroTitle": "Tu próximo cambio,",
+    "heroAccent": "empieza acá.",
+    "heroDescription": "Dólares, euros, reales, guaraníes y saldo PayPal. Consultá las cotizaciones, hacé tus cuentas y coordiná con nosotros.",
+    "ratesTitle": "Cada divisa. Todo claro.",
+    "ratesDescription": "Compará nuestros valores de compra y venta en pesos argentinos.",
+    "offersTitle": "Un buen cambio empieza con una oferta.",
+    "offersDescription": "Encontrá una propuesta para vos y consultá su disponibilidad.",
+    "howTitle": "Cambiar, así de simple.",
+    "contactTitle": "Hablemos de tu próximo cambio.",
+    "contactDescription": "¿Viajás, necesitás divisas o querés cambiar tu saldo PayPal? Contanos qué necesitás y coordinamos los detalles.",
+    "disclaimer": "Las cotizaciones son orientativas y están sujetas a confirmación, disponibilidad y condiciones de la operación. El conversor no reserva una cotización ni realiza transferencias."
+  },
+  "contact": {
+    "whatsapp": "",
+    "location": "Posadas, Misiones",
+    "address": "",
+    "hours": "Consultá nuestros horarios de atención",
+    "email": ""
+  },
+  "currencies": [
+    {
+      "id": "azul",
+      "name": "Dólar Azul",
+      "code": "USD",
+      "symbol": "US$",
+      "description": "Efectivo · Dólar Azul",
+      "buy": 1200,
+      "sell": 1240,
+      "color": "#3269C4",
+      "active": true
+    },
+    {
+      "id": "verde",
+      "name": "Dólar Verde",
+      "code": "USD",
+      "symbol": "US$",
+      "description": "Efectivo · Dólar Verde",
+      "buy": 1180,
+      "sell": 1220,
+      "color": "#198458",
+      "active": true
+    },
+    {
+      "id": "euro",
+      "name": "Euro",
+      "code": "EUR",
+      "symbol": "€",
+      "description": "Efectivo · Unión Europea",
+      "buy": 1340,
+      "sell": 1400,
+      "color": "#7360B4",
+      "active": true
+    },
+    {
+      "id": "real",
+      "name": "Reales",
+      "code": "BRL",
+      "symbol": "R$",
+      "description": "Efectivo · Brasil",
+      "buy": 215,
+      "sell": 230,
+      "color": "#A57916",
+      "active": true
+    },
+    {
+      "id": "guarani",
+      "name": "Guaraní",
+      "code": "PYG",
+      "symbol": "₲",
+      "description": "Efectivo · Paraguay",
+      "buy": 0.155,
+      "sell": 0.17,
+      "color": "#AF5160",
+      "active": true
+    },
+    {
+      "id": "paypal",
+      "name": "PayPal",
+      "code": "USD",
+      "symbol": "US$",
+      "description": "Saldo digital · USD",
+      "buy": 1080,
+      "sell": 1190,
+      "color": "#247CB2",
+      "active": true
+    }
+  ],
+  "offers": [
+    {
+      "id": "oferta-azul",
+      "title": "Tus dólares rinden más",
+      "description": "Cotización especial para este monto.",
+      "from": "azul",
+      "to": "ars",
+      "amount": 500,
+      "receive": 612500,
+      "active": true,
+      "expiresAt": ""
+    },
+    {
+      "id": "oferta-real",
+      "title": "Tu próxima escapada",
+      "description": "Una propuesta para viajar a Brasil.",
+      "from": "ars",
+      "to": "real",
+      "amount": 225000,
+      "receive": 1000,
+      "active": true,
+      "expiresAt": ""
+    },
+    {
+      "id": "oferta-paypal",
+      "title": "De PayPal a pesos",
+      "description": "Consultá las condiciones para tu saldo.",
+      "from": "paypal",
+      "to": "ars",
+      "amount": 200,
+      "receive": 222000,
+      "active": true,
+      "expiresAt": ""
+    }
+  ],
+  "steps": [
+    {
+      "title": "Elegí tu divisa",
+      "description": "Revisá las cotizaciones y calculá cuánto entregás y cuánto recibís."
+    },
+    {
+      "title": "Escribinos",
+      "description": "Mandanos tu consulta por WhatsApp para confirmar la cotización y la disponibilidad."
+    },
+    {
+      "title": "Coordiná tu cambio",
+      "description": "Acordamos el monto, la modalidad y los detalles de la operación con vos."
+    }
+  ],
+  "faqs": [
+    {
+      "id": "cotizacion",
+      "question": "¿La cotización del conversor es definitiva?",
+      "answer": "El conversor calcula un valor orientativo con las cotizaciones publicadas. Confirmá el monto final y la disponibilidad con nuestro equipo antes de operar.",
+      "keywords": "cotizacion,cotización,precio,tasa,definitiva"
+    },
+    {
+      "id": "modalidad",
+      "question": "¿Cómo coordino una operación?",
+      "answer": "Elegí la divisa y el monto en el conversor. Luego escribinos por WhatsApp para confirmar la cotización, el medio de pago y cómo realizar el cambio.",
+      "keywords": "operar,operacion,operación,comprar,vender,transferencia,efectivo,pago"
+    },
+    {
+      "id": "paypal",
+      "question": "¿Puedo consultar por mi saldo PayPal?",
+      "answer": "Sí. Seleccioná PayPal en el conversor y elegí la moneda que querés recibir. Antes de operar, confirmamos las condiciones, los posibles cargos y el importe final con vos.",
+      "keywords": "paypal,saldo,comision,comisión,cargo"
+    },
+    {
+      "id": "dolar",
+      "question": "¿Qué diferencia hay entre Dólar Azul y Dólar Verde?",
+      "answer": "En nuestra lista aparecen como dos categorías de dólares en efectivo, con cotizaciones separadas. Consultanos qué billetes corresponden a cada categoría y sus condiciones de recepción.",
+      "keywords": "azul,verde,billete,billetes,diferencia"
+    },
+    {
+      "id": "ofertas",
+      "question": "¿Cómo aprovecho una oferta?",
+      "answer": "Elegí una oferta para cargar su monto en el conversor y consultanos por WhatsApp. El beneficio se aplica al monto y a las condiciones indicadas, sujeto a confirmación de disponibilidad.",
+      "keywords": "oferta,promocion,promoción,descuento"
+    }
+  ],
+  "bot": {
+    "name": "Asistente DP",
+    "welcome": "¡Hola! Soy el asistente automático de Divisas Posadas. Te ayudo con las cotizaciones y las consultas frecuentes. ¿Qué necesitás?",
+    "fallback": "Puedo ayudarte con cotizaciones, ofertas, horarios, ubicación y cómo operar. Para una consulta específica, escribile a nuestro equipo por WhatsApp."
+  }
+}

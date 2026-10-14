@@ -1,0 +1,12 @@
+import type {SiteContent,ExchangeId} from "@/lib/content";
+export function Mark({className=""}:{className?:string}){
+  return <svg viewBox="0 0 48 48" className={className} fill="none" aria-hidden="true"><rect width="48" height="48" rx="15" fill="currentColor"/><path d="M12 18h21l-6-6M36 30H15l6 6" stroke="white" strokeWidth="3.3" strokeLinecap="round" strokeLinejoin="round"/><path d="M36 19v-1M12 29v1" stroke="#A6E3BD" strokeWidth="3.3" strokeLinecap="round"/></svg>;
+}
+export function Brand({content,light=false}:{content:SiteContent;light?:boolean}){
+  return <a className={`brand ${light?"brand-light":""}`} href="/" aria-label={`${content.brand.name}, inicio`}>{content.brand.logoUrl?<img className="custom-logo" src={content.brand.logoUrl} alt={content.brand.name}/>:<Mark className="brand-mark"/>}<span><strong>{content.brand.name}</strong><small>{content.brand.tagline}</small></span></a>;
+}
+export function CurrencyIcon({id,color,small=false}:{id:ExchangeId;color?:string;small?:boolean}){
+  return <span className={`currency-icon ${small?"currency-small":""} currency-${id}`} style={{"--coin":color||"#5685AA"} as React.CSSProperties} aria-hidden="true">
+    {id==="real"?<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="20" fill="#268658"/><path d="m20 6 16 14-16 14L4 20Z" fill="#FAD567"/><circle cx="20" cy="20" r="8.5" fill="#286298"/><path d="M13 17c6 0 9 2 14 6" stroke="white" strokeWidth="1.5"/></svg>:id==="guarani"?<svg viewBox="0 0 40 40"><defs><clipPath id={`py-${small?"s":"l"}`}><circle cx="20" cy="20" r="20"/></clipPath></defs><g clipPath={`url(#py-${small?"s":"l"})`}><path fill="#CC5363" d="M0 0h40v14H0z"/><path fill="#FFF" d="M0 14h40v12H0z"/><path fill="#3F5F9D" d="M0 26h40v14H0z"/></g><circle cx="20" cy="20" r="4" fill="none" stroke="#51896C" strokeWidth="1.2"/><circle cx="20" cy="20" r="1.5" fill="#DFBE5C"/></svg>:id==="ars"?<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="20" fill="#83BFE1"/><path d="M1 14h38v12H1z" fill="white"/><circle cx="20" cy="20" r="4" fill="#E8B84E"/></svg>:id==="euro"?<span>€</span>:id==="paypal"?<span className="paypal-letter">P</span>:<svg viewBox="0 0 40 40" fill="none"><rect x="5" y="10" width="30" height="20" rx="4" stroke="currentColor" strokeWidth="1.6"/><circle cx="20" cy="20" r="6" stroke="currentColor" strokeWidth="1.5"/><path d="M11 17v6m18-6v6m-9-9v12m2-9c-4-2-6 3-2 3s2 5-2 3" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round"/></svg>}
+  </span>;
+}
