@@ -46,7 +46,7 @@ function validate_content(mixed $input): array {
     }
     $c = object_value($v['contact'] ?? null, 'contacto');
     $whatsapp = text_value($c['whatsapp'] ?? null, 'WhatsApp', 15, true);
-    if (($whatsapp !== '' && !preg_match('/^[1-9]\d{7,14}$/D', $whatsapp)) || (!$out['demo'] && $whatsapp === '')) invalid('WhatsApp');
+    if ($whatsapp !== '' && !preg_match('/^[1-9]\d{7,14}$/D', $whatsapp)) invalid('WhatsApp');
     $email = text_value($c['email'] ?? null, 'correo de contacto', 200, true);
     if ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) invalid('correo de contacto');
     $out['contact'] = ['whatsapp'=>$whatsapp, 'location'=>text_value($c['location'] ?? null, 'ubicación',180), 'address'=>text_value($c['address'] ?? null,'dirección',250,true), 'hours'=>text_value($c['hours'] ?? null,'horarios',180), 'email'=>$email];
