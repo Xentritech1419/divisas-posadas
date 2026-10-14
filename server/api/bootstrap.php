@@ -57,7 +57,34 @@ function initial_state(): array {
     return ['content'=>json_decode(file_get_contents(__DIR__.'/default-content.json'),true,64,JSON_THROW_ON_ERROR),'revision'=>0,'updatedAt'=>null];
 }
 function read_state(): array { return locked(fn()=>read_json('content') ?? initial_state(),false); }
-function account(): ?array { return locked(fn()=>read_json('admin'),false); }
+function accounts(): array {
+    return locked(function() {
+        $stored=read_json('admins');
+        if (is_array($stored) && isset($stored['users']) && is_array($stored['users'])) return $stored;
+        $legacy=read_json('admin');
+        if ($legacy) {
+            $user=[
+                'id'=>bin2hex(random_bytes(12)),
+                'email'=>$legacy['email'],
+                'displayName'=>$legacy['displayName'],
+                'passwordHash'=>$legacy['passwordHash'],
+                'version'=>$legacy['version'],
+                'createdAt'=>gmdate('Y-m-d\\TH:i:s\\Z')
+            ];
+            $stored=['version'=>1,'users'=>[$user]];
+            write_json('admins',$stored);
+            return $stored;
+        }
+        return ['version'=>1,'users'=>[]];
+    });
+}
+function public_user(array $user): array {
+    return ['id'=>$user['id'],'email'=>$user['email'],'displayName'=>$user['displayName'],'createdAt'=>$user['createdAt'] ?? null];
+}
+function find_user_by_email(array $accounts,string $email): ?array {
+    foreach ($accounts['users'] as $user) if (($user['email'] ?? '')===$email) return $user;
+    return null;
+}
 function local_request(): bool {
     $host=$_SERVER['HTTP_HOST'] ?? '';
     return in_array($_SERVER['REMOTE_ADDR'] ?? '',['127.0.0.1','::1'],true) && (bool)preg_match('/^(localhost|127\.0\.0\.1)(:\d+)?$/D',$host);
@@ -72,9 +99,12 @@ function session_start_safe(): void {
 }
 function current_user(): ?array {
     session_start_safe();
-    $admin=account(); $auth=$_SESSION['auth'] ?? null;
-    if (!$admin || !is_array($auth) || !isset($auth['version'],$auth['time']) || time()-$auth['time']>28800 || !hash_equals($admin['version'],$auth['version'])) return null;
-    return ['email'=>$admin['email'],'displayName'=>$admin['displayName']];
+    $accounts=accounts(); $auth=$_SESSION['auth'] ?? null;
+    if (!is_array($auth) || !isset($auth['id'],$auth['version'],$auth['time']) || time()-$auth['time']>28800) return null;
+    foreach ($accounts['users'] as $user) {
+        if (($user['id'] ?? '')===$auth['id'] && isset($user['version']) && hash_equals($user['version'],$auth['version'])) return public_user($user);
+    }
+    return null;
 }
 function require_user(): array {
     $user=current_user();
@@ -115,5 +145,5 @@ function rate_check(string $kind): void {
 }
 function signed_in(array $admin): void {
     session_regenerate_id(true);
-    $_SESSION=['csrf'=>bin2hex(random_bytes(32)),'auth'=>['version'=>$admin['version'],'time'=>time()]];
+    $_SESSION=['csrf'=>bin2hex(random_bytes(32)),'auth'=>['id'=>$admin['id'],'version'=>$admin['version'],'time'=>time()]];
 }
