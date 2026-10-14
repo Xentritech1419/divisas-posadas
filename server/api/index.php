@@ -36,7 +36,7 @@ try {
         $name=text_value($input['displayName'] ?? null,'nombre',80); $password=$input['password'] ?? null;
         if (!filter_var($email,FILTER_VALIDATE_EMAIL)) invalid('correo');
         if (!is_string($password) || strlen($password)<12 || strlen($password)>72 || str_contains($password,"\0")) invalid('contraseña: usá entre 12 y 72 caracteres');
-        $admin=['id'=>bin2hex(random_bytes(12)),'email'=>$email,'displayName'=>$name,'passwordHash'=>password_hash($password,PASSWORD_DEFAULT),'version'=>bin2hex(random_bytes(24)),'createdAt'=>gmdate('Y-m-d\\TH:i:s\\Z')];
+        $admin=['id'=>bin2hex(random_bytes(12)),'email'=>$email,'displayName'=>$name,'passwordHash'=>password_hash($password,PASSWORD_DEFAULT),'role'=>'owner','version'=>bin2hex(random_bytes(24)),'createdAt'=>gmdate('Y-m-d\\TH:i:s\\Z')];
         $created=locked(function() use($admin) {
             $stored=read_json('admins'); $legacy=read_json('admin');
             if (($stored && !empty($stored['users'])) || $legacy!==null) return false;
@@ -46,11 +46,11 @@ try {
         signed_in($admin); respond(['ok'=>true],201);
     }
     if ($path==='/api/users' && $method==='GET') {
-        require_user(); $accounts=accounts();
+        require_owner(); $accounts=accounts();
         respond(['users'=>array_map('public_user',$accounts['users'])]);
     }
     if ($path==='/api/users' && $method==='POST') {
-        require_user(); csrf_check(); $input=json_body(4096);
+        require_owner(); csrf_check(); $input=json_body(4096);
         $email=strtolower(text_value($input['email'] ?? null,'correo',200));
         $name=text_value($input['displayName'] ?? null,'nombre',80); $password=$input['password'] ?? null;
         if (!filter_var($email,FILTER_VALIDATE_EMAIL)) invalid('correo');
@@ -58,14 +58,14 @@ try {
         $created=locked(function() use($email,$name,$password) {
             $stored=read_json('admins') ?? ['version'=>1,'users'=>[]];
             foreach ($stored['users'] as $user) if (($user['email'] ?? '')===$email) return null;
-            $user=['id'=>bin2hex(random_bytes(12)),'email'=>$email,'displayName'=>$name,'passwordHash'=>password_hash($password,PASSWORD_DEFAULT),'version'=>bin2hex(random_bytes(24)),'createdAt'=>gmdate('Y-m-d\\TH:i:s\\Z')];
+            $user=['id'=>bin2hex(random_bytes(12)),'email'=>$email,'displayName'=>$name,'passwordHash'=>password_hash($password,PASSWORD_DEFAULT),'role'=>'editor','version'=>bin2hex(random_bytes(24)),'createdAt'=>gmdate('Y-m-d\\TH:i:s\\Z')];
             $stored['users'][]=$user; write_json('admins',$stored); return public_user($user);
         });
         if ($created===null) respond(['error'=>'Ya existe un administrador con ese correo.'],409);
         respond(['user'=>$created],201);
     }
     if (is_string($path) && preg_match('~^/api/users/([a-f0-9]{24})$~D',$path,$match) && $method==='DELETE') {
-        $current=require_user(); csrf_check(); $id=$match[1];
+        $current=require_owner(); csrf_check(); $id=$match[1];
         if ($current['id']===$id) respond(['error'=>'No podés eliminar tu propia cuenta mientras está iniciada.'],400);
         $deleted=locked(function() use($id) {
             $stored=read_json('admins') ?? ['version'=>1,'users'=>[]];
