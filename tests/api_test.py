@@ -107,7 +107,7 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
         assert state["user"]["email"] == fields["email"] and state["configured"]
         assert admin.request("/api/setup", "POST", fields)[0] == 409
         payload = {"content": copy.deepcopy(initial["content"]), "revision": 0}
-        payload["content"]["currencies"][4]["buy"] = 0.156
+        payload["content"]["currencies"][4]["buy"] = 0.180
         assert admin.request("/api/content", "PUT", payload, csrf=False)[0] == 403
         assert admin.request("/api/content", "PUT", payload, headers={"Origin": "https://foreign.example"})[0] == 403
         broken = copy.deepcopy(payload)
@@ -117,13 +117,12 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
         broken["content"]["brand"]["logoUrl"] = "javascript:alert(1)"
         assert admin.request("/api/content", "PUT", broken)[0] == 400
         broken = copy.deepcopy(payload)
-        broken["content"]["demo"] = False
-        broken["content"]["contact"]["whatsapp"] = ""
+        broken["content"]["contact"]["whatsapp"] = "123"
         assert admin.request("/api/content", "PUT", broken)[0] == 400
         code, saved, _ = admin.request("/api/content", "PUT", payload)
         assert code == 200 and saved["revision"] == 1, (code, saved)
         assert admin.request("/api/content", "PUT", payload)[0] == 409
-        assert visitor.request("/api/content")[1]["content"]["currencies"][4]["buy"] == 0.156
+        assert visitor.request("/api/content")[1]["content"]["currencies"][4]["buy"] == 0.180
         assert admin.request("/api/backup")[1]["revision"] == 1
         assert (work / "divisas-posadas-data/content-backup.json").is_file()
         accounts = json.loads((work / "divisas-posadas-data/admins.json").read_text())
