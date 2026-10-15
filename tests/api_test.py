@@ -97,9 +97,11 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
         assert initial["content"]["currencies"][-1]["active"] is False
         assert initial["content"]["currencies"][2]["color"] == "#1976D2"
         assert initial["content"]["offers"][-1]["active"] is False
-        for coin in ["usd", "eur", "usdt"]:
+        for coin in ["usd", "eur", "usdt", "usd-azul", "usd-verde", "eur-azul-amarillo", "usdt-turquesa"]:
             code, asset, headers = visitor.request(f"/icons/{coin}.svg")
-            assert code == 200 and b"<svg" in asset
+            assert code == 200 and b"<svg" in asset, (coin, code)
+        euro_svg = visitor.request("/icons/eur-azul-amarillo.svg")[1].decode()
+        assert "#FFD528" in euro_svg and "#168CFC" in euro_svg
         assert initial["content"]["brand"]["logoUrl"] == "/logo-divisas-posadas.svg"
         assert initial["content"]["brand"]["primary"] == "#18E5C1"
         assert initial["content"]["brand"]["dark"] == "#2C3768"
