@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="USDT Tether">
+<defs>
+<linearGradient id="rim" x1="0" y1="0" x2=".92" y2="1"><stop stop-color="#AEFFF3"/><stop offset=".43" stop-color="#24E2D0"/><stop offset="1" stop-color="#00736F"/></linearGradient>
+<radialGradient id="face" cx=".33" cy=".24" r=".89"><stop stop-color="#7FFDE9"/><stop offset=".54" stop-color="#10CDB8"/><stop offset="1" stop-color="#007D78"/></radialGradient>
+<linearGradient id="shine" x1=".12" y1="0" x2=".9" y2="1"><stop stop-color="#fff" stop-opacity=".65"/><stop offset=".48" stop-color="#fff" stop-opacity=".1"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<filter id="symbol-shadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="1" dy="3" stdDeviation="1.2" flood-color="#005F5E" flood-opacity=".55"/></filter>
+</defs>
+<circle cx="64" cy="64" r="60" fill="#00736F"/>
+<circle cx="64" cy="62.5" r="59" fill="url(#rim)"/>
+<circle cx="64" cy="62" r="53" fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="3"/>
+<circle cx="64" cy="63" r="48.5" fill="#005F5E" opacity=".85"/>
+<circle cx="64" cy="61.5" r="46.5" fill="url(#face)"/>
+<ellipse cx="42" cy="32" rx="32" ry="11" transform="rotate(-36 42 32)" fill="url(#shine)"/>
+<path d="M19 54C22 35 33 24 51 18" fill="none" stroke="#fff" stroke-opacity=".57" stroke-width="3" stroke-linecap="round"/>
+<path d="M104 91A46 46 0 0 1 60 108" fill="none" stroke="#fff" stroke-opacity=".19" stroke-width="2" stroke-linecap="round"/>
+<g filter="url(#symbol-shadow)"><g fill="#fff"><path d="M40 42h48v13H70v34H58V55H40Z"/><path fill-rule="evenodd" d="M64 61c-22 0-38 5.3-38 12.5 0 7.3 16 12.4 38 12.4s38-5.1 38-12.4C102 66.3 86 61 64 61Zm0 8.8c14.2 0 25.5 1.6 30.9 3.7-5.4 2.2-16.7 3.7-30.9 3.7s-25.5-1.5-30.9-3.7c5.4-2.1 16.7-3.7 30.9-3.7Z"/></g></g>
+</svg>
