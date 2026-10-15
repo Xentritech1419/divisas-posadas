@@ -32,7 +32,7 @@ export default function Landing({initialState}:{initialState:ContentState}){
   function selectOffer(o:Offer){setFrom(o.from);setTo(o.to);setAmount(String(o.amount));setOfferId(o.id);document.getElementById("conversor")?.scrollIntoView({behavior:"smooth",block:"center"});}
   function ask(text:string){if(!text.trim())return;setMessages(v=>[...v,{role:"user" as const,text:text.trim()},{role:"bot" as const,text:botReply(c,text.trim())}].slice(-60));setQuestion("");}
   function goContact(){if(generalWhatsapp)window.open(generalWhatsapp,"_blank","noopener,noreferrer");else setChatOpen(true);}
-  const visibleCurrencies=c.currencies.filter(x=>x.active&&(filter==="all"||(filter==="digital"?x.id==="paypal":x.id!=="paypal")));
+  const visibleCurrencies=c.currencies.filter(x=>x.active&&(filter==="all"||(filter==="digital"?x.id==="usdt":x.id!=="usdt")));
   return <div className="site" style={{"--primary":c.brand.primary,"--ink":c.brand.dark} as CSSProperties}>
     <a href="#cotizaciones" className="skip-link">Ir a cotizaciones</a>
     <header className="site-header"><div className="shell nav-shell"><Brand content={c}/><nav className={navOpen?"nav-links is-open":"nav-links"} aria-label="Navegación principal">{[["Cotizaciones","#cotizaciones"],["Ofertas","#ofertas"],["Cómo funciona","#como-funciona"]].map(([label,link])=><a key={link} href={link} onClick={()=>setNavOpen(false)}>{label}</a>)}</nav><button className="button button-small header-contact" onClick={goContact}><MessageCircle size={17}/> Hablemos <ArrowUpRight size={15}/></button><button className="icon-button mobile-menu" onClick={()=>setNavOpen(!navOpen)} aria-label={navOpen?"Cerrar menú":"Abrir menú"} aria-expanded={navOpen}>{navOpen?<X/>:<Menu/>}</button></div></header>
