@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Dólar Azul">
+<defs>
+<linearGradient id="rim" x1="0" y1="0" x2=".92" y2="1"><stop stop-color="#83E2FF"/><stop offset=".43" stop-color="#168CFC"/><stop offset="1" stop-color="#0039BE"/></linearGradient>
+<radialGradient id="face" cx=".33" cy=".24" r=".89"><stop stop-color="#39ADFF"/><stop offset=".54" stop-color="#116CF7"/><stop offset="1" stop-color="#0649CC"/></radialGradient>
+<linearGradient id="shine" x1=".12" y1="0" x2=".9" y2="1"><stop stop-color="#fff" stop-opacity=".65"/><stop offset=".48" stop-color="#fff" stop-opacity=".1"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<filter id="symbol-shadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="1" dy="3" stdDeviation="1.2" flood-color="#09258C" flood-opacity=".55"/></filter>
+</defs>
+<circle cx="64" cy="64" r="60" fill="#0039BE"/>
+<circle cx="64" cy="62.5" r="59" fill="url(#rim)"/>
+<circle cx="64" cy="62" r="53" fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="3"/>
+<circle cx="64" cy="63" r="48.5" fill="#09258C" opacity=".85"/>
+<circle cx="64" cy="61.5" r="46.5" fill="url(#face)"/>
+<ellipse cx="42" cy="32" rx="32" ry="11" transform="rotate(-36 42 32)" fill="url(#shine)"/>
+<path d="M19 54C22 35 33 24 51 18" fill="none" stroke="#fff" stroke-opacity=".57" stroke-width="3" stroke-linecap="round"/>
+<path d="M104 91A46 46 0 0 1 60 108" fill="none" stroke="#fff" stroke-opacity=".19" stroke-width="2" stroke-linecap="round"/>
+<g filter="url(#symbol-shadow)"><text x="64" y="93" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="82" font-weight="900" fill="#fff">$</text></g>
+</svg>
