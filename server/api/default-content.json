@@ -122,7 +122,7 @@
     {
       "id": "oferta-usdt",
       "title": "De USDT a pesos",
-      "description": "Consultá las condiciones para tu saldo.",
+      "description": "Consultá las condiciones para USDT.",
       "from": "usdt",
       "to": "ars",
       "amount": 200,
@@ -159,10 +159,10 @@
       "keywords": "operar,operacion,operación,comprar,vender,transferencia,efectivo,pago"
     },
     {
-      "id": "USDT",
-      "question": "¿Puedo consultar por mi saldo USDT?",
-      "answer": "Sí. Seleccioná USDT en el conversor y elegí la moneda que querés recibir. Antes de operar, confirmamos las condiciones, los posibles cargos y el importe final con vos.",
-      "keywords": "USDT,saldo,comision,comisión,cargo"
+      "id": "usdt",
+      "question": "¿Puedo consultar por USDT?",
+      "answer": "Sí. Cuando la cotización de USDT esté habilitada, seleccionala en el conversor y elegí la moneda que querés recibir. Confirmamos la red, las posibles comisiones y el importe final antes de operar.",
+      "keywords": "usdt,tether,cripto,red,comision,comisión,cargo"
     },
     {
       "id": "dolar",
