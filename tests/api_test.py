@@ -107,13 +107,17 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
         assert initial["content"]["brand"]["dark"] == "#2C3768"
         assert visitor.request("/logo-divisas-posadas.svg")[0] == 200
         assert visitor.request("/favicon.svg")[0] == 200
-        status, favicon, _ = visitor.request("/favicon-divisas-posadas-v2.svg")
-        assert status == 200 and b'<svg' in favicon and b'#18E5C1' in favicon and b'#2C3768' in favicon
+        for file in ["favicon.svg", "favicon-divisas-posadas-v2.svg", "favicon-divisas-posadas-v3.svg"]:
+            status, favicon, _ = visitor.request("/" + file)
+            assert status == 200 and b'<svg' in favicon
+            assert b'#FFFFFF' in favicon and b'#E8EEF3' in favicon
+            assert b'#18E5C1' in favicon and b'#2C3768' in favicon
         status, home, _ = visitor.request("/")
-        assert status == 200 and b'/favicon-divisas-posadas-v2.svg' in home
-        assert b'/favicon.ico' in home
-        status, ico, _ = visitor.request("/favicon.ico")
-        assert status == 200 and ico[:4] == bytes.fromhex("00000100")
+        assert status == 200 and b'/favicon-divisas-posadas-v3.svg' in home
+        assert b'/favicon-blanco-v3.ico' in home
+        for ico_name in ["favicon.ico", "favicon-blanco-v3.ico"]:
+            status, ico, _ = visitor.request("/" + ico_name)
+            assert status == 200 and ico[:4] == bytes.fromhex("00000100")
         assert initial["content"]["contact"]["whatsapp"] == "5493764271559"
         assert visitor.request("/api/content", "PUT", initial)[0] == 401
         assert visitor.request("/api/backup")[0] == 401
