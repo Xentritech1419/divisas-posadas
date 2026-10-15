@@ -33,7 +33,7 @@ export const defaultContent:SiteContent={
   currencies:[
     {id:"azul",name:"Dólar Azul",code:"USD",symbol:"US$",description:"Efectivo · Dólar Azul",buy:1200,sell:1240,color:"#3269C4",active:true},
     {id:"verde",name:"Dólar Verde",code:"USD",symbol:"US$",description:"Efectivo · Dólar Verde",buy:1180,sell:1220,color:"#198458",active:true},
-    {id:"euro",name:"Euro",code:"EUR",symbol:"€",description:"Efectivo · Unión Europea",buy:1340,sell:1400,color:"#7360B4",active:true},
+    {id:"euro",name:"Euro",code:"EUR",symbol:"€",description:"Efectivo · Unión Europea",buy:1340,sell:1400,color:"#1976D2",active:true},
     {id:"real",name:"Reales",code:"BRL",symbol:"R$",description:"Efectivo · Brasil",buy:215,sell:230,color:"#A57916",active:true},
     {id:"guarani",name:"Guaraní",code:"PYG",symbol:"₲",description:"Efectivo · Paraguay",buy:0.155,sell:0.170,color:"#AF5160",active:true},
     {id:"usdt",name:"USDT (Tether)",code:"USDT",symbol:"USDT",description:"Activo digital · Tether",buy:1080,sell:1190,color:"#0C9D85",active:false},
