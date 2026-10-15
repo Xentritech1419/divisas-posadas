@@ -37,7 +37,7 @@ function validate_content(mixed $input): array {
     $out['demo'] = bool_value($v['demo'] ?? null, 'modo de ejemplo');
     $b = object_value($v['brand'] ?? null, 'marca');
     $logo = text_value($b['logoUrl'] ?? null, 'logo', 200, true);
-    if ($logo !== '' && !preg_match('~^/api/media/logo-[a-zA-Z0-9-]+\.(png|jpg|webp)$~D', $logo)) invalid('logo');
+    if ($logo !== '' && $logo !== '/logo-divisas-posadas.svg' && !preg_match('~^/api/media/logo-[a-zA-Z0-9-]+\.(png|jpg|webp)$~D', $logo)) invalid('logo');
     $out['brand'] = ['name' => text_value($b['name'] ?? null, 'marca', 180), 'tagline' => text_value($b['tagline'] ?? null, 'bajada', 180), 'logoUrl' => $logo, 'primary' => color_value($b['primary'] ?? null, 'color principal'), 'dark' => color_value($b['dark'] ?? null, 'color oscuro')];
     $copy = object_value($v['copy'] ?? null, 'textos'); $out['copy'] = [];
     foreach (['eyebrow','heroTitle','heroAccent','heroDescription','ratesTitle','ratesDescription','offersTitle','offersDescription','howTitle','contactTitle','contactDescription','disclaimer'] as $key) {
@@ -46,7 +46,7 @@ function validate_content(mixed $input): array {
     }
     $c = object_value($v['contact'] ?? null, 'contacto');
     $whatsapp = text_value($c['whatsapp'] ?? null, 'WhatsApp', 15, true);
-    if (($whatsapp !== '' && !preg_match('/^[1-9]\d{7,14}$/D', $whatsapp)) || (!$out['demo'] && $whatsapp === '')) invalid('WhatsApp');
+    if ($whatsapp !== '' && !preg_match('/^[1-9]\d{7,14}$/D', $whatsapp)) invalid('WhatsApp');
     $email = text_value($c['email'] ?? null, 'correo de contacto', 200, true);
     if ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) invalid('correo de contacto');
     $out['contact'] = ['whatsapp'=>$whatsapp, 'location'=>text_value($c['location'] ?? null, 'ubicación',180), 'address'=>text_value($c['address'] ?? null,'dirección',250,true), 'hours'=>text_value($c['hours'] ?? null,'horarios',180), 'email'=>$email];
@@ -55,7 +55,6 @@ function validate_content(mixed $input): array {
         $c = object_value($raw,'divisa'); $id = currency_value($c['id'] ?? null,'divisa',false);
         if (in_array($id,$ids,true)) invalid('divisas repetidas'); $ids[]=$id;
         $buy=number_value($c['buy'] ?? null,'compra',1e9); $sell=number_value($c['sell'] ?? null,'venta',1e9);
-        if ($sell<$buy) invalid('venta: debe ser igual o mayor a la compra');
         $out['currencies'][]=['id'=>$id,'name'=>text_value($c['name'] ?? null,'nombre de divisa',180),'code'=>text_value($c['code'] ?? null,'código',12),'symbol'=>text_value($c['symbol'] ?? null,'símbolo',5),'description'=>text_value($c['description'] ?? null,'descripción',180),'buy'=>$buy,'sell'=>$sell,'color'=>color_value($c['color'] ?? null,'color de divisa'),'active'=>bool_value($c['active'] ?? null,'visibilidad')];
     }
     $out['offers']=[]; $ids=[];

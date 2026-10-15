@@ -30,13 +30,15 @@ El código de instalación no es la contraseña del administrador. No se publica
 
 ## 4. Cargar información real
 
-En el panel, cargá WhatsApp con código de país y solo números, horarios, cotizaciones y ofertas reales. Guardá los cambios. Después desactivá **Modo de ejemplo** y guardá nuevamente.
+El WhatsApp predeterminado es **+54 9 376 427-1559**; podés cambiarlo en **Contacto** con el código de país y solo números. Cargá tus horarios, cotizaciones y ofertas reales, y guardá. Después desactivá **Modo de ejemplo** y guardá nuevamente.
+
+Para dar acceso a otras personas, abrí **Administradores** desde el panel, creá una cuenta con nombre, correo y contraseña temporal segura (mínimo 12 caracteres), y comunicá esos datos por un medio privado. Solo la cuenta propietaria puede dar o revocar accesos. Los usuarios creados pueden editar cotizaciones y contenido, pero no administrar otras cuentas. No se permite eliminar la propia cuenta mientras está iniciada.
 
 El WhatsApp, el logo, las cotizaciones, las ofertas, los textos, los colores y las respuestas del asistente quedan editables en el panel.
 
 ## Datos y actualizaciones
 
-El servidor crea automáticamente **`divisas-posadas-data` al lado de `public_html`, fuera de la web pública**. Allí quedan la cuenta (contraseña guardada como hash), contenido, revisión anterior y logos. No borres esa carpeta al actualizar la landing.
+El servidor crea automáticamente **`divisas-posadas-data` al lado de `public_html`, fuera de la web pública**. Allí quedan las cuentas administradoras (contraseñas guardadas como hash), contenido, revisión anterior y logos. Si había una sola cuenta en `admin.json`, al instalar la actualización se migra automáticamente al nuevo archivo `admins.json`; la sesión antigua puede pedir iniciar sesión nuevamente. No borres esa carpeta al actualizar la landing.
 
 Si aparece un error de permisos, verificá que PHP pueda crear esa carpeta. También podés crearla desde el administrador de archivos y asignar en `data_dir` su ruta absoluta. La ruta debe estar **fuera de `public_html`**; el código rechaza carpetas dentro de la web pública. No uses permisos 777.
 
@@ -44,7 +46,7 @@ Para actualizar, reemplazá los archivos de la landing con el nuevo ZIP, conserv
 
 Podés exportar el contenido desde **Descargar respaldo** en el panel. El respaldo completo se obtiene descargando también la carpeta privada desde Hostinger.
 
-Si perdés la contraseña, con acceso al administrador de archivos podés renombrar `admin.json` dentro de la carpeta privada, establecer un código de instalación nuevo en `config.local.php` y volver a crear tu cuenta. Conservá `content.json` y `media/` para mantener la información; las sesiones de la cuenta anterior dejarán de ser válidas.
+Si perdés la contraseña, primero pedile a otro administrador activo que cree una cuenta para vos. Si nadie tiene acceso, desde el administrador de archivos del hosting hacé un respaldo de **toda la carpeta privada**. Fuera de la raíz pública, apartá tanto `admins.json` como el antiguo `admin.json` (si todavía existe). Configurá un código de instalación nuevo en `config.local.php` y creá una cuenta principal nueva en `/admin`. Esta recuperación restablece los accesos anteriores y requiere volver a crear las otras cuentas. Conservá `content.json` y `media/` para mantener las cotizaciones, textos y logos.
 
 ## Referencias de Hostinger
 

@@ -3,9 +3,9 @@
   "brand": {
     "name": "Divisas Posadas",
     "tagline": "Tu cambio, más cerca.",
-    "logoUrl": "",
-    "primary": "#087F65",
-    "dark": "#132E32"
+    "logoUrl": "/logo-divisas-posadas.svg",
+    "primary": "#18E5C1",
+    "dark": "#2C3768"
   },
   "copy": {
     "eyebrow": "DIVISAS EN POSADAS, MISIONES",
@@ -22,7 +22,7 @@
     "disclaimer": "Las cotizaciones son orientativas y están sujetas a confirmación, disponibilidad y condiciones de la operación. El conversor no reserva una cotización ni realiza transferencias."
   },
   "contact": {
-    "whatsapp": "",
+    "whatsapp": "5493764271559",
     "location": "Posadas, Misiones",
     "address": "",
     "hours": "Consultá nuestros horarios de atención",

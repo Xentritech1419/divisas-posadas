@@ -17,13 +17,15 @@ try {
         readfile($file); exit;
     }
     if ($path==='/api/session' && $method==='GET') {
-        $user=current_user(); $admin=account(); $key=settings()['setup_key'] ?? '';
-        respond(['configured'=>$admin!==null,'setupEnabled'=>$admin===null && is_string($key) && strlen($key)>=24,'csrf'=>$_SESSION['csrf'],'user'=>$user]);
+        $user=current_user(); $accounts=accounts(); $configured=count($accounts['users'])>0; $key=settings()['setup_key'] ?? '';
+        respond(['configured'=>$configured,'setupEnabled'=>!$configured && is_string($key) && strlen($key)>=24,'csrf'=>$_SESSION['csrf'],'user'=>$user]);
     }
     if ($path==='/api/login' && $method==='POST') {
-        csrf_check(); rate_check('login'); $input=json_body(4096); $admin=account();
+        csrf_check(); rate_check('login'); $input=json_body(4096); $accounts=accounts();
         $email=$input['email'] ?? ''; $password=$input['password'] ?? '';
-        if (!$admin || !is_string($email) || !is_string($password) || strlen($password)>72 || !password_verify($password,$admin['passwordHash']) || strtolower(trim($email))!==$admin['email']) respond(['error'=>'El correo o la contraseña no son correctos.'],401);
+        $normalized=is_string($email)?strtolower(trim($email)):'';
+        $admin=find_user_by_email($accounts,$normalized);
+        if (!$admin || !is_string($password) || strlen($password)>72 || !password_verify($password,$admin['passwordHash'])) respond(['error'=>'El correo o la contraseña no son correctos.'],401);
         signed_in($admin); respond(['ok'=>true]);
     }
     if ($path==='/api/setup' && $method==='POST') {
@@ -34,10 +36,48 @@ try {
         $name=text_value($input['displayName'] ?? null,'nombre',80); $password=$input['password'] ?? null;
         if (!filter_var($email,FILTER_VALIDATE_EMAIL)) invalid('correo');
         if (!is_string($password) || strlen($password)<12 || strlen($password)>72 || str_contains($password,"\0")) invalid('contraseña: usá entre 12 y 72 caracteres');
-        $admin=['email'=>$email,'displayName'=>$name,'passwordHash'=>password_hash($password,PASSWORD_DEFAULT),'version'=>bin2hex(random_bytes(24))];
-        $created=locked(function() use($admin) { if (read_json('admin')!==null) return false; write_json('admin',$admin); return true; });
+        $admin=['id'=>bin2hex(random_bytes(12)),'email'=>$email,'displayName'=>$name,'passwordHash'=>password_hash($password,PASSWORD_DEFAULT),'role'=>'owner','version'=>bin2hex(random_bytes(24)),'createdAt'=>gmdate('Y-m-d\\TH:i:s\\Z')];
+        $created=locked(function() use($admin) {
+            $stored=read_json('admins'); $legacy=read_json('admin');
+            if (($stored && !empty($stored['users'])) || $legacy!==null) return false;
+            write_json('admins',['version'=>1,'users'=>[$admin]]); return true;
+        });
         if (!$created) respond(['error'=>'La cuenta administradora ya está creada.'],409);
         signed_in($admin); respond(['ok'=>true],201);
+    }
+    if ($path==='/api/users' && $method==='GET') {
+        require_owner(); $accounts=accounts();
+        respond(['users'=>array_map('public_user',$accounts['users'])]);
+    }
+    if ($path==='/api/users' && $method==='POST') {
+        require_owner(); csrf_check(); $input=json_body(4096);
+        $email=strtolower(text_value($input['email'] ?? null,'correo',200));
+        $name=text_value($input['displayName'] ?? null,'nombre',80); $password=$input['password'] ?? null;
+        if (!filter_var($email,FILTER_VALIDATE_EMAIL)) invalid('correo');
+        if (!is_string($password) || strlen($password)<12 || strlen($password)>72 || str_contains($password,"\0")) invalid('contraseña: usá entre 12 y 72 caracteres');
+        $created=locked(function() use($email,$name,$password) {
+            $stored=read_json('admins') ?? ['version'=>1,'users'=>[]];
+            foreach ($stored['users'] as $user) if (($user['email'] ?? '')===$email) return null;
+            $user=['id'=>bin2hex(random_bytes(12)),'email'=>$email,'displayName'=>$name,'passwordHash'=>password_hash($password,PASSWORD_DEFAULT),'role'=>'editor','version'=>bin2hex(random_bytes(24)),'createdAt'=>gmdate('Y-m-d\\TH:i:s\\Z')];
+            $stored['users'][]=$user; write_json('admins',$stored); return public_user($user);
+        });
+        if ($created===null) respond(['error'=>'Ya existe un administrador con ese correo.'],409);
+        respond(['user'=>$created],201);
+    }
+    if (is_string($path) && preg_match('~^/api/users/([a-f0-9]{24})$~D',$path,$match) && $method==='DELETE') {
+        $current=require_owner(); csrf_check(); $id=$match[1];
+        if ($current['id']===$id) respond(['error'=>'No podés eliminar tu propia cuenta mientras está iniciada.'],400);
+        $deleted=locked(function() use($id) {
+            $stored=read_json('admins') ?? ['version'=>1,'users'=>[]];
+            if (count($stored['users'])<=1) return false;
+            $before=count($stored['users']);
+            $stored['users']=array_values(array_filter($stored['users'],fn($u)=>($u['id'] ?? '')!==$id));
+            if (count($stored['users'])===$before) return null;
+            write_json('admins',$stored); return true;
+        });
+        if ($deleted===null) respond(['error'=>'Administrador no encontrado.'],404);
+        if ($deleted===false) respond(['error'=>'Debe quedar al menos un administrador activo.'],400);
+        respond(['ok'=>true]);
     }
     if ($path==='/api/logout' && $method==='POST') {
         csrf_check(); $_SESSION=[]; session_destroy();
