@@ -92,6 +92,14 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
         code, initial, _ = admin.request("/api/content")
         assert code == 200 and initial["revision"] == 0 and initial["content"]["demo"]
         assert len(initial["content"]["currencies"]) == 6
+        ids = [c["id"] for c in initial["content"]["currencies"]]
+        assert "usdt" in ids and "paypal" not in ids
+        assert initial["content"]["currencies"][-1]["active"] is False
+        assert initial["content"]["currencies"][2]["color"] == "#1976D2"
+        assert initial["content"]["offers"][-1]["active"] is False
+        for coin in ["usd", "eur", "usdt"]:
+            code, asset, headers = visitor.request(f"/icons/{coin}.svg")
+            assert code == 200 and b"<svg" in asset
         assert initial["content"]["brand"]["logoUrl"] == "/logo-divisas-posadas.svg"
         assert initial["content"]["brand"]["primary"] == "#18E5C1"
         assert initial["content"]["brand"]["dark"] == "#2C3768"
@@ -180,6 +188,19 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
         old_state["content"]["brand"]["logoUrl"] = ""
         old_state["content"]["brand"]["primary"] = "#087F65"
         old_state["content"]["brand"]["dark"] = "#132E32"
+        # Simular una instalación activa con PayPal personalizado para comprobar que
+        # los precios se conservan pero no se anuncian incorrectamente como USDT.
+        old_state["content"]["currencies"][2]["color"] = "#7360B4"
+        legacy_coin = old_state["content"]["currencies"][-1]
+        legacy_coin.update({"id": "paypal", "name": "PayPal", "code": "USD",
+                            "symbol": "US$", "description": "Mi saldo PayPal",
+                            "buy": 1456, "sell": 1589, "color": "#247CB2",
+                            "active": True})
+        old_state["content"]["offers"][-1].update({"id": "oferta-paypal", "title": "De PayPal a pesos",
+                                                     "from": "paypal", "active": True})
+        old_state["content"]["faqs"][2].update({"id": "paypal", "question": "¿Saldo PayPal?",
+                                                   "answer": "Consultá saldo PayPal", "keywords": "paypal"})
+        old_state["content"]["copy"]["heroDescription"] = "Un cambio con PayPal y otras divisas."
         (directory / "content.json").write_text(json.dumps(old_state))
         old_account = {field: credentials[field] for field in ("email", "displayName", "passwordHash", "version")}
         (directory / "admin.json").write_text(json.dumps(old_account))
@@ -192,6 +213,18 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
         assert current_state["content"]["brand"]["primary"] == "#18E5C1"
         assert current_state["content"]["brand"]["dark"] == "#2C3768"
         assert current_state["content"]["currencies"][4]["buy"] == 0.180
+        assert current_state["content"]["currencies"][2]["color"] == "#1976D2"
+        usdt = current_state["content"]["currencies"][-1]
+        assert usdt["id"] == "usdt" and usdt["code"] == "USDT"
+        assert usdt["buy"] == 1456 and usdt["sell"] == 1589
+        assert usdt["active"] is False
+        assert current_state["content"]["offers"][-1]["from"] == "usdt"
+        assert current_state["content"]["offers"][-1]["active"] is False
+        assert current_state["content"]["faqs"][2]["id"] == "usdt"
+        assert "PayPal" not in json.dumps(current_state["content"], ensure_ascii=False)
+        assert visitor.request("/api/content")[1]["revision"] == 2
+        backup = json.loads((directory / "content-backup.json").read_text())
+        assert backup["content"]["currencies"][-1]["id"] == "paypal"
         assert visitor.request(uploaded["url"])[1] == png
         assert visitor.session()[0]["configured"]
         migrated = json.loads((directory / "admins.json").read_text())
@@ -199,10 +232,20 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
         assert migrated["users"][0]["role"] == "owner"
         admin.session()
         assert admin.request("/api/login", "POST", fields)[0] == 200
+        admin.session()  # el inicio de sesión rota el token CSRF
+        active_usdt = copy.deepcopy(current_state)
+        active_usdt["content"]["currencies"][-1].update({
+            "buy": 1500, "sell": 1575, "active": True, "description": "USDT verificado"})
+        save_code, save_body, _ = admin.request("/api/content", "PUT", active_usdt)
+        assert save_code == 200, (save_code, save_body)
+        live_usdt = visitor.request("/api/content")[1]
+        assert live_usdt["revision"] == 3
+        assert live_usdt["content"]["currencies"][-1]["buy"] == 1500
+        assert live_usdt["content"]["currencies"][-1]["active"] is True
         for _ in range(10):
             code, _, _ = visitor.request("/api/login", "POST", {"email": fields["email"], "password": "wrong"})
         assert code == 429, code
-        print("API PHP verificada: instalación, migración de identidad, múltiples administradores, login, CSRF, contenido persistente, logos, respaldo y límites de intentos.")
+        print("API PHP verificada: USDT, íconos, migración de PayPal segura, múltiples administradores, CSRF, cotizaciones persistentes y respaldo.")
     except Exception:
         log.flush()
         log.seek(0)

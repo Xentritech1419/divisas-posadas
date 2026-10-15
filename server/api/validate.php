@@ -27,7 +27,7 @@ function list_value(mixed $value, string $field, int $min, int $max): array {
     return $value;
 }
 function currency_value(mixed $value, string $field, bool $pesos = true): string {
-    $allowed = ['azul', 'verde', 'euro', 'real', 'guarani', 'paypal'];
+    $allowed = ['azul', 'verde', 'euro', 'real', 'guarani', 'usdt'];
     if ($pesos) $allowed[] = 'ars';
     if (!is_string($value) || !in_array($value, $allowed, true)) invalid($field);
     return $value;
