@@ -235,7 +235,8 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
         active_usdt = copy.deepcopy(current_state)
         active_usdt["content"]["currencies"][-1].update({
             "buy": 1500, "sell": 1575, "active": True, "description": "USDT verificado"})
-        assert admin.request("/api/content", "PUT", active_usdt)[0] == 200
+        save_code, save_body, _ = admin.request("/api/content", "PUT", active_usdt)
+        assert save_code == 200, (save_code, save_body)
         live_usdt = visitor.request("/api/content")[1]
         assert live_usdt["revision"] == 3
         assert live_usdt["content"]["currencies"][-1]["buy"] == 1500
