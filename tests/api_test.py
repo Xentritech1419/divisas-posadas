@@ -232,6 +232,7 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
         assert migrated["users"][0]["role"] == "owner"
         admin.session()
         assert admin.request("/api/login", "POST", fields)[0] == 200
+        admin.session()  # el inicio de sesión rota el token CSRF
         active_usdt = copy.deepcopy(current_state)
         active_usdt["content"]["currencies"][-1].update({
             "buy": 1500, "sell": 1575, "active": True, "description": "USDT verificado"})
