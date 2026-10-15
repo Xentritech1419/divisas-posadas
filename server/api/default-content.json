@@ -11,14 +11,14 @@
     "eyebrow": "DIVISAS EN POSADAS, MISIONES",
     "heroTitle": "Tu próximo cambio,",
     "heroAccent": "empieza acá.",
-    "heroDescription": "Dólares, euros, reales, guaraníes y saldo PayPal. Consultá las cotizaciones, hacé tus cuentas y coordiná con nosotros.",
+    "heroDescription": "Dólares, euros, reales, guaraníes y saldo USDT. Consultá las cotizaciones, hacé tus cuentas y coordiná con nosotros.",
     "ratesTitle": "Cada divisa. Todo claro.",
     "ratesDescription": "Compará nuestros valores de compra y venta en pesos argentinos.",
     "offersTitle": "Un buen cambio empieza con una oferta.",
     "offersDescription": "Encontrá una propuesta para vos y consultá su disponibilidad.",
     "howTitle": "Cambiar, así de simple.",
     "contactTitle": "Hablemos de tu próximo cambio.",
-    "contactDescription": "¿Viajás, necesitás divisas o querés cambiar tu saldo PayPal? Contanos qué necesitás y coordinamos los detalles.",
+    "contactDescription": "¿Viajás, necesitás divisas o querés cambiar tu saldo USDT? Contanos qué necesitás y coordinamos los detalles.",
     "disclaimer": "Las cotizaciones son orientativas y están sujetas a confirmación, disponibilidad y condiciones de la operación. El conversor no reserva una cotización ni realiza transferencias."
   },
   "contact": {
@@ -59,7 +59,7 @@
       "description": "Efectivo · Unión Europea",
       "buy": 1340,
       "sell": 1400,
-      "color": "#7360B4",
+      "color": "#1976D2",
       "active": true
     },
     {
@@ -85,15 +85,15 @@
       "active": true
     },
     {
-      "id": "paypal",
-      "name": "PayPal",
-      "code": "USD",
-      "symbol": "US$",
-      "description": "Saldo digital · USD",
+      "id": "usdt",
+      "name": "USDT (Tether)",
+      "code": "USDT",
+      "symbol": "USDT",
+      "description": "Activo digital · Tether",
       "buy": 1080,
       "sell": 1190,
-      "color": "#247CB2",
-      "active": true
+      "color": "#0C9D85",
+      "active": false
     }
   ],
   "offers": [
@@ -120,14 +120,14 @@
       "expiresAt": ""
     },
     {
-      "id": "oferta-paypal",
-      "title": "De PayPal a pesos",
+      "id": "oferta-usdt",
+      "title": "De USDT a pesos",
       "description": "Consultá las condiciones para tu saldo.",
-      "from": "paypal",
+      "from": "usdt",
       "to": "ars",
       "amount": 200,
       "receive": 222000,
-      "active": true,
+      "active": false,
       "expiresAt": ""
     }
   ],
@@ -159,10 +159,10 @@
       "keywords": "operar,operacion,operación,comprar,vender,transferencia,efectivo,pago"
     },
     {
-      "id": "paypal",
-      "question": "¿Puedo consultar por mi saldo PayPal?",
-      "answer": "Sí. Seleccioná PayPal en el conversor y elegí la moneda que querés recibir. Antes de operar, confirmamos las condiciones, los posibles cargos y el importe final con vos.",
-      "keywords": "paypal,saldo,comision,comisión,cargo"
+      "id": "USDT",
+      "question": "¿Puedo consultar por mi saldo USDT?",
+      "answer": "Sí. Seleccioná USDT en el conversor y elegí la moneda que querés recibir. Antes de operar, confirmamos las condiciones, los posibles cargos y el importe final con vos.",
+      "keywords": "USDT,saldo,comision,comisión,cargo"
     },
     {
       "id": "dolar",
