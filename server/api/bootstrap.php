@@ -56,8 +56,70 @@ function write_json(string $name,array $value): void {
 function initial_state(): array {
     return ['content'=>json_decode(file_get_contents(__DIR__.'/default-content.json'),true,64,JSON_THROW_ON_ERROR),'revision'=>0,'updatedAt'=>null];
 }
-// Conserva las cotizaciones y los cambios del cliente al actualizar una marca anterior.
-// Migra solamente los valores por defecto del diseño previo.
+// Se ejecuta una sola vez en el primer GET posterior a actualizar Hostinger.
+// No reutiliza públicamente precios de PayPal como cotizaciones verificadas de USDT.
+function migrate_legacy_currency(array &$content): bool {
+    $changed=false;
+    if (isset($content['currencies']) && is_array($content['currencies'])) {
+        foreach ($content['currencies'] as &$currency) {
+            if (($currency['id'] ?? '')==='paypal') {
+                $currency['id']='usdt';
+                $currency['name']='USDT (Tether)';
+                $currency['code']='USDT';
+                $currency['symbol']='USDT';
+                $currency['description']='Activo digital · Revisar cotización antes de activar';
+                $currency['color']='#0C9D85';
+                $currency['active']=false;
+                // Los importes anteriores permanecen guardados para revisión,
+                // pero la moneda se desactiva hasta cargar una cotización nueva.
+                $changed=true;
+            } elseif (($currency['id'] ?? '')==='euro'
+                && strcasecmp((string)($currency['color'] ?? ''),'#7360B4')===0) {
+                $currency['color']='#1976D2';
+                $changed=true;
+            }
+        }
+        unset($currency);
+    }
+    if (isset($content['offers']) && is_array($content['offers'])) {
+        foreach ($content['offers'] as &$offer) {
+            $wasPaypal=(($offer['from'] ?? '')==='paypal' || ($offer['to'] ?? '')==='paypal');
+            if (!$wasPaypal) continue;
+            if (($offer['from'] ?? '')==='paypal') $offer['from']='usdt';
+            if (($offer['to'] ?? '')==='paypal') $offer['to']='usdt';
+            if (($offer['id'] ?? '')==='oferta-paypal') $offer['id']='oferta-usdt';
+            $offer['active']=false;
+            $changed=true;
+        }
+        unset($offer);
+    }
+    // Elimina textos de PayPal de la web manteniendo el resto del contenido personalizado.
+    foreach (['copy','bot'] as $section) {
+        if (!isset($content[$section]) || !is_array($content[$section])) continue;
+        foreach ($content[$section] as $key=>$value) {
+            if (!is_string($value)) continue;
+            $next=str_ireplace('paypal','USDT',$value);
+            if ($next!==$value) {$content[$section][$key]=$next; $changed=true;}
+        }
+    }
+    foreach (['offers','faqs','steps'] as $section) {
+        if (!isset($content[$section]) || !is_array($content[$section])) continue;
+        foreach ($content[$section] as &$item) {
+            if ($section==='faqs' && ($item['id'] ?? '')==='paypal') {
+                $item['id']='usdt';
+                $changed=true;
+            }
+            foreach ($item as $key=>$value) {
+                if (!is_string($value)) continue;
+                $next=str_ireplace('paypal','USDT',$value);
+                if ($next!==$value) {$item[$key]=$next; $changed=true;}
+            }
+        }
+        unset($item);
+    }
+    return $changed;
+}
+// Preserva configuraciones, contactos, cotizaciones y cuentas de administradores.
 function read_state(): array {
     return locked(function() {
         $saved=read_json('content');
@@ -67,8 +129,10 @@ function read_state(): array {
         if (strcasecmp((string)($brand['primary'] ?? ''),'#087F65')===0) $brand['primary']='#18E5C1';
         if (strcasecmp((string)($brand['dark'] ?? ''),'#132E32')===0) $brand['dark']='#2C3768';
         if (($brand['logoUrl'] ?? '')==='') $brand['logoUrl']='/logo-divisas-posadas.svg';
-        if ($brand!==$previous) {
-            $state['content']['brand']=$brand;
+        $changed=$brand!==$previous;
+        if ($changed) $state['content']['brand']=$brand;
+        if (migrate_legacy_currency($state['content'])) $changed=true;
+        if ($changed) {
             $state['revision']=(int)$state['revision']+1;
             write_json('content-backup',$saved);
             write_json('content',$state);
