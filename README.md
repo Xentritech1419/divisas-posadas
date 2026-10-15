@@ -12,7 +12,8 @@ La landing funciona con valores de ejemplo desde la primera carga. No hay contra
 
 ## Incluye
 
-- Dólar Azul, Dólar Verde, Euro, Reales, Guaraní y PayPal.
+- Dólar Azul, Dólar Verde, Euro, Reales, Guaraní y USDT (Tether).
+- Íconos SVG optimizados: moneda dorada para dólares, moneda azul para euro y moneda turquesa para USDT.
 - Compra y venta en ARS, conversión con decimales y ofertas con monto fijo y vencimiento.
 - Edición de cotizaciones de compra y venta independientes, ofertas, colores, logo, textos, horarios, contacto y respuestas del chat.
 - Acceso administrativo con múltiples cuentas por correo y contraseña; creación y revocación de usuarios, cierre de sesión y respaldo descargable.
