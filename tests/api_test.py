@@ -113,7 +113,7 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
         assert status == 200 and b'/favicon-divisas-posadas-v2.svg' in home
         assert b'/favicon.ico' in home
         status, ico, _ = visitor.request("/favicon.ico")
-        assert status == 200 and ico[:4] == b"\\x00\\x00\\x01\\x00"
+        assert status == 200 and ico[:4] == bytes.fromhex("00000100")
         assert initial["content"]["contact"]["whatsapp"] == "5493764271559"
         assert visitor.request("/api/content", "PUT", initial)[0] == 401
         assert visitor.request("/api/backup")[0] == 401
