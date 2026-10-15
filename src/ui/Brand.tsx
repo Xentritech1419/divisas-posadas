@@ -14,10 +14,10 @@ export function Brand({content,light=false}:{content:SiteContent;light?:boolean}
   </a>;
 }
 const currencyArt:Partial<Record<ExchangeId,string>>={
-  azul:"/icons/usd.svg",
-  verde:"/icons/usd.svg",
-  euro:"/icons/eur.svg",
-  usdt:"/icons/usdt.svg",
+  azul:"/icons/usd-azul.svg",
+  verde:"/icons/usd-verde.svg",
+  euro:"/icons/eur-azul-amarillo.svg",
+  usdt:"/icons/usdt-turquesa.svg",
 };
 export function CurrencyIcon({id,color,small=false}:{id:ExchangeId;color?:string;small?:boolean}){
   const art=currencyArt[id];
