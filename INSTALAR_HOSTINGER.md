@@ -42,7 +42,30 @@ El servidor crea automáticamente **`divisas-posadas-data` al lado de `public_ht
 
 Si aparece un error de permisos, verificá que PHP pueda crear esa carpeta. También podés crearla desde el administrador de archivos y asignar en `data_dir` su ruta absoluta. La ruta debe estar **fuera de `public_html`**; el código rechaza carpetas dentro de la web pública. No uses permisos 777.
 
-Para actualizar, reemplazá los archivos de la landing con el nuevo ZIP, conservando `config.local.php` y `divisas-posadas-data`. No subas el ZIP fuente completo descargado desde **Code → Download ZIP** como si fuera la web compilada.
+Para actualizar, reemplazá los archivos de la landing con el nuevo ZIP, conservando `config.local.php` y `divisas-posadas-data`.
+
+### Actualización PayPal → USDT e íconos
+
+Este paquete reemplaza PayPal por **USDT (Tether)** y añade tres íconos SVG de monedas:
+**dólar dorado**, **euro azul** y **USDT turquesa**.
+
+Al abrir el sitio por primera vez después de la actualización, el backend convierte los
+identificadores anteriores `paypal` a `usdt` dentro de las cotizaciones, ofertas y
+textos guardados. Se conserva una copia de la revisión anterior en
+`divisas-posadas-data/content-backup.json`, además del respaldo completo que
+tenés que descargar antes de instalar.
+
+**Importante:** los valores anteriores de PayPal no son cotizaciones de USDT.
+Por seguridad, la cotización USDT y las ofertas que estaban asociadas a PayPal
+quedan **desactivadas**, sin borrar sus importes. Entrá al panel `/admin` →
+**Cotizaciones**, cargá los precios reales de USDT, activá su visibilidad y guardá.
+Revisá las ofertas migradas en **Ofertas**, actualizá sus importes y activalas solo
+cuando correspondan. Si la web todavía utiliza valores ilustrativos, mantené
+el modo de ejemplo hasta cargar y verificar todas las cotizaciones.
+
+La carpeta `public_html/icons/` debe aparecer después de extraer el ZIP.
+No publiques manualmente los valores archivados en `content-backup.json`,
+porque pueden pertenecer a la cotización PayPal anterior. No subas el ZIP fuente completo descargado desde **Code → Download ZIP** como si fuera la web compilada.
 
 Podés exportar el contenido desde **Descargar respaldo** en el panel. El respaldo completo se obtiene descargando también la carpeta privada desde Hostinger.
 
