@@ -27,4 +27,12 @@ assert.match(css,/\.rates-grid\{display:grid;grid-template-columns:repeat\(3,min
 assert.match(css,/@media\(max-width:900px\)\{[\s\S]*?\.rates-grid\{grid-template-columns:repeat\(2,minmax\(0,1fr\)\)\}/);
 assert.match(css,/@media \(max-width:700px\)\{\s*\.rates-grid\{\s*grid-template-columns:minmax\(0,1fr\)/);
 assert.match(css,/\.rates-grid \.rate-actions button\{[\s\S]*?min-height:48px;/);
+// El avatar del chat debe ser el ícono con fondo blanco, no la flecha
+// transparente que pierde contraste sobre la cabecera azul oscuro.
+const brandComponent=readFileSync(new URL("../src/ui/Brand.tsx",import.meta.url),"utf8");
+assert(brandComponent.includes('src="/logo-asistente-divisas-posadas.svg"'));
+const assistantAvatar=readFileSync(new URL("../public/logo-asistente-divisas-posadas.svg",import.meta.url),"utf8");
+assert.match(assistantAvatar,/<rect[^>]+fill="#FFFFFF"[^>]+stroke="#DCE8EE"/);
+assert.match(assistantAvatar,/<path fill="#18E5C1"/);
+assert.match(assistantAvatar,/<path fill="#2C3768"/);
 console.log("Compra, venta, guaraní, pausa, vencimiento y asistente verificados.");
