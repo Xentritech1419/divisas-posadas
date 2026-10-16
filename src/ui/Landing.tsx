@@ -20,6 +20,7 @@ export default function Landing({initialState}:{initialState:ContentState}){
   const valid=numeric>0&&numeric<=1e12&&Number.isFinite(numeric)&&from!==to&&source.active&&target.active;
   const result=valid?(selectedOffer?.receive??convert(c,numeric,from,to)):0;
   const options=[peso,...c.currencies.filter(x=>x.active)];
+  const generalWhatsapp=whatsappLink(c,`Hola, ${c.brand.name}. Quiero consultar por un cambio de divisas.`);
   const quoteMessage=`Hola, ${c.brand.name}. Quiero consultar ${selectedOffer?`la oferta «${selectedOffer.title}»`:'un cambio'}: entrego ${formatNumber(numeric)} ${source.name} (${source.code}) y recibiría aproximadamente ${formatNumber(result)} ${target.name} (${target.code}). ¿Me confirman la cotización y disponibilidad?${c.demo?' [Solicito confirmar una cotización actual]':''}`;
   async function refresh(manual=false){if(manual)setRefreshing(true);try{const r=await fetch("/api/content",{cache:"no-store"});if(!r.ok)throw new Error();const next=await r.json() as ContentState;setState(next);setRefreshError("");}catch{if(manual)setRefreshError("No pudimos actualizar. Se mantienen los últimos valores cargados.");}finally{if(manual)setRefreshing(false);}}
   useEffect(()=>{const timer=setInterval(()=>{void refresh();setNow(Date.now());},60000);const sync=(event:StorageEvent)=>{if(event.key==="dp-content-revision")void refresh(true);};window.addEventListener("storage",sync);return()=>{clearInterval(timer);window.removeEventListener("storage",sync);};},[]);
