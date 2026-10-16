@@ -36,6 +36,23 @@ Para dar acceso a otras personas, abrí **Administradores** desde el panel, cre�
 
 El WhatsApp, el logo, las cotizaciones, las ofertas, los textos, los colores y las respuestas del asistente quedan editables en el panel.
 
+### Cambiar la contraseña de administrador
+
+Cada usuario con acceso al panel, tanto propietario como editor, puede abrir
+**Administración → Seguridad → Cambiar mi contraseña**. Debe escribir su
+contraseña actual, la nueva y repetir la nueva para confirmarla. La contraseña
+nueva debe tener entre **12 y 72 caracteres** y no puede ser igual a la anterior.
+Al guardar, se mantiene abierta únicamente la sesión actual de esa cuenta;
+las demás sesiones de ese usuario quedan revocadas.
+
+La contraseña no se muestra ni se guarda en texto plano: el servidor conserva
+solo un hash seguro. El cambio no modifica las contraseñas de otros
+administradores ni las cotizaciones. Si el usuario olvidó la contraseña actual,
+este formulario no permite cambiarla sin verificarla; consultá las instrucciones
+de recuperación al final de este documento.
+
+
+
 ## Datos y actualizaciones
 
 El servidor crea automáticamente **`divisas-posadas-data` al lado de `public_html`, fuera de la web pública**. Allí quedan las cuentas administradoras (contraseñas guardadas como hash), contenido, revisión anterior y logos. Si había una sola cuenta en `admin.json`, al instalar la actualización se migra automáticamente al nuevo archivo `admins.json`; la sesión antigua puede pedir iniciar sesión nuevamente. No borres esa carpeta al actualizar la landing.

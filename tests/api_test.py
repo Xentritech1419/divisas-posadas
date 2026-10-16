@@ -122,6 +122,9 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
         assert visitor.request("/api/content", "PUT", initial)[0] == 401
         assert visitor.request("/api/backup")[0] == 401
         assert visitor.request("/api/users")[0] == 401
+        assert visitor.request("/api/change-password", "POST", {
+            "currentPassword": "fake", "newPassword": "Un-password-nuevo-123",
+            "confirmPassword": "Un-password-nuevo-123"})[0] == 401
         assert visitor.request("/api/upload", "POST", {})[0] == 401
         state, headers = admin.session()
         assert state["setupEnabled"] and not state["configured"]
@@ -172,6 +175,40 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
         assert second.request("/api/users")[0] == 403
         assert second.request("/api/users", "POST", teammate)[0] == 403
         assert second.request("/api/users/" + created["user"]["id"], "DELETE")[0] == 403
+
+        # El editor puede cambiar únicamente su propia contraseña, con CSRF.
+        new_editor_password = "Clave-editor-renovada!42"
+        change_editor = {"currentPassword": teammate["password"],
+                         "newPassword": new_editor_password, "confirmPassword": new_editor_password}
+        assert second.request("/api/change-password", "POST", change_editor, csrf=False)[0] == 403
+        assert second.request("/api/change-password", "POST", change_editor, headers={"Origin": "https://foreign.example"})[0] == 403
+        assert second.request("/api/change-password", "POST", {
+            **change_editor, "currentPassword": "incorrecta"})[0] == 401
+        assert second.request("/api/change-password", "POST", {
+            **change_editor, "newPassword": "corta", "confirmPassword": "corta"})[0] == 400
+        assert second.request("/api/change-password", "POST", {
+            **change_editor, "confirmPassword": "no-igual"})[0] == 400
+        assert second.request("/api/change-password", "POST", {
+            **change_editor, "newPassword": teammate["password"],
+            "confirmPassword": teammate["password"]})[0] == 400
+        stored_before = json.loads((work / "divisas-posadas-data/admins.json").read_text())
+        editor_before = next(u for u in stored_before["users"] if u["email"] == teammate["email"])
+        editor_other = Client(origin)
+        editor_other.session()
+        assert editor_other.request("/api/login", "POST", teammate)[0] == 200
+        editor_other.session()
+        code, changed, _ = second.request("/api/change-password", "POST", change_editor)
+        assert code == 200 and changed == {"ok": True}, (code, changed)
+        assert second.session()[0]["user"]["role"] == "editor"  # renovó el token CSRF
+        assert second.request("/api/backup")[0] == 200
+        assert editor_other.request("/api/backup")[0] == 401  # sesiones anteriores revocadas
+        stored_after = json.loads((work / "divisas-posadas-data/admins.json").read_text())
+        editor_after = next(u for u in stored_after["users"] if u["email"] == teammate["email"])
+        assert editor_after["passwordHash"] != editor_before["passwordHash"]
+        assert editor_after["version"] != editor_before["version"]
+        assert next(u for u in stored_after["users"] if u["email"] == fields["email"]) == (
+            next(u for u in stored_before["users"] if u["email"] == fields["email"]))
+
         assert admin.request("/api/users/" + created["user"]["id"], "DELETE")[0] == 200
         assert second.session()[0]["user"] is None
         assert visitor.request("/api/admin.json")[0] == 404
@@ -246,6 +283,24 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
         admin.session()
         assert admin.request("/api/login", "POST", fields)[0] == 200
         admin.session()  # el inicio de sesión rota el token CSRF
+        owner_other = Client(origin)
+        owner_other.session()
+        assert owner_other.request("/api/login", "POST", fields)[0] == 200
+        owner_other.session()
+        before_owner_change = json.loads((directory / "admins.json").read_text())["users"][0]
+        new_owner_password = "Clave-owner-segura!42"
+        code, changed, _ = admin.request("/api/change-password", "POST", {
+            "currentPassword": fields["password"], "newPassword": new_owner_password,
+            "confirmPassword": new_owner_password})
+        assert code == 200 and changed == {"ok": True}, (code, changed)
+        refreshed, _ = admin.session()
+        assert refreshed["user"]["email"] == fields["email"]
+        assert owner_other.request("/api/backup")[0] == 401
+        after_owner_change = json.loads((directory / "admins.json").read_text())["users"][0]
+        assert after_owner_change["passwordHash"] != before_owner_change["passwordHash"]
+        assert after_owner_change["version"] != before_owner_change["version"]
+        # Los datos de las cotizaciones no se deben tocar al cambiar el acceso.
+        assert visitor.request("/api/content")[1]["revision"] == 2
         active_usdt = copy.deepcopy(current_state)
         active_usdt["content"]["currencies"][-1].update({
             "buy": 1500, "sell": 1575, "active": True, "description": "USDT verificado"})
@@ -255,10 +310,17 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
         assert live_usdt["revision"] == 3
         assert live_usdt["content"]["currencies"][-1]["buy"] == 1500
         assert live_usdt["content"]["currencies"][-1]["active"] is True
+        assert admin.request("/api/backup")[0] == 200  # la sesión renovada puede operar
+        assert visitor.request("/api/login", "POST", fields)[0] == 401
+        signin_new = Client(origin)
+        signin_new.session()
+        assert signin_new.request("/api/login", "POST", {
+            "email": fields["email"], "password": new_owner_password})[0] == 200
+        assert signin_new.session()[0]["user"]["role"] == "owner"
         for _ in range(10):
             code, _, _ = visitor.request("/api/login", "POST", {"email": fields["email"], "password": "wrong"})
         assert code == 429, code
-        print("API PHP verificada: USDT, íconos, migración de PayPal segura, múltiples administradores, CSRF, cotizaciones persistentes y respaldo.")
+        print("API PHP verificada: cambio seguro de contraseña de owner/editor, revocación de sesiones, USDT, cotizaciones persistentes, CSRF y respaldo.")
     except Exception:
         log.flush()
         log.seek(0)
