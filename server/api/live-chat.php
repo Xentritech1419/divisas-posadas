@@ -63,6 +63,13 @@ function chat_active_operators(): array {
     return $names;
 }
 function chat_is_online(): bool { return count(chat_active_operators())>0; }
+function chat_operator_is_available(array $current,mixed $client): bool {
+    if (!is_string($client) || !preg_match('/^[a-zA-Z0-9-]{16,64}$/D',$client)) return false;
+    session_start_safe();
+    $key=hash('sha256',$current['id'].'|'.session_id().'|'.$client);
+    $entry=(read_json('chat-presence') ?? [])[$key] ?? null;
+    return is_array($entry) && ($entry['until'] ?? 0)>time();
+}
 function chat_operator_heartbeat(array $current,array $input): never {
     $available=$input['available'] ?? null;
     $client=$input['clientId'] ?? null;
@@ -157,7 +164,7 @@ function chat_operator_threads(): never {
             $messages=$t['messages'] ?? []; $last=end($messages);
             $result[]=['id'=>$t['id'],'updatedAt'=>$t['updatedAt'] ?? 0,
                 'closed'=>$t['closed'] ?? false,'count'=>count($messages),
-                'preview'=>is_array($last)?mb_substr((string)($last['text'] ?? ''),0,90):'Nueva conversación'];
+                'preview'=>is_array($last)?(function_exists('mb_substr')?mb_substr((string)($last['text'] ?? ''),0,90):substr((string)($last['text'] ?? ''),0,90)):'Nueva conversación'];
         }
         usort($result,fn($a,$b)=>$b['updatedAt']<=>$a['updatedAt']);
         return array_slice($result,0,CHAT_MAX_THREADS);
@@ -179,9 +186,10 @@ function chat_operator_action(array $current,array $input): never {
     $id=$input['id'] ?? null;
     $action=$input['action'] ?? null;
     if (!is_string($id) || !preg_match('/^[a-f0-9]{24}$/D',$id) || !in_array($action,['send','close'],true)) invalid('conversación');
+    $text='';
     if ($action==='send') {
-        rate_check('operator-message');
-        if (!chat_is_online()) respond(['error'=>'Activá tu disponibilidad para responder desde Mensajes.'],409);
+        if (!chat_operator_is_available($current,$input['clientId'] ?? null)) respond(['error'=>'Activá tu disponibilidad para responder desde Mensajes.'],409);
+        chat_send_limit();
         $text=chat_message_text($input['text'] ?? null);
     }
     $thread=locked(function() use($current,$id,$action,$text){
