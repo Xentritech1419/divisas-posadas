@@ -120,6 +120,7 @@ export default function ChatWidget({content,open,onOpenChange}:{content:SiteCont
       {!human&&<div className="chat-quick">
         {["Cotizaciones","Cómo operar","Horarios","Ofertas"].map(q=><button key={q} onClick={()=>askBot(q)}>{q}</button>)}
       </div>}
+      {!human&&online&&<p className="live-chat-privacy">Para que nuestro equipo te atienda, los mensajes se guardan temporalmente en el servidor.</p>}
       {!human&&online?<button type="button" className="chat-human" disabled={connecting} onClick={()=>void startHuman()}>
         <UserRound size={15}/>{connecting?"Conectando con un asesor…":"Hablar con un asesor en esta web"}<ArrowUpRight size={13}/>
       </button>:(!online||!!thread?.closed)?<a className="chat-human" href={whatsapp} target="_blank" rel="noopener noreferrer">
