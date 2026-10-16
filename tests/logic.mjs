@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { defaultContent, convert, activeOffers, contentSchema, botReply } from "../src/lib/content.ts";
 assert(contentSchema.safeParse(defaultContent).success);
 assert(defaultContent.currencies.some(c=>c.id==="usdt" && c.active===false));
@@ -20,4 +21,10 @@ assert.equal(activeOffers(expired).length, 1);
 assert.match(botReply(defaultContent, "cotización guaraní"), /0,155/);
 assert.match(botReply(defaultContent, "cotización guaraní"), /ejemplo/);
 assert.equal(convert(defaultContent, Infinity, "azul", "ars"), 0);
+// Evita regresar accidentalmente a dos columnas en celulares.
+const css=readFileSync(new URL("../src/styles.css",import.meta.url),"utf8");
+assert.match(css,/\.rates-grid\{display:grid;grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
+assert.match(css,/@media\(max-width:900px\)\{[\s\S]*?\.rates-grid\{grid-template-columns:repeat\(2,minmax\(0,1fr\)\)\}/);
+assert.match(css,/@media \(max-width:700px\)\{\s*\.rates-grid\{\s*grid-template-columns:minmax\(0,1fr\)/);
+assert.match(css,/\.rates-grid \.rate-actions button\{[\s\S]*?min-height:48px;/);
 console.log("Compra, venta, guaraní, pausa, vencimiento y asistente verificados.");
