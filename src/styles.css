@@ -171,3 +171,20 @@
   }
   .rates-grid .rate-actions button svg{width:15px;height:15px}
 }
+
+/* Cambio de contraseña: área privada y usable desde celular. */
+.password-card{max-width:620px}
+.password-card-heading{display:flex;align-items:flex-start;gap:13px;margin-bottom:24px}
+.password-card-heading>svg{flex:none;color:var(--ink);margin-top:2px}
+.password-card-heading strong{display:block;font-size:17px;color:var(--ink)}
+.password-card-heading p{font-size:12px;line-height:1.6;color:var(--muted);margin-top:5px}
+.password-fieldset{border:0;margin:0;padding:0;display:grid;gap:18px;min-width:0}
+.password-fieldset .admin-field{max-width:100%;min-width:0}
+.password-fieldset .admin-field input{width:100%;max-width:100%}
+.password-submit{justify-self:start;display:inline-flex;align-items:center;gap:9px;margin-top:4px}
+.password-fieldset .admin-alert{margin:0;max-width:100%}
+@media(max-width:700px){
+  .password-card{max-width:100%}
+  .password-card-heading{margin-bottom:20px}
+  .password-submit{width:100%;justify-content:center;min-height:46px}
+}
