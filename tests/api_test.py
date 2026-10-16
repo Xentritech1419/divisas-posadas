@@ -249,6 +249,21 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
         assert not (web / "live-chat.json").exists()
         stored_chats = json.loads((work / "divisas-posadas-data/live-chat.json").read_text())
         assert stored_chats["threads"][0]["tokenHash"] != visitor_token
+        # La presencia también se corta sin que el administrador presione el botón:
+        # simula una pestaña cerrada que deja vencer su último latido.
+        assert admin.request("/api/chat/operator/heartbeat", "POST", {
+            "available": True, "clientId": operator_tab})[0] == 200
+        assert visitor.request("/api/chat/status")[1]["online"] is True
+        presence_file = work / "divisas-posadas-data/chat-presence.json"
+        stale_presence = json.loads(presence_file.read_text())
+        for entry in stale_presence.values():
+            entry["until"] = int(time.time()) - 10
+        presence_file.write_text(json.dumps(stale_presence))
+        assert visitor.request("/api/chat/status")[1]["online"] is False
+        assert visitor.request("/api/chat/guest", "POST", chat_start)[0] == 409
+        assert visitor.request("/api/chat/guest", "POST", {
+            "action": "poll", "token": visitor_token})[1]["thread"]["messages"][-1]["role"] == "operator"
+
 
         # El editor puede cambiar únicamente su propia contraseña, con CSRF.
         new_editor_password = "Clave-editor-renovada!42"
