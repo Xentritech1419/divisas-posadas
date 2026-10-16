@@ -7,6 +7,7 @@ on:
       - chatgpt/monedas-personalizadas
       - chatgpt/favicon-cache-refresh
       - chatgpt/favicon-fondo-blanco
+      - chatgpt/mobile-rate-cards-single-column
   pull_request:
     branches:
       - main
@@ -37,7 +38,7 @@ jobs:
       - name: Empaquetar para Hostinger
         run: python3 scripts/make-zip.py
       - name: Mantener actualizado el ZIP de la rama de revisión
-        if: github.event_name == 'push' && (github.ref == 'refs/heads/chatgpt/admin-users-rates-whatsapp' || github.ref == 'refs/heads/chatgpt/usdt-currency-icons' || github.ref == 'refs/heads/chatgpt/monedas-personalizadas' || github.ref == 'refs/heads/chatgpt/favicon-cache-refresh' || github.ref == 'refs/heads/chatgpt/favicon-fondo-blanco')
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/chatgpt/admin-users-rates-whatsapp' || github.ref == 'refs/heads/chatgpt/usdt-currency-icons' || github.ref == 'refs/heads/chatgpt/monedas-personalizadas' || github.ref == 'refs/heads/chatgpt/favicon-cache-refresh' || github.ref == 'refs/heads/chatgpt/favicon-fondo-blanco' || github.ref == 'refs/heads/chatgpt/mobile-rate-cards-single-column')
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
