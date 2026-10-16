@@ -36,6 +36,48 @@ Para dar acceso a otras personas, abrí **Administradores** desde el panel, cre�
 
 El WhatsApp, el logo, las cotizaciones, las ofertas, los textos, los colores y las respuestas del asistente quedan editables en el panel.
 
+### Atención por chat en vivo y WhatsApp
+
+El sitio tiene un asistente automático que puede responder preguntas habituales
+sobre cotizaciones y horarios. Además:
+
+1. Un propietario o editor entra al panel **/admin → Mensajes** y presiona
+   **Ponerme en línea**. Debe mantener esa sección abierta y visible mientras
+   atiende clientes. Los mensajes se actualizan cada pocos segundos.
+2. Cuando hay al menos un operador activo, los visitantes ven
+   **Hablar con un asesor en esta web** dentro del chat. El bot transfiere la
+   conversación existente y el operador puede responder desde **Mensajes**.
+3. Cuando ningún operador está disponible, el cliente conserva el bot y ve
+   **Hablar por WhatsApp**. Se abre WhatsApp con un resumen de la consulta
+   para que el cliente elija si quiere enviarlo. No se envían mensajes
+   automáticamente sin que el visitante confirme.
+4. Los operadores pueden **Finalizar** conversaciones desde el panel.
+   Todos los administradores con sesión válida pueden atender conversaciones.
+5. El estado online se renueva aproximadamente cada 12 segundos; si el
+   operador cierra el navegador, cambia de sección o deja la pestaña oculta,
+   su disponibilidad desaparece como máximo aproximadamente 45 segundos
+   después de su último latido.
+
+**Privacidad y funcionamiento:** las conversaciones en vivo se guardan en
+`divisas-posadas-data/live-chat.json` y la disponibilidad en
+`divisas-posadas-data/chat-presence.json`, **fuera de `public_html`**.
+Los visitantes solo pueden leer el hilo asociado a su token privado y los
+administradores deben iniciar sesión. Las conversaciones de más de siete días
+se depuran al comenzar nuevas conversaciones, y el almacenamiento tiene un
+límite de cantidad y mensajes por hilo. Los visitantes pueden recuperar su
+conversación mientras conserven abierta la sesión de su navegador.
+No solicites contraseñas, códigos de verificación, datos bancarios completos
+ni documentos sensibles por el chat.
+
+La atención es casi inmediata mediante consultas periódicas (polling), no
+requiere Node.js, websockets ni servicios de chat externos y funciona sobre
+el alojamiento PHP de Hostinger. **El botón para WhatsApp no guarda mensajes
+en el chat**: abre WhatsApp en otra pestaña. Si no se abre, verificá el
+número configurado en **Contacto**. No reemplaces ni elimines la carpeta
+privada durante actualizaciones; allí también quedan las cuentas y
+las cotizaciones.
+
+
 ### Cambiar la contraseña de administrador
 
 Cada usuario con acceso al panel, tanto propietario como editor, puede abrir
