@@ -30,7 +30,7 @@ assert.match(css,/\.rates-grid \.rate-actions button\{[\s\S]*?min-height:48px;/)
 // El avatar del chat debe ser el ícono con fondo blanco, no la flecha
 // transparente que pierde contraste sobre la cabecera azul oscuro.
 const brandComponent=readFileSync(new URL("../src/ui/Brand.tsx",import.meta.url),"utf8");
-assert.match(brandComponent,/src="\\/logo-asistente-divisas-posadas\\.svg"/);
+assert(brandComponent.includes('src="/logo-asistente-divisas-posadas.svg"'));
 const assistantAvatar=readFileSync(new URL("../public/logo-asistente-divisas-posadas.svg",import.meta.url),"utf8");
 assert.match(assistantAvatar,/<rect[^>]+fill="#FFFFFF"[^>]+stroke="#DCE8EE"/);
 assert.match(assistantAvatar,/<path fill="#18E5C1"/);
