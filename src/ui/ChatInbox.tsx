@@ -21,6 +21,7 @@ export default function ChatInbox(){
   const [error,setError]=useState("");
   const [loading,setLoading]=useState(true);
   const clientId=useRef(crypto.randomUUID());
+  const messageEnd=useRef<HTMLDivElement>(null);
 
   useEffect(()=>{
     let alive=true;
@@ -29,7 +30,7 @@ export default function ChatInbox(){
         const data=await apiJson<{threads:LiveThreadSummary[]}>("/api/chat/operator/threads");
         if(alive){
           setThreads(data.threads);
-          setSelected(previous=>previous??data.threads.find(t=>!t.closed)?.id??data.threads[0]?.id??null);
+          setSelected(previous=>data.threads.some(t=>t.id===previous)?previous:data.threads.find(t=>!t.closed)?.id??data.threads[0]?.id??null);
         }
       }catch(e){if(alive)setError(e instanceof Error?e.message:"No se pudieron cargar los mensajes.");}
       finally{if(alive)setLoading(false);}
@@ -37,6 +38,8 @@ export default function ChatInbox(){
     void fetchThreads();const timer=setInterval(()=>void fetchThreads(),5000);
     return()=>{alive=false;clearInterval(timer);};
   },[]);
+
+  useEffect(()=>{messageEnd.current?.scrollIntoView({behavior:"smooth",block:"nearest"});},[thread?.messages.length]);
 
   useEffect(()=>{
     if(!selected){setThread(null);return;}
@@ -142,6 +145,7 @@ export default function ChatInbox(){
               <small>{m.role==="operator"?(m.by||"Equipo"):m.role==="bot"?"Bot automático":"Cliente"} · {new Date(m.time*1000).toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit"})}</small>
               <p>{m.text}</p>
             </div>)}
+            <div ref={messageEnd}/>
           </div>
           {!thread.closed&&<form className="inbox-compose" onSubmit={e=>void send(e)}>
             <textarea aria-label="Responder al cliente" placeholder={available?"Escribí tu respuesta…":"Ponete en línea para responder"} value={text} onChange={e=>setText(e.target.value)} maxLength={1000} rows={3} disabled={!available||busy}/>
