@@ -57,7 +57,7 @@ export default function ChatWidget({content,open,onOpenChange}:{content:SiteCont
 
   function askBot(text:string){
     const cleaned=text.trim();if(!cleaned)return;
-    setHistory(list=>[...list,{role:"user",text:cleaned},{role:"bot",text:botReply(content,cleaned)}].slice(-40));
+    setHistory(list=>[...list,{role:"user" as const,text:cleaned},{role:"bot" as const,text:botReply(content,cleaned)}].slice(-40));
     setQuestion("");
   }
 
