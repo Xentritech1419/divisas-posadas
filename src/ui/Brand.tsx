@@ -1,8 +1,9 @@
 import {brandLogoUrl,type SiteContent,type ExchangeId} from "@/lib/content";
 
-// El mismo ícono optimizado identifica al sitio, al asistente y al favicon.
+// Avatar del asistente: mismas flechas, con fondo blanco y contorno suave
+// para que el símbolo azul marino sea visible sobre el encabezado oscuro.
 export function Mark({className=""}:{className?:string}){
-  return <img className={className} src={brandLogoUrl} alt="" aria-hidden="true" draggable={false} width={44} height={44}/>;
+  return <img className={className} src="/logo-asistente-divisas-posadas.svg" alt="" aria-hidden="true" draggable={false} width={44} height={44} decoding="async"/>;
 }
 export function Brand({content,light=false}:{content:SiteContent;light?:boolean}){
   const logo = content.brand.logoUrl || brandLogoUrl;
