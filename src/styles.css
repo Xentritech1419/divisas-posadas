@@ -256,3 +256,6 @@ button.chat-human{width:100%;background:#f2fcf9;border:none;cursor:pointer}
 }
 
 .live-chat-privacy{padding:8px 13px 2px;color:#6b7c88;font-size:10px;line-height:1.5;text-align:center}
+
+.chat-toggle span.offline{background:#9aa9b9}
+.chat-toggle span.online{background:#09b886}
