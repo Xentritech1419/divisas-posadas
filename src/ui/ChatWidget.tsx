@@ -7,8 +7,7 @@ import {Mark} from "./Brand";
 
 type BotMessage={role:"user"|"bot";text:string};
 
-export default function ChatWidget({content}:{content:SiteContent}){
-  const [open,setOpen]=useState(false);
+export default function ChatWidget({content,open,onOpenChange}:{content:SiteContent;open:boolean;onOpenChange:(open:boolean)=>void}){
   const [history,setHistory]=useState<BotMessage[]>([]);
   const [question,setQuestion]=useState("");
   const [online,setOnline]=useState(false);
@@ -99,7 +98,7 @@ export default function ChatWidget({content}:{content:SiteContent}){
   return <>
     <div className="chat-dock">
       {!open&&<span className="chat-teaser">¿En qué te ayudamos?</span>}
-      <button className="chat-toggle" onClick={()=>setOpen(v=>!v)} aria-expanded={open} aria-controls="chat-window" aria-label={open?"Cerrar asistente":"Abrir asistente"}>
+      <button className="chat-toggle" onClick={()=>onOpenChange(!open)} aria-expanded={open} aria-controls="chat-window" aria-label={open?"Cerrar asistente":"Abrir asistente"}>
         {open?<X size={24}/>:<MessageCircle size={25}/>}<span/>
       </button>
     </div>
@@ -109,7 +108,7 @@ export default function ChatWidget({content}:{content:SiteContent}){
         <div><strong>{human?"Atención de Divisas Posadas":content.bot.name}</strong>
           <span>{human?(online?"Asesor en línea":"Sin asesores disponibles"):(online?"Asesor disponible · chat en vivo":"Respuestas automáticas · WhatsApp")}</span>
         </div>
-        <button onClick={()=>setOpen(false)} aria-label="Cerrar chat"><X size={19}/></button>
+        <button onClick={()=>onOpenChange(false)} aria-label="Cerrar chat"><X size={19}/></button>
       </div>
       <div className="chat-messages" aria-live="polite">
         {!human&&<div className="message bot">{content.bot.welcome}</div>}
@@ -121,11 +120,11 @@ export default function ChatWidget({content}:{content:SiteContent}){
       {!human&&<div className="chat-quick">
         {["Cotizaciones","Cómo operar","Horarios","Ofertas"].map(q=><button key={q} onClick={()=>askBot(q)}>{q}</button>)}
       </div>}
-      {online&&!human?<button type="button" className="chat-human" disabled={connecting} onClick={()=>void startHuman()}>
+      {!human&&online?<button type="button" className="chat-human" disabled={connecting} onClick={()=>void startHuman()}>
         <UserRound size={15}/>{connecting?"Conectando con un asesor…":"Hablar con un asesor en esta web"}<ArrowUpRight size={13}/>
-      </button>:<a className="chat-human" href={whatsapp} target="_blank" rel="noopener noreferrer">
+      </button>:(!online||!!thread?.closed)?<a className="chat-human" href={whatsapp} target="_blank" rel="noopener noreferrer">
         <MessageCircle size={15}/> {human?"Continuar conversación por WhatsApp":"Hablar por WhatsApp"} <ArrowUpRight size={13}/>
-      </a>}
+      </a>:<div className="chat-human chat-human-active"><UserRound size={15}/> Un asesor está atendiendo tu consulta</div>}
       {human&&<button type="button" className="chat-return" onClick={()=>{setHuman(false);setError("");}}>
         <RotateCcw size={13}/> Volver al asistente automático
       </button>}
