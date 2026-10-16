@@ -106,6 +106,10 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
         assert initial["content"]["brand"]["primary"] == "#18E5C1"
         assert initial["content"]["brand"]["dark"] == "#2C3768"
         assert visitor.request("/logo-divisas-posadas.svg")[0] == 200
+        code, avatar, _ = visitor.request("/logo-asistente-divisas-posadas.svg")
+        assert code == 200 and b'<svg' in avatar
+        assert b'#FFFFFF' in avatar and b'#DCE8EE' in avatar
+        assert b'#18E5C1' in avatar and b'#2C3768' in avatar
         assert visitor.request("/favicon.svg")[0] == 200
         for file in ["favicon.svg", "favicon-divisas-posadas-v2.svg", "favicon-divisas-posadas-v3.svg"]:
             status, favicon, _ = visitor.request("/" + file)
