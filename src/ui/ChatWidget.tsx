@@ -28,16 +28,15 @@ export default function ChatWidget({content,open,onOpenChange}:{content:SiteCont
   const whatsapp=whatsappLink(content,whatsappMessage);
 
   useEffect(()=>{
-    if(!open)return;
     let active=true;
     async function status(){
       try{const result=await getLiveStatus();if(active)setOnline(result);}
       catch{if(active)setOnline(false);}
     }
     void status();
-    const poll=setInterval(()=>void status(),10000);
+    const poll=setInterval(()=>void status(),15000);
     return()=>{active=false;clearInterval(poll);};
-  },[open]);
+  },[]);
 
   useEffect(()=>{
     if(!open||!human)return;
@@ -99,7 +98,7 @@ export default function ChatWidget({content,open,onOpenChange}:{content:SiteCont
     <div className="chat-dock">
       {!open&&<span className="chat-teaser">¿En qué te ayudamos?</span>}
       <button className="chat-toggle" onClick={()=>onOpenChange(!open)} aria-expanded={open} aria-controls="chat-window" aria-label={open?"Cerrar asistente":"Abrir asistente"}>
-        {open?<X size={24}/>:<MessageCircle size={25}/>}<span/>
+        {open?<X size={24}/>:<MessageCircle size={25}/>}<span className={online?"online":"offline"}/>
       </button>
     </div>
     {open&&<aside className="chat-window" id="chat-window" aria-label="Atención automática y humana">
