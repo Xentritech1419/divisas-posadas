@@ -10,6 +10,7 @@ on:
       - chatgpt/mobile-rate-cards-single-column
       - chatgpt/cambiar-contrasena-administradores
       - chatgpt/logo-chat-asistente
+      - chatgpt/live-chat-inbox-whatsapp
   pull_request:
     branches:
       - main
@@ -40,7 +41,7 @@ jobs:
       - name: Empaquetar para Hostinger
         run: python3 scripts/make-zip.py
       - name: Mantener actualizado el ZIP de la rama de revisión
-        if: github.event_name == 'push' && (github.ref == 'refs/heads/chatgpt/admin-users-rates-whatsapp' || github.ref == 'refs/heads/chatgpt/usdt-currency-icons' || github.ref == 'refs/heads/chatgpt/monedas-personalizadas' || github.ref == 'refs/heads/chatgpt/favicon-cache-refresh' || github.ref == 'refs/heads/chatgpt/favicon-fondo-blanco' || github.ref == 'refs/heads/chatgpt/mobile-rate-cards-single-column' || github.ref == 'refs/heads/chatgpt/cambiar-contrasena-administradores' || github.ref == 'refs/heads/chatgpt/logo-chat-asistente')
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/chatgpt/admin-users-rates-whatsapp' || github.ref == 'refs/heads/chatgpt/usdt-currency-icons' || github.ref == 'refs/heads/chatgpt/monedas-personalizadas' || github.ref == 'refs/heads/chatgpt/favicon-cache-refresh' || github.ref == 'refs/heads/chatgpt/favicon-fondo-blanco' || github.ref == 'refs/heads/chatgpt/mobile-rate-cards-single-column' || github.ref == 'refs/heads/chatgpt/cambiar-contrasena-administradores' || github.ref == 'refs/heads/chatgpt/logo-chat-asistente' || github.ref == 'refs/heads/chatgpt/live-chat-inbox-whatsapp')
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
