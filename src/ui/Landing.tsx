@@ -1,10 +1,10 @@
 "use client";
 import {useState,useRef,useEffect,type CSSProperties} from "react";
-import {ArrowUpRight,ArrowRight,ArrowLeftRight,ArrowDown,ChevronDown,ChevronLeft,ChevronRight,MapPin,MessageCircle,Menu,X,RefreshCw,Clock3,Check,Plus,Minus,Send,Info,Copy,CheckCheck,Mail,Sparkles} from "lucide-react";
-import {type ContentState,type ExchangeId,type Offer,type SiteContent,activeOffers,convert,formatNumber,rateNumber,getCurrency,whatsappLink,botReply,peso} from "@/lib/content";
-import {Brand,Mark,CurrencyIcon} from "./Brand";
+import {ArrowUpRight,ArrowRight,ArrowLeftRight,ArrowDown,ChevronDown,ChevronLeft,ChevronRight,MapPin,MessageCircle,Menu,X,RefreshCw,Clock3,Check,Plus,Minus,Info,Copy,CheckCheck,Mail,Sparkles} from "lucide-react";
+import {type ContentState,type ExchangeId,type Offer,type SiteContent,activeOffers,convert,formatNumber,rateNumber,getCurrency,whatsappLink,peso} from "@/lib/content";
+import {Brand,CurrencyIcon} from "./Brand";
+import ChatWidget from "./ChatWidget";
 
-type Message={role:"user"|"bot";text:string};
 function updatedLabel(date:string|null){return date?new Intl.DateTimeFormat("es-AR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit",timeZone:"America/Argentina/Buenos_Aires"}).format(new Date(date)):"Valores de demostración";}
 
 export default function Landing({initialState}:{initialState:ContentState}){
@@ -12,26 +12,24 @@ export default function Landing({initialState}:{initialState:ContentState}){
   const [navOpen,setNavOpen]=useState(false);const [filter,setFilter]=useState("all");
   const [from,setFrom]=useState<ExchangeId>(initialState.content.currencies.find(x=>x.active)?.id||"ars");const [to,setTo]=useState<ExchangeId>("ars");const [amount,setAmount]=useState("100");const [offerId,setOfferId]=useState<string|null>(null);
   const [now,setNow]=useState(Date.now());const [refreshing,setRefreshing]=useState(false);const [refreshError,setRefreshError]=useState("");
-  const [chatOpen,setChatOpen]=useState(false);const [messages,setMessages]=useState<Message[]>([]);const [question,setQuestion]=useState("");
+  const [chatOpen,setChatOpen]=useState(false);
   const [quote,setQuote]=useState<string|null>(null);const [copied,setCopied]=useState(false);
-  const offerTrack=useRef<HTMLDivElement>(null);const messageEnd=useRef<HTMLDivElement>(null);const dialog=useRef<HTMLDialogElement>(null);const chatInput=useRef<HTMLInputElement>(null);
+  const offerTrack=useRef<HTMLDivElement>(null);const dialog=useRef<HTMLDialogElement>(null);
   const offers=activeOffers(c,now);const selectedOffer=offers.find(o=>o.id===offerId&&o.from===from&&o.to===to&&o.amount===Number(amount));
   const source=getCurrency(c,from);const target=getCurrency(c,to);const numeric=Number(amount);
   const valid=numeric>0&&numeric<=1e12&&Number.isFinite(numeric)&&from!==to&&source.active&&target.active;
   const result=valid?(selectedOffer?.receive??convert(c,numeric,from,to)):0;
   const options=[peso,...c.currencies.filter(x=>x.active)];
-  const quoteMessage=`Hola, ${c.brand.name}. Quiero consultar ${selectedOffer?`la oferta «${selectedOffer.title}»`:'un cambio'}: entrego ${formatNumber(numeric)} ${source.name} (${source.code}) y recibiría aproximadamente ${formatNumber(result)} ${target.name} (${target.code}). ¿Me confirman la cotización y disponibilidad?${c.demo?' [Solicito confirmar una cotización actual]':''}`;
   const generalWhatsapp=whatsappLink(c,`Hola, ${c.brand.name}. Quiero consultar por un cambio de divisas.`);
+  const quoteMessage=`Hola, ${c.brand.name}. Quiero consultar ${selectedOffer?`la oferta «${selectedOffer.title}»`:'un cambio'}: entrego ${formatNumber(numeric)} ${source.name} (${source.code}) y recibiría aproximadamente ${formatNumber(result)} ${target.name} (${target.code}). ¿Me confirman la cotización y disponibilidad?${c.demo?' [Solicito confirmar una cotización actual]':''}`;
   async function refresh(manual=false){if(manual)setRefreshing(true);try{const r=await fetch("/api/content",{cache:"no-store"});if(!r.ok)throw new Error();const next=await r.json() as ContentState;setState(next);setRefreshError("");}catch{if(manual)setRefreshError("No pudimos actualizar. Se mantienen los últimos valores cargados.");}finally{if(manual)setRefreshing(false);}}
   useEffect(()=>{const timer=setInterval(()=>{void refresh();setNow(Date.now());},60000);const sync=(event:StorageEvent)=>{if(event.key==="dp-content-revision")void refresh(true);};window.addEventListener("storage",sync);return()=>{clearInterval(timer);window.removeEventListener("storage",sync);};},[]);
   useEffect(()=>{if(!source.active){setFrom(options.find(x=>x.id!==to)?.id||"ars");setOfferId(null);}if(!target.active){setTo("ars");setOfferId(null);}},[c]);
-  useEffect(()=>{if(chatOpen){messageEnd.current?.scrollIntoView({behavior:"smooth",block:"nearest"});chatInput.current?.focus();}},[chatOpen,messages]);
   useEffect(()=>{if(quote){dialog.current?.showModal();setCopied(false);}else dialog.current?.close();},[quote]);
   useEffect(()=>{function escape(e:KeyboardEvent){if(e.key==="Escape"){setChatOpen(false);setNavOpen(false);}}document.addEventListener("keydown",escape);return()=>document.removeEventListener("keydown",escape);},[]);
   function contactCurrency(id:ExchangeId,direction:"buy"|"sell"){const currency=getCurrency(c,id);const rate=direction==="buy"?currency.sell:currency.buy;const action=direction==="buy"?"comprar":"vender";const message=`Hola, ${c.brand.name}. Quiero ${action} ${currency.name} (${currency.code}). La cotización publicada es $ ${rateNumber(rate)} ARS por unidad. ¿Me confirman el valor y la disponibilidad para realizar la operación?${c.demo?" [Solicito una cotización actualizada]":""}`;window.open(whatsappLink(c,message),"_blank","noopener,noreferrer");}
   function selectOffer(o:Offer){setFrom(o.from);setTo(o.to);setAmount(String(o.amount));setOfferId(o.id);document.getElementById("conversor")?.scrollIntoView({behavior:"smooth",block:"center"});}
-  function ask(text:string){if(!text.trim())return;setMessages(v=>[...v,{role:"user" as const,text:text.trim()},{role:"bot" as const,text:botReply(c,text.trim())}].slice(-60));setQuestion("");}
-  function goContact(){if(generalWhatsapp)window.open(generalWhatsapp,"_blank","noopener,noreferrer");else setChatOpen(true);}
+  function goContact(){setChatOpen(true);}
   const visibleCurrencies=c.currencies.filter(x=>x.active&&(filter==="all"||(filter==="digital"?x.id==="usdt":x.id!=="usdt")));
   return <div className="site" style={{"--primary":c.brand.primary,"--ink":c.brand.dark} as CSSProperties}>
     <a href="#cotizaciones" className="skip-link">Ir a cotizaciones</a>
@@ -70,8 +68,7 @@ export default function Landing({initialState}:{initialState:ContentState}){
         <span className="footer-location"><MapPin size={14}/> {c.contact.location}</span>
       </div>
     </footer>
-    <div className="chat-dock">{!chatOpen&&<span className="chat-teaser">¿En qué te ayudamos?</span>}<button className="chat-toggle" onClick={()=>setChatOpen(!chatOpen)} aria-expanded={chatOpen} aria-controls="chat-window" aria-label={chatOpen?"Cerrar asistente":"Abrir asistente automático"}>{chatOpen?<X size={24}/>:<MessageCircle size={25}/>}<span/></button></div>
-    {chatOpen&&<aside className="chat-window" id="chat-window" aria-label="Asistente automático"><div className="chat-head"><Mark className="chat-mark"/><div><strong>{c.bot.name}</strong><span>Respuestas automáticas</span></div><button onClick={()=>setChatOpen(false)} aria-label="Cerrar chat"><X size={19}/></button></div><div className="chat-messages" aria-live="polite"><div className="message bot">{c.bot.welcome}</div>{messages.map((m,i)=><div className={`message ${m.role}`} key={i}>{m.text}</div>)}<div ref={messageEnd}/></div><div className="chat-quick">{["Cotizaciones","Cómo operar","Horarios","Ofertas"].map(q=><button onClick={()=>ask(q)} key={q}>{q}</button>)}</div>{generalWhatsapp?<a className="chat-human" href={generalWhatsapp} target="_blank" rel="noreferrer"><MessageCircle size={14}/> Hablar con una persona <ArrowUpRight size={13}/></a>:<p className="chat-unavailable">El contacto por WhatsApp estará disponible próximamente.</p>}<form className="chat-form" onSubmit={e=>{e.preventDefault();ask(question);}}><input ref={chatInput} value={question} onChange={e=>setQuestion(e.target.value)} maxLength={600} aria-label="Escribí tu consulta" placeholder="Escribí tu consulta…"/><button type="submit" disabled={!question.trim()} aria-label="Enviar consulta"><Send size={18}/></button></form></aside>}
+    <ChatWidget content={c} open={chatOpen} onOpenChange={setChatOpen}/>
     <dialog ref={dialog} aria-labelledby="quote-title" className="quote-dialog" onCancel={()=>setQuote(null)} onClick={e=>{if(e.target===dialog.current)setQuote(null);}}><button className="dialog-close icon-button" onClick={()=>setQuote(null)} aria-label="Cerrar consulta"><X size={20}/></button><span className="dialog-icon"><ArrowLeftRight size={28}/></span><span className="eyebrow section-eyebrow">TU CONSULTA ESTÁ LISTA</span><h2 id="quote-title">Un paso más para tu cambio.</h2><p className="quote-summary">{quote}</p>{c.contact.whatsapp?<a className="button" href={whatsappLink(c,quote||"")||"#"} target="_blank" rel="noreferrer"><MessageCircle size={18}/> Enviar por WhatsApp <ArrowUpRight size={17}/></a>:<p className="notice">El contacto por WhatsApp todavía no está disponible. Podés copiar tu consulta.</p>}<button className="text-button copy-button" onClick={async()=>{try{await navigator.clipboard.writeText(quote||"");setCopied(true);}catch{setCopied(false);}}}>{copied?<CheckCheck size={16}/>:<Copy size={16}/>} {copied?"Consulta copiada":"Copiar consulta"}</button><small>El monto se confirma con nuestro equipo antes de operar.</small></dialog>
   </div>;
 }

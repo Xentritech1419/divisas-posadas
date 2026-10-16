@@ -3,11 +3,21 @@ declare(strict_types=1);
 ini_set('display_errors','0');
 require __DIR__.'/bootstrap.php';
 require __DIR__.'/validate.php';
+require __DIR__.'/live-chat.php';
 
 try {
     $path=parse_url($_SERVER['REQUEST_URI'] ?? '/',PHP_URL_PATH);
     $method=$_SERVER['REQUEST_METHOD'] ?? 'GET';
     if ($path==='/api/content' && $method==='GET') respond(read_state());
+    if ($path==='/api/chat/status' && $method==='GET') respond(['online'=>chat_is_online()]);
+    if ($path==='/api/chat/guest' && $method==='POST') chat_guest_request(json_body(18000));
+    if ($path==='/api/chat/operator/heartbeat' && $method==='POST') {
+        $current=require_user(); csrf_check(); chat_operator_heartbeat($current,json_body(1500));
+    }
+    if ($path==='/api/chat/operator/threads' && $method==='GET') chat_operator_threads();
+    if ($path==='/api/chat/operator/thread' && $method==='GET') chat_operator_thread((string)($_GET['id'] ?? ''));
+    if ($path==='/api/chat/operator/action' && $method==='POST') chat_operator_action(require_user(),json_body(3000));
+
     if (is_string($path) && preg_match('~^/api/media/(logo-[a-zA-Z0-9-]+\.(png|jpg|webp))$~D',$path,$match) && $method==='GET') {
         $file=private_dir().'/media/'.$match[1];
         if (!is_file($file)) respond(['error'=>'Imagen no encontrada.'],404);

@@ -130,6 +130,18 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
             "currentPassword": "fake", "newPassword": "Un-password-nuevo-123",
             "confirmPassword": "Un-password-nuevo-123"})[0] == 401
         assert visitor.request("/api/upload", "POST", {})[0] == 401
+        assert visitor.request("/api/chat/status")[1] == {"online": False}
+        assert visitor.request("/api/chat/operator/threads")[0] == 401
+        assert visitor.request("/api/chat/operator/heartbeat", "POST", {"available": True, "clientId": "test-tab-intruso-123456"})[0] == 401
+        visitor_token = "a" * 64
+        other_token = "b" * 64
+        chat_start = {"action": "start", "token": visitor_token,
+                      "history": [{"role": "bot", "text": "Bienvenido"},
+                                  {"role": "user", "text": "Quiero comprar dólares."}]}
+        assert visitor.request("/api/chat/guest", "POST", chat_start)[0] == 409
+        assert visitor.request("/api/chat/guest", "POST", {**chat_start, "token": "pequeño"})[0] == 400
+        assert visitor.request("/api/chat/guest", "POST", chat_start, headers={"Origin": "https://evil.test"})[0] == 403
+        assert visitor.request("/api/chat/guest", "POST", {"action": "poll", "token": other_token})[1]["thread"] is None
         state, headers = admin.session()
         assert state["setupEnabled"] and not state["configured"]
         cookie = headers.get("Set-Cookie", "").lower()
@@ -141,6 +153,38 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
         state, _ = admin.session()
         assert state["user"]["email"] == fields["email"] and state["configured"]
         assert state["user"]["role"] == "owner"
+
+        # La presencia solo existe si el operador activa la bandeja de mensajes.
+        operator_tab = "owner-live-inbox-test-12345"
+        assert admin.request("/api/chat/operator/heartbeat", "POST", {
+            "available": True, "clientId": operator_tab}, csrf=False)[0] == 403
+        code, presence, _ = admin.request("/api/chat/operator/heartbeat", "POST", {
+            "available": True, "clientId": operator_tab})
+        assert code == 200 and presence["online"], (code, presence)
+        assert visitor.request("/api/chat/status")[1]["online"] is True
+        code, started, _ = visitor.request("/api/chat/guest", "POST", chat_start)
+        assert code == 201 and started["thread"]["closed"] is False, (code, started)
+        chat_id = started["thread"]["id"]
+        assert len(started["thread"]["messages"]) == 2
+        assert visitor.request("/api/chat/guest", "POST", {"action": "poll", "token": other_token})[1]["thread"] is None
+        assert visitor.request("/api/chat/guest", "POST", {"action": "poll", "token": visitor_token})[1]["thread"]["id"] == chat_id
+        code, sent, _ = visitor.request("/api/chat/guest", "POST", {
+            "action": "send", "token": visitor_token, "text": "¿Hay atención en vivo?"})
+        assert code == 200 and sent["thread"]["messages"][-1]["role"] == "visitor", (code, sent)
+        assert visitor.request("/api/chat/guest", "POST", {
+            "action": "send", "token": other_token, "text": "No debería entrar"})[0] == 404
+        code, listing, _ = admin.request("/api/chat/operator/threads")
+        assert code == 200 and listing["threads"][0]["id"] == chat_id
+        assert admin.request("/api/chat/operator/thread?id=" + chat_id)[1]["thread"]["messages"][-1]["text"] == "¿Hay atención en vivo?"
+        assert visitor.request("/api/chat/operator/thread?id=" + chat_id)[0] == 401
+        assert admin.request("/api/chat/operator/action", "POST", {
+            "action": "send", "id": chat_id, "text": "Te atiendo."})[0] == 409  # operador no puede responder sin disponibilidad propia
+        code, replied, _ = admin.request("/api/chat/operator/action", "POST", {
+            "action": "send", "id": chat_id, "text": "Te atiendo.", "clientId": operator_tab})
+        assert code == 200 and replied["thread"]["messages"][-1]["role"] == "operator", (code, replied)
+        assert replied["thread"]["messages"][-1]["by"] == fields["displayName"]
+        assert visitor.request("/api/chat/guest", "POST", {
+            "action": "poll", "token": visitor_token})[1]["thread"]["messages"][-1]["text"] == "Te atiendo."
         assert admin.request("/api/setup", "POST", fields)[0] == 409
         payload = {"content": copy.deepcopy(initial["content"]), "revision": 0}
         payload["content"]["currencies"][4]["buy"] = 0.180
@@ -179,6 +223,47 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
         assert second.request("/api/users")[0] == 403
         assert second.request("/api/users", "POST", teammate)[0] == 403
         assert second.request("/api/users/" + created["user"]["id"], "DELETE")[0] == 403
+        # Los editores también pueden participar en la bandeja; el estado online
+        # se mantiene si uno de varios operadores sigue disponible.
+        editor_tab = "editor-live-inbox-test-12345"
+        assert second.request("/api/chat/operator/heartbeat", "POST", {
+            "available": True, "clientId": editor_tab})[0] == 200
+        code, edited, _ = second.request("/api/chat/operator/action", "POST", {
+            "action": "send", "id": chat_id, "text": "Hola, soy del equipo.",
+            "clientId": editor_tab})
+        assert code == 200 and edited["thread"]["messages"][-1]["role"] == "operator"
+        assert second.request("/api/chat/operator/heartbeat", "POST", {
+            "available": False, "clientId": editor_tab})[0] == 200
+        assert visitor.request("/api/chat/status")[1]["online"] is True
+        assert admin.request("/api/chat/operator/action", "POST", {
+            "action": "close", "id": chat_id})[0] == 200
+        assert visitor.request("/api/chat/guest", "POST", {
+            "action": "poll", "token": visitor_token})[1]["thread"]["closed"] is True
+        assert visitor.request("/api/chat/guest", "POST", {
+            "action": "send", "token": visitor_token, "text": "¿Seguís?"})[0] == 409
+        assert admin.request("/api/chat/operator/heartbeat", "POST", {
+            "available": False, "clientId": operator_tab})[0] == 200
+        assert visitor.request("/api/chat/status")[1]["online"] is False
+        assert visitor.request("/api/chat/guest", "POST", chat_start)[0] == 409
+        assert (work / "divisas-posadas-data/live-chat.json").is_file()
+        assert not (web / "live-chat.json").exists()
+        stored_chats = json.loads((work / "divisas-posadas-data/live-chat.json").read_text())
+        assert stored_chats["threads"][0]["tokenHash"] != visitor_token
+        # La presencia también se corta sin que el administrador presione el botón:
+        # simula una pestaña cerrada que deja vencer su último latido.
+        assert admin.request("/api/chat/operator/heartbeat", "POST", {
+            "available": True, "clientId": operator_tab})[0] == 200
+        assert visitor.request("/api/chat/status")[1]["online"] is True
+        presence_file = work / "divisas-posadas-data/chat-presence.json"
+        stale_presence = json.loads(presence_file.read_text())
+        for entry in stale_presence.values():
+            entry["until"] = int(time.time()) - 10
+        presence_file.write_text(json.dumps(stale_presence))
+        assert visitor.request("/api/chat/status")[1]["online"] is False
+        assert visitor.request("/api/chat/guest", "POST", chat_start)[0] == 409
+        assert visitor.request("/api/chat/guest", "POST", {
+            "action": "poll", "token": visitor_token})[1]["thread"]["messages"][-1]["role"] == "operator"
+
 
         # El editor puede cambiar únicamente su propia contraseña, con CSRF.
         new_editor_password = "Clave-editor-renovada!42"
