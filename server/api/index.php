@@ -45,6 +45,35 @@ try {
         if (!$created) respond(['error'=>'La cuenta administradora ya está creada.'],409);
         signed_in($admin); respond(['ok'=>true],201);
     }
+    if ($path==='/api/change-password' && $method==='POST') {
+        $current=require_user(); csrf_check(); rate_check('change-password');
+        $input=json_body(4096);
+        $old=$input['currentPassword'] ?? null;
+        $new=$input['newPassword'] ?? null;
+        $confirm=$input['confirmPassword'] ?? null;
+        if (!is_string($old) || strlen($old)<1 || strlen($old)>72 || str_contains($old,"\\0")) invalid('contraseña actual');
+        if (!is_string($new) || strlen($new)<12 || strlen($new)>72 || str_contains($new,"\\0")) invalid('contraseña nueva: usá entre 12 y 72 caracteres');
+        if (!is_string($confirm) || !hash_equals($new,$confirm)) invalid('confirmación de contraseña');
+        if (hash_equals($old,$new)) invalid('contraseña nueva: debe ser distinta de la anterior');
+        $updated=locked(function() use($current,$old,$new) {
+            $stored=read_json('admins') ?? ['version'=>1,'users'=>[]];
+            foreach ($stored['users'] as &$user) {
+                if (($user['id'] ?? '')!==$current['id']) continue;
+                if (!password_verify($old,$user['passwordHash'])) return null;
+                $user['passwordHash']=password_hash($new,PASSWORD_DEFAULT);
+                $user['version']=bin2hex(random_bytes(24));
+                $updated=$user;
+                write_json('admins',$stored);
+                return $updated;
+            }
+            unset($user);
+            return null;
+        });
+        if ($updated===null) respond(['error'=>'La contraseña actual no es correcta.'],401);
+        // Invalidar las demás sesiones y renovar la sesión actual con un token CSRF nuevo.
+        signed_in($updated);
+        respond(['ok'=>true]);
+    }
     if ($path==='/api/users' && $method==='GET') {
         require_owner(); $accounts=accounts();
         respond(['users'=>array_map('public_user',$accounts['users'])]);
