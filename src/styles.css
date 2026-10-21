@@ -259,3 +259,7 @@ button.chat-human{width:100%;background:#f2fcf9;border:none;cursor:pointer}
 
 .chat-toggle span.offline{background:#9aa9b9}
 .chat-toggle span.online{background:#09b886}
+
+/* Guaraníes expresados por cada peso argentino (no ARS por cada PYG). */
+.rate-values .guarani-unit{display:block;margin-top:5px;font-size:10px;font-weight:500;letter-spacing:0;line-height:1.35;color:#718395;white-space:nowrap}
+@media(max-width:700px){.rates-currency{max-width:100%;line-height:1.5}}
