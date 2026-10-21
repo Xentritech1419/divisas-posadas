@@ -164,6 +164,11 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
         code, presence, _ = admin.request("/api/chat/operator/heartbeat", "POST", {
             "available": True, "clientId": operator_tab})
         assert code == 200 and presence["online"], (code, presence)
+        # Disponibilidad confirmada en el servidor durante aproximadamente 2 minutos,
+        # incluso si el operador pasa brevemente a otra pestaña del celular.
+        ttl_file = work / "divisas-posadas-data/chat-presence.json"
+        current_ttl = max(item["until"] - time.time() for item in json.loads(ttl_file.read_text()).values())
+        assert 110 <= current_ttl <= 121, current_ttl
         assert visitor.request("/api/chat/status")[1]["online"] is True
         code, started, _ = visitor.request("/api/chat/guest", "POST", chat_start)
         assert code == 201 and started["thread"]["closed"] is False, (code, started)
