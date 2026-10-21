@@ -5,14 +5,17 @@ import {apiFetch} from "@/lib/api";
 import {type LiveThread,type LiveThreadSummary} from "@/lib/liveChat";
 
 async function apiJson<T>(path:string,options?:RequestInit):Promise<T>{
-  const response=await apiFetch(path,options);
-  const data=await response.json() as T & {error?:string};
-  if(!response.ok)throw new Error(data.error||"No se pudo contactar al chat.");
+  const response=await apiFetch(path,{cache:"no-store",...options});
+  let data: T & {error?:string;ok?:boolean};
+  try{data=await response.json() as T & {error?:string;ok?:boolean};}
+  catch{throw new Error("El servidor no devolvió una respuesta válida del chat (HTTP "+response.status+"). Comprobá que hayas instalado el ZIP completo en Hostinger.");}
+  if(!response.ok)throw new Error(data.error||"No se pudo contactar al chat (HTTP "+response.status+").");
   return data;
 }
 
 export default function ChatInbox(){
   const [available,setAvailable]=useState(false);
+  const [presenceBusy,setPresenceBusy]=useState(false);
   const [threads,setThreads]=useState<LiveThreadSummary[]>([]);
   const [selected,setSelected]=useState<string|null>(null);
   const [thread,setThread]=useState<LiveThread|null>(null);
@@ -21,6 +24,28 @@ export default function ChatInbox(){
   const [error,setError]=useState("");
   const [loading,setLoading]=useState(true);
   const clientId=useRef(crypto.randomUUID());
+  // Serializa activaciones, renovaciones y desconexiones para evitar peticiones fuera de orden.
+  const presenceQueue=useRef<Promise<void>>(Promise.resolve());
+  function updatePresence(next:boolean):Promise<{ok:boolean;online:boolean}>{
+    const task=presenceQueue.current.then(()=>apiJson<{ok:boolean;online:boolean}>("/api/chat/operator/heartbeat",{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({available:next,clientId:clientId.current})
+    }));
+    presenceQueue.current=task.then(()=>undefined,()=>undefined);
+    return task;
+  }
+  async function changePresence(){
+    if(presenceBusy)return;
+    setPresenceBusy(true);setError("");
+    const next=!available;
+    try{
+      const confirmed=await updatePresence(next);
+      if(!confirmed.ok||(next&&!confirmed.online))throw new Error("Hostinger no confirmó la disponibilidad. Intentá nuevamente.");
+      setAvailable(next);
+    }catch(e){
+      setError(e instanceof Error?e.message:"No se pudo cambiar la disponibilidad.");
+    }finally{setPresenceBusy(false);}
+  }
   const messageEnd=useRef<HTMLDivElement>(null);
 
   useEffect(()=>{
@@ -57,23 +82,34 @@ export default function ChatInbox(){
   useEffect(()=>{
     if(!available)return;
     let active=true;
-    const heartbeat=async(on:boolean)=>{
+    let refreshing=false;
+    async function renew(){
+      if(!active||refreshing)return;
+      refreshing=true;
       try{
-        await apiJson("/api/chat/operator/heartbeat",{
-          method:"POST",headers:{"Content-Type":"application/json"},
-          body:JSON.stringify({available:on,clientId:clientId.current})
-        });
+        const confirmed=await updatePresence(true);
+        if(active&&!confirmed.online)throw new Error("El servidor informó que ya no estás en línea.");
       }catch(e){
-        if(active&&on){setAvailable(false);setError(e instanceof Error?e.message:"No se pudo activar la disponibilidad.");}
-      }
-    };
-    const pulse=()=>void heartbeat(!document.hidden);
-    pulse();
-    document.addEventListener("visibilitychange",pulse);
-    const timer=setInterval(pulse,12000);
+        if(active){
+          setAvailable(false);
+          setError(e instanceof Error?e.message:"Se perdió la conexión con el chat. Volvé a ponerte en línea.");
+        }
+      }finally{refreshing=false;}
+    }
+    // Mantener la disponibilidad cuando el operador consulta otra pestaña.
+    // Los navegadores móviles pueden pausar temporalmente los intervalos.
+    const onFocus=()=>void renew();
+    const onVisibility=()=>{if(!document.hidden)void renew();};
+    const timer=setInterval(()=>void renew(),20000);
+    window.addEventListener("focus",onFocus);
+    document.addEventListener("visibilitychange",onVisibility);
     return()=>{
-      active=false;clearInterval(timer);document.removeEventListener("visibilitychange",pulse);
-      void heartbeat(false);
+      active=false;clearInterval(timer);
+      window.removeEventListener("focus",onFocus);
+      document.removeEventListener("visibilitychange",onVisibility);
+      // Si cerró el panel o eligió desconectarse, solicitar salida inmediata.
+      // En cierres bruscos, Hostinger vence la presencia automáticamente.
+      void updatePresence(false);
     };
   },[available]);
 
@@ -114,15 +150,15 @@ export default function ChatInbox(){
     </div>
     <div className="admin-card inbox-presence">
       <div><strong>{available?"Estás disponible para atender":"Actualmente estás fuera de línea"}</strong>
-        <p>{available?"Mantené esta sección abierta. Al cerrar o dejar la pestaña, el sistema te desconectará automáticamente.":"Activá la atención cuando puedas responder. Las cotizaciones y el bot siguen funcionando normalmente."}</p>
+        <p>{available?"Conexión confirmada con el servidor. Podés cambiar de sección o pestaña mientras el panel siga abierto.":"Activá la atención cuando puedas responder. Las cotizaciones y el bot siguen funcionando normalmente."}</p>
       </div>
       <button type="button" className={`button inbox-status-button ${available?"inbox-offline-button":""}`}
-        onClick={()=>{setError("");setAvailable(v=>!v);}}>
-        {available?<WifiOff size={17}/>:<Wifi size={17}/>}
-        {available?"Ponerme fuera de línea":"Ponerme en línea"}
+        disabled={presenceBusy} aria-busy={presenceBusy} onClick={()=>void changePresence()}>
+        {presenceBusy?<Loader2 size={17} className="spinning"/>:available?<WifiOff size={17}/>:<Wifi size={17}/>}
+        {presenceBusy?"Confirmando con Hostinger…":available?"Ponerme fuera de línea":"Ponerme en línea"}
       </button>
     </div>
-    {error&&<div className="admin-alert error" role="alert">{error}</div>}
+    {error&&<div className="admin-alert error" role="alert">{error} <a href="/api/chat/status" target="_blank" rel="noopener noreferrer">Comprobar conexión de chat</a></div>}
     <div className="inbox-layout">
       <section className="admin-card inbox-list" aria-label="Conversaciones recibidas">
         <div className="inbox-list-header"><strong>Conversaciones</strong><span>{openThreads} abiertas</span></div>
@@ -154,6 +190,6 @@ export default function ChatInbox(){
         </>}
       </section>
     </div>
-    <div className="admin-hint"><MessageCircle size={17}/><p>Los mensajes se guardan de forma privada en el servidor y se eliminan automáticamente de la lista cuando tienen más de 7 días al recibir nuevas conversaciones. No cierres esta sección si necesitás seguir atendiendo: tu disponibilidad caduca en aproximadamente 45 segundos. Para atención fuera de línea, los visitantes pueden usar WhatsApp.</p></div>
+    <div className="admin-hint"><MessageCircle size={17}/><p>Los mensajes se guardan de forma privada en el servidor y se eliminan automáticamente de la lista cuando tienen más de 7 días al recibir nuevas conversaciones. Podés cambiar de sección del panel o pestaña; mantené el panel abierto y el estado en línea activado. Si el navegador se cierra o suspende, la disponibilidad caduca aproximadamente en 2 minutos. Para atención fuera de línea, los visitantes pueden usar WhatsApp.</p></div>
   </>;
 }

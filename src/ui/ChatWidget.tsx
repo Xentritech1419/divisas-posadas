@@ -34,9 +34,9 @@ export default function ChatWidget({content,open,onOpenChange}:{content:SiteCont
       catch{if(active)setOnline(false);}
     }
     void status();
-    const poll=setInterval(()=>void status(),15000);
+    const poll=setInterval(()=>void status(),open?5000:15000);
     return()=>{active=false;clearInterval(poll);};
-  },[]);
+  },[open]);
 
   useEffect(()=>{
     if(!open||!human)return;
