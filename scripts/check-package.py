@@ -25,18 +25,24 @@ def main() -> int:
         css = b"\n".join(archive.read(p) for p in names if p.startswith("assets/") and p.endswith(".css"))
         php = archive.read("api/live-chat.php") if "api/live-chat.php" in names else b""
         info = archive.read("build-info.json") if "build-info.json" in names else b""
-        # El optimizador CSS puede ordenar las propiedades o combinar selectores.
-        # Mostrar la regla real para poder diagnosticar cualquier diferencia.
-        for fragment in [b".site .rates-grid .rate-card-top p", b".site .rates-grid .rate-actions button", b".site .rates-currency"]:
-            pos = css.rfind(fragment)
-            print("DEBUG CSS LAST", fragment.decode(), ":", repr(css[max(0,pos-45):pos+250]) if pos>=0 else "selector no encontrado")
+        # El optimizador de Vite combina selectores y reordena declaraciones.
+        # Verificamos las propiedades por regla en lugar de exigir bytes idénticos.
+        def compiled_rule(selector: bytes, properties: list[bytes]) -> bool:
+            for rule in css.split(b"}"):
+                if b"{" not in rule:
+                    continue
+                head, body = rule.rsplit(b"{", 1)
+                selectors = [s.strip() for s in head.rsplit(b"}",1)[-1].split(b",")]
+                if selector in selectors and all(prop in body for prop in properties):
+                    return True
+            return False
         checks = {
             "HTML principal": "index.html" in names,
             "API PHP del chat": bool(php),
             "cotización ₲ por $1 (tarjeta)": "por $ 1 ARS".encode() in js,
             "edición guaraníes por $1 (administración)": "Guaraníes por $ 1 ARS".encode() in js or "Compra · ₲ por $ 1".encode() in js,
-            "textos móviles agrandados (descripción)": b".site .rates-grid .rate-card-top p{font-size:12px}" in css,
-            "textos móviles agrandados (botones)": b".site .rates-grid .rate-actions button{font-size:14px;min-height:50px}" in css,
+            "textos móviles agrandados (descripción)": compiled_rule(b".site .rates-grid .rate-card-top p",[b"font-size:12px"]),
+            "textos móviles agrandados (botones)": compiled_rule(b".site .rates-grid .rate-actions button",[b"font-size:14px",b"min-height:50px"]),
             "chat confirma estado en Hostinger": b"Confirmando con Hostinger" in js,
             "chat renueva la presencia": b"CHAT_OPERATOR_TTL=120" in php,
             "versión identificable": b'"features"' in info,
