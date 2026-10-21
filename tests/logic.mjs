@@ -72,4 +72,17 @@ const assistantAvatar=readFileSync(new URL("../public/logo-asistente-divisas-pos
 assert.match(assistantAvatar,/<rect[^>]+fill="#FFFFFF"[^>]+stroke="#DCE8EE"/);
 assert.match(assistantAvatar,/<path fill="#18E5C1"/);
 assert.match(assistantAvatar,/<path fill="#2C3768"/);
+// La presencia del operador debe confirmarse en Hostinger. Ocultar la pestaña
+// no lo desconecta inmediatamente, y navegar por otras secciones no desmonta el chat.
+const inbox=readFileSync(new URL("../src/ui/ChatInbox.tsx",import.meta.url),"utf8");
+const admin=readFileSync(new URL("../src/ui/Admin.tsx",import.meta.url),"utf8");
+const widget=readFileSync(new URL("../src/ui/ChatWidget.tsx",import.meta.url),"utf8");
+assert(inbox.includes('const confirmed=await updatePresence(next)'));
+assert(inbox.includes('setAvailable(next);'));
+assert(inbox.includes('disabled={presenceBusy}'));
+assert(inbox.includes('presenceQueue.current=task.then'));
+assert(!inbox.includes("heartbeat(!document.hidden)"));
+assert(inbox.includes('if(!document.hidden)void renew()'));
+assert(admin.includes('<div hidden={tab!=="messages"}><ChatInbox/></div>'));
+assert(widget.includes('open?5000:15000'));
 console.log("Compra, venta, guaraní, pausa, vencimiento y asistente verificados.");
