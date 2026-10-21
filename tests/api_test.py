@@ -92,6 +92,9 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
         code, initial, _ = admin.request("/api/content")
         assert code == 200 and initial["revision"] == 0 and initial["content"]["demo"]
         assert len(initial["content"]["currencies"]) == 6
+        assert initial["content"]["currencies"][4]["id"] == "guarani"
+        assert initial["content"]["currencies"][4]["buy"] == 0.155
+        assert initial["content"]["currencies"][4]["sell"] == 0.170
         ids = [c["id"] for c in initial["content"]["currencies"]]
         assert "usdt" in ids and "paypal" not in ids
         assert initial["content"]["currencies"][-1]["active"] is False
@@ -203,6 +206,7 @@ with tempfile.TemporaryDirectory(prefix="divisas-php-test-") as temp:
         assert code == 200 and saved["revision"] == 1, (code, saved)
         assert admin.request("/api/content", "PUT", payload)[0] == 409
         assert visitor.request("/api/content")[1]["content"]["currencies"][4]["buy"] == 0.180
+        assert visitor.request("/api/content")[1]["content"]["currencies"][4]["sell"] == 0.170
         assert admin.request("/api/backup")[1]["revision"] == 1
         assert (work / "divisas-posadas-data/content-backup.json").is_file()
         accounts = json.loads((work / "divisas-posadas-data/admins.json").read_text())
