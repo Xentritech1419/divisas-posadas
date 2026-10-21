@@ -28,7 +28,7 @@ export type ContentState={content:SiteContent;revision:number;updatedAt:string|n
 export const defaultContent:SiteContent={
   demo:true,
   brand:{name:"Divisas Posadas",tagline:"Tu cambio, más cerca.",logoUrl:brandLogoUrl,primary:brandPalette.primary,dark:brandPalette.dark},
-  copy:{eyebrow:"DIVISAS EN POSADAS, MISIONES",heroTitle:"Tu próximo cambio,",heroAccent:"empieza acá.",heroDescription:"Dólares, euros, reales, guaraníes y saldo USDT. Consultá las cotizaciones, hacé tus cuentas y coordiná con nosotros.",ratesTitle:"Cada divisa. Todo claro.",ratesDescription:"Compará nuestros valores de compra y venta en pesos argentinos.",offersTitle:"Un buen cambio empieza con una oferta.",offersDescription:"Encontrá una propuesta para vos y consultá su disponibilidad.",howTitle:"Cambiar, así de simple.",contactTitle:"Hablemos de tu próximo cambio.",contactDescription:"¿Viajás, necesitás divisas o querés cambiar tu saldo USDT? Contanos qué necesitás y coordinamos los detalles.",disclaimer:"Las cotizaciones son orientativas y están sujetas a confirmación, disponibilidad y condiciones de la operación. El conversor no reserva una cotización ni realiza transferencias."},
+  copy:{eyebrow:"DIVISAS EN POSADAS, MISIONES",heroTitle:"Tu próximo cambio,",heroAccent:"empieza acá.",heroDescription:"Dólares, euros, reales, guaraníes y saldo USDT. Consultá las cotizaciones, hacé tus cuentas y coordiná con nosotros.",ratesTitle:"Cada divisa. Todo claro.",ratesDescription:"Compará nuestros valores de compra y venta: guaraníes por cada peso argentino y las demás divisas en pesos.",offersTitle:"Un buen cambio empieza con una oferta.",offersDescription:"Encontrá una propuesta para vos y consultá su disponibilidad.",howTitle:"Cambiar, así de simple.",contactTitle:"Hablemos de tu próximo cambio.",contactDescription:"¿Viajás, necesitás divisas o querés cambiar tu saldo USDT? Contanos qué necesitás y coordinamos los detalles.",disclaimer:"Las cotizaciones son orientativas y están sujetas a confirmación, disponibilidad y condiciones de la operación. El conversor no reserva una cotización ni realiza transferencias."},
   contact:{whatsapp:"5493764271559",location:"Posadas, Misiones",address:"",hours:"Consultá nuestros horarios de atención",email:""},
   currencies:[
     {id:"azul",name:"Dólar Azul",code:"USD",symbol:"US$",description:"Efectivo · Dólar Azul",buy:1200,sell:1240,color:"#3269C4",active:true},
@@ -64,6 +64,24 @@ export function convert(content:SiteContent,amount:number,from:ExchangeId,to:Exc
 }
 export function formatNumber(value:number,decimals=2){return new Intl.NumberFormat("es-AR",{minimumFractionDigits:decimals,maximumFractionDigits:decimals}).format(value);}
 export function rateNumber(value:number){return new Intl.NumberFormat("es-AR",{minimumFractionDigits:value<1?3:0,maximumFractionDigits:value<1?6:2}).format(value);}
+// Los datos guardados siguen siendo ARS por 1 PYG, para preservar las
+// cotizaciones, el conversor y las ofertas existentes.
+export function guaraniesPorPeso(arsPorGuarani:number){
+  if(!Number.isFinite(arsPorGuarani)||arsPorGuarani<=0)return 0;
+  const valor=1/arsPorGuarani;
+  return Number.isFinite(valor)?valor:0;
+}
+export function guaraniesPorPesoFormato(arsPorGuarani:number){
+  return new Intl.NumberFormat("es-AR",{minimumFractionDigits:2,maximumFractionDigits:2}).format(guaraniesPorPeso(arsPorGuarani));
+}
+// Solo para la carga en el panel: hasta dos decimales en guaraníes por peso.
+export function guaraniesPorPesoEditor(arsPorGuarani:number){
+  return Number(guaraniesPorPeso(arsPorGuarani).toFixed(2));
+}
+export function arsPorGuarani(guaraniesPorPesoIngresado:number){
+  if(!Number.isFinite(guaraniesPorPesoIngresado)||guaraniesPorPesoIngresado<=0)return 0;
+  return 1/guaraniesPorPesoIngresado;
+}
 export function activeOffers(content:SiteContent,now=Date.now()){return content.offers.filter(o=>o.active&&(!o.expiresAt||new Date(o.expiresAt).getTime()>now)&&getCurrency(content,o.from)?.active&&getCurrency(content,o.to)?.active);}
 export const operationWhatsapp="5493764271559";
 export function whatsappLink(content:SiteContent,message:string){const number=content.contact.whatsapp||operationWhatsapp;return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;}
@@ -76,7 +94,7 @@ export function botReply(content:SiteContent,message:string){
   if(/cotiza|precio|cuanto|valor|tasa/.test(q)){
     const selected=content.currencies.filter(c=>c.active&&(q.includes(normalize(c.name))||q.includes(c.id)||q.includes(normalize(c.code))));
     const cs=selected.length?selected:content.currencies.filter(c=>c.active);
-    return `${content.demo?"Valores de ejemplo; no son cotizaciones reales.\n\n":"Cotizaciones orientativas publicadas:\n\n"}${cs.map(c=>`${c.name}: compramos a $ ${rateNumber(c.buy)} · vendemos a $ ${rateNumber(c.sell)} ARS por 1 ${c.code}.`).join("\n")}\n\nConfirmá el valor final y la disponibilidad con nuestro equipo.`;
+    return `${content.demo?"Valores de ejemplo; no son cotizaciones reales.\n\n":"Cotizaciones orientativas publicadas:\n\n"}${cs.map(c=>c.id==="guarani"?`${c.name}: compramos a ₲ ${guaraniesPorPesoFormato(c.buy)} por $ 1 ARS · vendemos a ₲ ${guaraniesPorPesoFormato(c.sell)} por $ 1 ARS.`:`${c.name}: compramos a $ ${rateNumber(c.buy)} · vendemos a $ ${rateNumber(c.sell)} ARS por 1 ${c.code}.`).join("\n")}\n\nConfirmá el valor final y la disponibilidad con nuestro equipo.`;
   }
   if(/oferta|promocion/.test(q)){const offers=activeOffers(content);return offers.length?`${content.demo?"Ofertas de ejemplo:\n\n":"Ofertas publicadas:\n\n"}${offers.map(o=>`${o.title}: entregás ${formatNumber(o.amount)} ${getCurrency(content,o.from).code} y recibís ${formatNumber(o.receive)} ${getCurrency(content,o.to).code}.`).join("\n")}\n\nConsultá disponibilidad y condiciones.`:"Por el momento no hay ofertas activas. Podés consultar una propuesta con nuestro equipo.";}
   const matches=content.faqs.map(f=>({f,score:f.keywords.split(",").map(k=>normalize(k.trim())).filter(k=>k&&q.includes(k)).length})).sort((a,b)=>b.score-a.score);

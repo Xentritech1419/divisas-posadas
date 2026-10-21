@@ -135,3 +135,16 @@ Si perdés la contraseña, primero pedile a otro administrador activo que cree u
 - https://www.hostinger.com/support/1583289-how-to-manually-transfer-a-website-to-hostinger/
 - https://www.hostinger.com/support/1583214-how-to-add-a-website-in-hostinger/
 - https://www.hostinger.com/support/4548688-basic-actions-in-the-file-manager-in-hostinger/
+
+### Visualización de guaraníes por peso
+
+El sitio muestra el guaraní en cantidad de PYG equivalente a un peso argentino (ARS).
+Las demás monedas se muestran en ARS por unidad.
+
+En el panel de Cotizaciones, los campos de compra y venta de guaraníes
+reciben directamente el número de guaraníes por 1 ARS, por ejemplo 6.45 y 5.88.
+Usá punto decimal al ingresar los valores en el navegador.
+
+Los datos existentes se conservan: internamente las cotizaciones continúan
+almacenadas en ARS por PYG. La conversión visual no modifica los valores
+persistidos hasta que el administrador los edite y guarde.
