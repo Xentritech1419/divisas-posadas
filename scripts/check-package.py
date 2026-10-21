@@ -6,6 +6,8 @@ tipografía móvil y el chat híbrido.
 from pathlib import Path
 from zipfile import ZipFile
 import argparse
+import hashlib
+import json
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -36,6 +38,20 @@ def main() -> int:
                 if selector in selectors and all(prop in body for prop in properties):
                     return True
             return False
+        source_files = [
+            "src/lib/content.ts", "src/ui/Landing.tsx", "src/ui/Admin.tsx",
+            "src/ui/ChatInbox.tsx", "src/ui/ChatWidget.tsx", "src/styles.css",
+            "server/api/live-chat.php"
+        ]
+        digest = hashlib.sha256()
+        for filename in source_files:
+            digest.update(filename.encode("utf-8"))
+            digest.update((ROOT / filename).read_bytes())
+        try:
+            build_meta = json.loads(info)
+        except (ValueError, UnicodeDecodeError):
+            build_meta = {}
+        fresh = build_meta.get("buildId") == digest.hexdigest()[:16]
         checks = {
             "HTML principal": "index.html" in names,
             "API PHP del chat": bool(php),
@@ -46,10 +62,12 @@ def main() -> int:
             "chat confirma estado en Hostinger": b"Confirmando con Hostinger" in js,
             "chat renueva la presencia": b"CHAT_OPERATOR_TTL=120" in php,
             "versión identificable": b'"features"' in info,
+            "ZIP compilado desde el último código fuente": fresh,
         }
         for name, ok in checks.items():
             print(("OK" if ok else "FALTA") + ": " + name)
         print(f"ZIP: {ZIP.stat().st_size:,} bytes, {len(names)} archivos")
+        print("Identificador de versión:", build_meta.get("buildId", "no disponible"))
         missing = [name for name, ok in checks.items() if not ok]
         if missing and not args.report_only:
             print("ERROR: este ZIP NO incluye todas las mejoras solicitadas.", file=sys.stderr)
