@@ -53,10 +53,12 @@ sobre cotizaciones y horarios. Además:
    automáticamente sin que el visitante confirme.
 4. Los operadores pueden **Finalizar** conversaciones desde el panel.
    Todos los administradores con sesión válida pueden atender conversaciones.
-5. El estado online se renueva aproximadamente cada 12 segundos; si el
-   operador cierra el navegador, cambia de sección o deja la pestaña oculta,
-   su disponibilidad desaparece como máximo aproximadamente 45 segundos
-   después de su último latido.
+5. El estado en línea se confirma primero desde el servidor. Una vez activado,
+   el operador puede cambiar de sección del panel o abrir otra pestaña
+   mientras su panel permanezca abierto. El estado se renueva cada 20 segundos.
+   Si cierra el navegador, deja de tener conexión o el teléfono suspende el
+   navegador, la disponibilidad caduca en unos 2 minutos. Puede desactivarla
+   inmediatamente presionando **Ponerme fuera de línea**.
 
 **Privacidad y funcionamiento:** las conversaciones en vivo se guardan en
 `divisas-posadas-data/live-chat.json` y la disponibilidad en
@@ -135,6 +137,25 @@ Si perdés la contraseña, primero pedile a otro administrador activo que cree u
 - https://www.hostinger.com/support/1583289-how-to-manually-transfer-a-website-to-hostinger/
 - https://www.hostinger.com/support/1583214-how-to-add-a-website-in-hostinger/
 - https://www.hostinger.com/support/4548688-basic-actions-in-the-file-manager-in-hostinger/
+
+
+#### Si el chat no aparece en línea
+
+1. Verificá que hayas extraído **todo** el último paquete en `public_html`,
+   incluida la carpeta `api`. El paquete no instala el código automáticamente.
+2. Abrí `https://TU_DOMINIO/api/chat/status`. Debe mostrar un JSON parecido
+   a `{"online":false}`. Si aparece una página HTML, un error 404 o una
+   redirección, revisá la publicación del backend PHP y las reglas de
+   `.htaccess`.
+3. Entrá a `/admin → Mensajes`, presioná **Ponerme en línea** y esperá el
+   mensaje **Conexión confirmada con el servidor**. Si falla, vas a ver el
+   error de la API en la misma sección.
+4. Volvé a abrir `/api/chat/status` en otra pestaña: tiene que mostrar
+   `{"online":true}`. En la web pública, al abrir el chat se vuelve a
+   consultar la disponibilidad inmediatamente.
+5. No elimines `config.local.php` ni la carpeta privada
+   `divisas-posadas-data`. Hostinger necesita permiso de escritura sobre esa
+   carpeta para guardar `chat-presence.json` y las conversaciones.
 
 ### Visualización de guaraníes por peso
 
