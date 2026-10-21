@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { defaultContent, convert, activeOffers, contentSchema, botReply } from "../src/lib/content.ts";
+import { defaultContent, convert, activeOffers, contentSchema, botReply, guaraniesPorPeso, guaraniesPorPesoFormato, guaraniesPorPesoEditor, arsPorGuarani } from "../src/lib/content.ts";
 assert(contentSchema.safeParse(defaultContent).success);
 assert(defaultContent.currencies.some(c=>c.id==="usdt" && c.active===false));
 assert(!defaultContent.currencies.some(c=>c.id==="paypal"));
@@ -18,9 +18,34 @@ const paused = structuredClone(defaultContent); paused.currencies[0].active = fa
 assert.equal(convert(paused, 100, "azul", "ars"), 0);
 const expired = structuredClone(defaultContent); expired.offers[0].expiresAt = "2000-01-01T00:00:00Z";
 assert.equal(activeOffers(expired).length, 1);
-assert.match(botReply(defaultContent, "cotización guaraní"), /0,155/);
+assert.equal(guaraniesPorPeso(0.155),1/0.155);
+assert.equal(guaraniesPorPesoFormato(0.155),"6,45");
+assert.equal(guaraniesPorPesoFormato(0.170),"5,88");
+assert.equal(guaraniesPorPesoEditor(0.155),6.45);
+assert.equal(guaraniesPorPesoEditor(0.170),5.88);
+assert.equal(arsPorGuarani(0),0);
+assert.equal(guaraniesPorPeso(0),0);
+assert.equal(guaraniesPorPeso(Number.POSITIVE_INFINITY),0);
+assert(Math.abs(arsPorGuarani(6.45)-(1/6.45))<1e-12);
+const personalized=structuredClone(defaultContent);
+personalized.currencies.find(c=>c.id==="guarani").buy=arsPorGuarani(6.45);
+personalized.currencies.find(c=>c.id==="guarani").sell=arsPorGuarani(5.88);
+assert(contentSchema.safeParse(personalized).success);
+assert(Math.abs(convert(personalized,6.45,"guarani","ars")-1)<1e-10);
+assert(Math.abs(convert(personalized,1,"ars","guarani")-5.88)<1e-10);
+assert.match(botReply(defaultContent,"cotización guaraní"),/₲ 6,45 por \$ 1 ARS/);
+assert.match(botReply(defaultContent,"cotización guaraní"),/₲ 5,88 por \$ 1 ARS/);
+assert.match(botReply(defaultContent,"precio dólar azul"),/1200/);
 assert.match(botReply(defaultContent, "cotización guaraní"), /ejemplo/);
 assert.equal(convert(defaultContent, Infinity, "azul", "ars"), 0);
+// La cotización PYG/ARS debe aparecer tanto en la web como en el panel.
+const landingSource=readFileSync(new URL("../src/ui/Landing.tsx",import.meta.url),"utf8");
+const adminSource=readFileSync(new URL("../src/ui/Admin.tsx",import.meta.url),"utf8");
+assert(landingSource.includes("x.id===\"guarani\"?guaraniesPorPesoFormato(x.buy)"));
+assert(landingSource.includes("x.id===\"guarani\"?guaraniesPorPesoFormato(x.sell)"));
+assert(landingSource.includes('className="guarani-unit"'));
+assert(adminSource.includes('guaraniesPorPesoEditor(cur.buy)'));
+assert(adminSource.includes('arsPorGuarani(Number(v))'));
 // Evita regresar accidentalmente a dos columnas en celulares.
 const css=readFileSync(new URL("../src/styles.css",import.meta.url),"utf8");
 assert.match(css,/\.rates-grid\{display:grid;grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
