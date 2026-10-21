@@ -35,7 +35,7 @@ assert(Math.abs(convert(personalized,6.45,"guarani","ars")-1)<1e-10);
 assert(Math.abs(convert(personalized,1,"ars","guarani")-5.88)<1e-10);
 assert.match(botReply(defaultContent,"cotización guaraní"),/₲ 6,45 por \$ 1 ARS/);
 assert.match(botReply(defaultContent,"cotización guaraní"),/₲ 5,88 por \$ 1 ARS/);
-assert.match(botReply(defaultContent,"precio dólar azul"),/1200/);
+assert.match(botReply(defaultContent,"precio dólar azul"),/1[.]200/);
 assert.match(botReply(defaultContent, "cotización guaraní"), /ejemplo/);
 assert.equal(convert(defaultContent, Infinity, "azul", "ars"), 0);
 // La cotización PYG/ARS debe aparecer tanto en la web como en el panel.
