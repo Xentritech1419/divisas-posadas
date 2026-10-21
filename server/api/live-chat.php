@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 // Chat híbrido: los mensajes y el estado de los operadores viven fuera de public_html.
 // Un visitante solamente puede leer su conversación con un token aleatorio de 256 bits.
-const CHAT_OPERATOR_TTL=45;
+const CHAT_OPERATOR_TTL=120;
 const CHAT_RETENTION=604800; // 7 días
 const CHAT_MAX_THREADS=120;
 const CHAT_MAX_MESSAGES=100;
