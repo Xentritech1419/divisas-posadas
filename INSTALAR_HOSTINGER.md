@@ -169,3 +169,33 @@ Usá punto decimal al ingresar los valores en el navegador.
 Los datos existentes se conservan: internamente las cotizaciones continúan
 almacenadas en ARS por PYG. La conversión visual no modifica los valores
 persistidos hasta que el administrador los edite y guarde.
+
+
+### Verificar que Hostinger usa la última versión del ZIP
+
+Si después de actualizar no ves **guaraníes por $1 ARS** o los
+**textos agrandados**, no alcanza con comprobar que GitHub tenga el código:
+hay que comprobar que **la web publicada** use el ZIP compilado vigente.
+
+1. Descargá `deploy/divisas-posadas-hostinger.zip` desde la rama principal
+   `main` después de que termine la verificación automática de GitHub.
+2. En Hostinger hacé copia de seguridad de `public_html` y de la carpeta
+   privada `divisas-posadas-data`. Extraé **todo el contenido interno** del
+   ZIP en `public_html` (que `index.html`, `assets/` y `api/` queden en
+   esa carpeta, no dentro de otra `public_html` anidada).
+3. Reemplazá los archivos anteriores cuando el administrador de archivos lo
+   pregunte, incluidos los de `assets/` y `api/`. **No borres** tu
+   `config.local.php` ni `divisas-posadas-data`.
+4. Abrí `https://TU-DOMINIO/build-info.json`. Si devuelve un archivo JSON
+   que contiene `buildId` y estas tres funciones:
+   `guaranies-por-peso`, `textos-movil-ampliados` y
+   `chat-en-vivo-confirmado`, la versión nueva está instalada. Si da
+   404 o abre el HTML de la portada, revisá dónde extrajiste el ZIP.
+5. Volvé a abrir el sitio en una pestaña de incógnito o vaciá la caché.
+   Comprá el resultado de **Guaraní** con **₲ por $1 ARS** y los botones
+   más legibles en celulares. Revisá además `/admin → Cotizaciones`.
+
+La verificación automática del repositorio ahora inspecciona **el ZIP real**
+y contrasta su identificador `buildId` con el código fuente. Si el paquete
+queda desactualizado o pierde estas mejoras, la compilación se marca como
+fallida y no se publica el ZIP como válido.
