@@ -52,6 +52,18 @@ assert.match(css,/\.rates-grid\{display:grid;grid-template-columns:repeat\(3,min
 assert.match(css,/@media\(max-width:900px\)\{[\s\S]*?\.rates-grid\{grid-template-columns:repeat\(2,minmax\(0,1fr\)\)\}/);
 assert.match(css,/@media \(max-width:700px\)\{\s*\.rates-grid\{\s*grid-template-columns:minmax\(0,1fr\)/);
 assert.match(css,/\.rates-grid \.rate-actions button\{[\s\S]*?min-height:48px;/);
+// Los textos menores (entre 8 y 10px en la versión original) deben ser
+// legibles en celulares sin convertir la grilla nuevamente en dos columnas.
+assert.match(css,/\/\* Legibilidad: microtextos más cómodos/);
+assert.match(css,/\.site \.rates-grid \.rate-card-top p\{font-size:11px;/);
+assert.match(css,/\.site \.rates-grid \.rate-values span\{font-size:11px;/);
+assert.match(css,/\.site \.rates-currency\{font-size:12px;/);
+assert.match(css,/@media\(max-width:700px\)\{[\s\S]*?\.site \.rates-grid \.rate-card-top p\{font-size:12px\}/);
+assert.match(css,/\.site \.rates-grid \.rate-values span\{font-size:12px\}/);
+assert.match(css,/\.site \.rates-grid \.rate-actions button\{font-size:14px;min-height:50px\}/);
+assert.match(css,/\.site \.converter-field label\{font-size:13px\}/);
+assert.match(css,/\.site \.chat-form input\{font-size:14px\}/);
+
 // El avatar del chat debe ser el ícono con fondo blanco, no la flecha
 // transparente que pierde contraste sobre la cabecera azul oscuro.
 const brandComponent=readFileSync(new URL("../src/ui/Brand.tsx",import.meta.url),"utf8");
