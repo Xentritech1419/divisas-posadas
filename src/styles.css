@@ -263,3 +263,55 @@ button.chat-human{width:100%;background:#f2fcf9;border:none;cursor:pointer}
 /* Guaraníes expresados por cada peso argentino (no ARS por cada PYG). */
 .rate-values .guarani-unit{display:block;margin-top:5px;font-size:10px;font-weight:500;letter-spacing:0;line-height:1.35;color:#718395;white-space:nowrap}
 @media(max-width:700px){.rates-currency{max-width:100%;line-height:1.5}}
+
+/* Legibilidad: microtextos más cómodos sin alterar la disposición de tarjetas
+   ni aumentar el ancho de los importes de compra y venta. */
+.site .section-heading p,
+.site .how-title p,
+.site .faq-section>div>p{font-size:14px;line-height:1.75}
+.site .rate-card-top h3{font-size:18px}
+.site .rates-grid .rate-card-top p{font-size:11px;line-height:1.5;color:#647486}
+.site .rates-grid .currency-code{font-size:10px}
+.site .rates-grid .rate-values span{font-size:11px;color:#687a87}
+.site .rates-grid .rate-actions button{font-size:11px;line-height:1.35;white-space:normal;text-align:center}
+.site .rates-currency{font-size:12px;line-height:1.55;color:#647486}
+.site .filter-tabs button{font-size:12px;line-height:1.35;min-height:39px}
+.site .rates-note{font-size:12px;line-height:1.7;color:#687988}
+.site .rate-values .guarani-unit{font-size:11px}
+.site .offer-description{font-size:12px;line-height:1.65}
+.site .offer-money small{font-size:12px}
+.site .offer-top>span{font-size:10px;line-height:1.35}
+.site .converter-field label{font-size:12px}
+.site .currency-select select{font-size:12px}
+.site .conversion-rate{font-size:12px}
+.site .converter-note{font-size:11px;line-height:1.6}
+.site .hero-footnote{font-size:11px;flex-wrap:wrap;line-height:1.5}
+.site .footer-bottom{font-size:11px}
+.site .chat-head span{font-size:11px}
+.site .message{font-size:13px;line-height:1.65}
+.site .chat-quick button{font-size:11px}
+.site .chat-human{font-size:12px}
+.site .chat-form input{font-size:13px}
+.site .live-chat-privacy{font-size:11px}
+.admin-app .editor-currency small{font-size:10px}
+.admin-app .admin-intro p{font-size:13px}
+.admin-app .admin-hint p{font-size:12px}
+.admin-app .admin-field{font-size:12px}
+
+@media(max-width:700px){
+  .site .hero-description{font-size:15px;line-height:1.75}
+  .site .section-heading p{font-size:14px}
+  .site .rates-grid .rate-card-top h3{font-size:19px}
+  .site .rates-grid .rate-card-top p{font-size:12px}
+  .site .rates-grid .rate-values span{font-size:12px}
+  .site .rates-grid .rate-actions button{font-size:14px;min-height:50px}
+  .site .rates-currency{font-size:11px}
+  .site .filter-tabs button{font-size:12px;padding:9px 5px;white-space:normal}
+  .site .rates-note{font-size:12px}
+  .site .converter-field label{font-size:13px}
+  .site .conversion-rate{font-size:12px}
+  .site .converter-note{font-size:12px}
+  .site .footer-bottom{font-size:11px}
+  .site .message{font-size:13px}
+  .site .chat-form input{font-size:14px}
+}
