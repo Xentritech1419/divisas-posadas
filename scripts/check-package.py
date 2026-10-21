@@ -27,9 +27,9 @@ def main() -> int:
         info = archive.read("build-info.json") if "build-info.json" in names else b""
         # El optimizador CSS puede ordenar las propiedades o combinar selectores.
         # Mostrar la regla real para poder diagnosticar cualquier diferencia.
-        for fragment in [b".rates-grid .rate-card-top p", b".rates-grid .rate-actions button"]:
-            pos = css.find(fragment)
-            print("DEBUG CSS", fragment.decode(), ":", repr(css[max(0,pos-60):pos+250]) if pos>=0 else "selector no encontrado")
+        for fragment in [b".site .rates-grid .rate-card-top p", b".site .rates-grid .rate-actions button", b".site .rates-currency"]:
+            pos = css.rfind(fragment)
+            print("DEBUG CSS LAST", fragment.decode(), ":", repr(css[max(0,pos-45):pos+250]) if pos>=0 else "selector no encontrado")
         checks = {
             "HTML principal": "index.html" in names,
             "API PHP del chat": bool(php),
