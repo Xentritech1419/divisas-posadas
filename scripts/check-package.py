@@ -25,6 +25,11 @@ def main() -> int:
         css = b"\n".join(archive.read(p) for p in names if p.startswith("assets/") and p.endswith(".css"))
         php = archive.read("api/live-chat.php") if "api/live-chat.php" in names else b""
         info = archive.read("build-info.json") if "build-info.json" in names else b""
+        # El optimizador CSS puede ordenar las propiedades o combinar selectores.
+        # Mostrar la regla real para poder diagnosticar cualquier diferencia.
+        for fragment in [b".rates-grid .rate-card-top p", b".rates-grid .rate-actions button"]:
+            pos = css.find(fragment)
+            print("DEBUG CSS", fragment.decode(), ":", repr(css[max(0,pos-60):pos+250]) if pos>=0 else "selector no encontrado")
         checks = {
             "HTML principal": "index.html" in names,
             "API PHP del chat": bool(php),
