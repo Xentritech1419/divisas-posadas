@@ -192,7 +192,7 @@ hay que comprobar que **la web publicada** use el ZIP compilado vigente.
    `chat-en-vivo-confirmado`, la versión nueva está instalada. Si da
    404 o abre el HTML de la portada, revisá dónde extrajiste el ZIP.
 5. Volvé a abrir el sitio en una pestaña de incógnito o vaciá la caché.
-   Comprá el resultado de **Guaraní** con **₲ por $1 ARS** y los botones
+   Compará el resultado de **Guaraní** con **₲ por $1 ARS** y los botones
    más legibles en celulares. Revisá además `/admin → Cotizaciones`.
 
 La verificación automática del repositorio ahora inspecciona **el ZIP real**
