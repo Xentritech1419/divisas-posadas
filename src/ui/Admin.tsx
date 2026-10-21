@@ -12,7 +12,7 @@ const copyLabels:Record<keyof SiteContent["copy"],string>={eyebrow:"Etiqueta sob
 function Field({label,value,onChange,type="text",hint,wide=false}:{label:string;value:string|number;onChange:(v:string)=>void;type?:string;hint?:string;wide?:boolean}){
   const numeric=type==="number"; const [raw,setRaw]=useState(String(value));
   useEffect(()=>{if(!numeric)setRaw(String(value));},[value,numeric]);
-  function commitNumber(){if(!numeric)return;const next=raw.trim();if(next===""){setRaw(String(value));return;}const number=Number(next);if(Number.isFinite(number)){onChange(String(number));setRaw(String(number));}else setRaw(String(value));}
+  function commitNumber(){if(!numeric)return;const next=raw.trim();if(next===""){setRaw(String(value));return;}const number=Number(next);if(Number.isFinite(number)){if(number!==Number(value))onChange(String(number));setRaw(String(number));}else setRaw(String(value));}
   return <label className={`admin-field ${wide?"wide":""}`}><span>{label}</span>{type==="textarea"?<textarea value={value} onChange={e=>onChange(e.target.value)} rows={3}/>:<input type={type} value={numeric?raw:value} onChange={e=>numeric?setRaw(e.target.value):onChange(e.target.value)} onBlur={commitNumber} step={numeric?"any":undefined}/>} {hint&&<small>{hint}</small>}</label>;
 }
 function Toggle({checked,onChange,label}:{checked:boolean;onChange:(v:boolean)=>void;label:string}){return <label className="toggle-field"><input type="checkbox" checked={checked} onChange={e=>onChange(e.target.checked)}/><span className="toggle-track"/><span>{label}</span></label>;}
