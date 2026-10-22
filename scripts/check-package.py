@@ -41,7 +41,7 @@ def main() -> int:
         source_files = [
             "src/lib/content.ts", "src/ui/Landing.tsx", "src/ui/Admin.tsx",
             "src/ui/ChatInbox.tsx", "src/ui/ChatWidget.tsx", "src/ui/OffersShowcase.tsx", "src/styles.css",
-            "server/api/live-chat.php"
+            "server/api/live-chat.php", "public/icons/elegi-tu-divisa.svg"
         ]
         digest = hashlib.sha256()
         for filename in source_files:
@@ -130,6 +130,14 @@ def main() -> int:
             "pasos responsivos de una columna en celular": (
                 b"@media (width<=700px)" in css
                 and compiled_rule(b".site .how-section .steps",[b"grid-template-columns:1fr"])
+            ),
+            "ícono de divisas en líneas azules y fondo transparente": (
+                "icons/elegi-tu-divisa.svg" in names
+                and b"icono-lineal-elegi-divisa" in info
+                and b'fill="none"' in archive.read("icons/elegi-tu-divisa.svg")
+                and b'stroke="#22599B"' in archive.read("icons/elegi-tu-divisa.svg")
+                and b"/icons/elegi-tu-divisa.svg" in js
+                and compiled_rule(b".site .how-step-symbol .how-step-custom-icon",[b"width:37px",b"height:37px"])
             ),
             "ZIP compilado desde el último código fuente": fresh,
         }
