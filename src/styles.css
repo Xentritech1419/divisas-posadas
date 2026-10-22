@@ -823,3 +823,315 @@ button.chat-human{width:100%;background:#f2fcf9;border:none;cursor:pointer}
   .site-header .header-contact{width:40px;min-width:40px;min-height:40px}
   .site-header .mobile-menu{width:30px;min-width:30px}
 }
+
+
+/* Nueva experiencia gráfica: tres pasos con íconos y recorrido conectado. */
+.site .how-section{
+  grid-template-columns:minmax(230px,.82fr) minmax(0,2.1fr);
+  align-items:center;
+  gap:clamp(26px,4vw,62px);
+  padding-block:80px 86px;
+  border-bottom:none;
+}
+.site .how-title h2{
+  max-width:340px;
+  font-size:clamp(28px,2.8vw,38px);
+  line-height:1.18;
+  letter-spacing:-1px;
+  margin-top:18px;
+}
+.site .how-title>p{
+  font-size:15px;
+  line-height:1.7;
+  color:#50667e;
+  margin-top:13px;
+}
+.site .how-caption{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  max-width:315px;
+  margin-top:25px;
+  color:#0a726a;
+  font-size:12px;
+  font-weight:700;
+  line-height:1.6;
+}
+.site .how-caption svg{flex:none}
+.site .how-section .steps{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:16px;
+  padding-top:0;
+}
+.site .how-section .how-step{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  min-height:284px;
+  background:#fff;
+  border:1px solid #dce8f2;
+  border-radius:21px;
+  padding:19px 18px 24px;
+  box-shadow:0 12px 30px rgba(27,52,94,.075),0 2px 5px rgba(27,52,94,.04);
+}
+.site .how-step-visual{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:120px;
+  border-radius:16px;
+  background:linear-gradient(140deg,#ecf6ff,#e6fcf5);
+  margin-bottom:21px;
+  overflow:hidden;
+}
+.site .how-step-visual:after{
+  content:"";
+  position:absolute;
+  width:108px;
+  height:108px;
+  border:1px solid rgba(18,156,157,.16);
+  border-radius:50%;
+}
+.site .how-step-number{
+  position:absolute;
+  z-index:1;
+  top:10px;
+  left:11px;
+  display:inline-flex;
+  min-width:37px;
+  height:31px;
+  align-items:center;
+  justify-content:center;
+  border-radius:10px;
+  background:#fff;
+  border:1px solid #cce8df;
+  color:#0b766b;
+  font-size:13px;
+  font-weight:850;
+  letter-spacing:.6px;
+}
+.site .how-step-symbol{
+  z-index:1;
+  display:grid;
+  place-items:center;
+  width:72px;
+  height:72px;
+  border-radius:23px;
+  background:linear-gradient(140deg,#d0f9ee,#b7d9ff);
+  color:#18518c;
+  border:1px solid #b5e5e7;
+  box-shadow:0 9px 17px rgba(35,80,126,.13);
+}
+.site .how-step-2 .how-step-visual{background:linear-gradient(140deg,#eff2ff,#e5f5ff)}
+.site .how-step-2 .how-step-symbol{background:linear-gradient(140deg,#d3e2ff,#e8e2ff);color:#344ba2;border-color:#c7d4fa}
+.site .how-step-3 .how-step-visual{background:linear-gradient(140deg,#effdf5,#e8f7ff)}
+.site .how-step-3 .how-step-symbol{background:linear-gradient(140deg,#ccf7de,#aeeed4);color:#087d65;border-color:#a9e3c3}
+.site .how-step-body{flex:1}
+.site .how-section .steps h3{
+  font-size:17px;
+  font-weight:850;
+  line-height:1.3;
+  letter-spacing:-.45px;
+  color:#2c3768;
+  margin-bottom:11px;
+}
+.site .how-section .steps p{
+  font-size:13px;
+  line-height:1.75;
+  color:#52687b;
+}
+.site .how-step-arrow{
+  position:absolute;
+  z-index:3;
+  right:-23px;
+  top:80px;
+  color:#176e87;
+  background:#f1fffb;
+  border:1px solid #b8e7df;
+  border-radius:50%;
+  padding:6px;
+  width:34px;
+  height:34px;
+  box-shadow:0 3px 10px rgba(36,69,111,.08);
+}
+
+/* Preguntas frecuentes: heredan el fondo azul del bloque de contacto eliminado. */
+.site .faq-section{
+  display:block;
+  padding-block:0 79px;
+}
+.site .faq-panel{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  display:grid;
+  grid-template-columns:minmax(255px,.83fr) minmax(0,1.35fr);
+  gap:clamp(28px,4.6vw,77px);
+  align-items:start;
+  border-radius:23px;
+  padding:clamp(30px,4.4vw,59px);
+  color:#fff;
+  background:linear-gradient(120deg,#303e76 0%,#26345e 55%,#1f2c54 100%);
+  box-shadow:0 18px 48px rgba(27,43,84,.15);
+}
+.site .faq-panel-decor{
+  position:absolute;
+  z-index:-1;
+  right:-82px;
+  bottom:-143px;
+  color:rgba(142,192,240,.065);
+  transform:rotate(-26deg);
+  pointer-events:none;
+}
+.site .faq-panel-decor svg{height:440px;width:440px;stroke-width:.65}
+.site .faq-intro{position:relative;z-index:1}
+.site .faq-intro .eyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:1.3px;
+  color:#87fbe7;
+}
+.site .faq-intro h2{
+  font-size:clamp(30px,3.25vw,40px);
+  line-height:1.16;
+  margin-top:21px;
+  font-weight:850;
+  letter-spacing:-1.1px;
+  color:#fff;
+}
+.site .faq-intro>p{
+  margin-top:16px;
+  max-width:370px;
+  font-size:15px;
+  line-height:1.75;
+  color:#d4e2f5;
+}
+.site .faq-cta{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  max-width:100%;
+  margin-top:29px;
+  min-height:50px;
+  border:none;
+  border-radius:12px;
+  padding:12px 19px;
+  background:#18e5c1;
+  color:#203660;
+  box-shadow:0 8px 24px rgba(24,229,193,.18);
+  font-size:14px;
+  font-weight:850;
+  line-height:1.35;
+  text-align:center;
+  transition:transform .2s ease,background .2s ease;
+}
+.site .faq-cta svg{flex:none}
+.site .faq-cta:hover{background:#67f3dc;transform:translateY(-2px)}
+.site .faq-cta:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.site .faq-panel .faq-list{
+  padding-top:0;
+  position:relative;
+  z-index:1;
+  min-width:0;
+}
+.site .faq-panel .faq-list details{
+  border-bottom:1px solid rgba(205,225,250,.25);
+}
+.site .faq-panel .faq-list details:first-child{
+  border-top:1px solid rgba(205,225,250,.25);
+}
+.site .faq-panel .faq-list summary{
+  padding:19px 0;
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  align-items:center;
+  color:#f5f9ff;
+  font-size:14px;
+  font-weight:750;
+  line-height:1.5;
+  cursor:pointer;
+}
+.site .faq-panel .faq-list summary:hover{color:#8cfbea}
+.site .faq-panel .faq-indicator{
+  width:32px;
+  height:32px;
+  border:1px solid rgba(165,231,223,.37);
+  border-radius:50%;
+  background:rgba(169,237,230,.10);
+  color:#80ffe5;
+  flex:none;
+  display:grid;
+  place-items:center;
+}
+.site .faq-panel .faq-indicator svg{margin:0;color:inherit}
+.site .faq-panel .faq-list details[open] .faq-indicator{background:#18e5c1;color:#1c365b;border-color:#18e5c1}
+.site .faq-panel .faq-list details p{
+  font-size:13px;
+  line-height:1.85;
+  color:#dbe8f7;
+  padding:0 46px 22px 0;
+}
+.site .faq-panel .faq-list summary:focus-visible{outline:2px solid #99f8eb;outline-offset:4px;border-radius:4px}
+@media(max-width:1060px){
+  .site .how-section{grid-template-columns:1fr;gap:25px;padding-block:62px}
+  .site .how-title h2{max-width:none}
+  .site .how-caption{margin-top:15px}
+  .site .faq-panel{grid-template-columns:minmax(225px,.8fr) minmax(0,1.25fr);gap:28px}
+}
+@media(max-width:760px){
+  .site .faq-panel{grid-template-columns:1fr;gap:28px;padding:32px 26px}
+  .site .faq-section{padding-bottom:54px}
+  .site .faq-intro h2{margin-top:15px}
+  .site .faq-intro .faq-cta{margin-top:19px}
+}
+@media(max-width:700px){
+  .site .how-section{padding-block:49px 56px}
+  .site .how-title h2{font-size:30px}
+  .site .how-section .steps{grid-template-columns:1fr;gap:19px}
+  .site .how-section .how-step{
+    min-height:0;
+    flex-direction:row;
+    align-items:center;
+    gap:18px;
+    padding:16px;
+    border-radius:17px;
+  }
+  .site .how-step-visual{flex:0 0 112px;height:112px;margin:0}
+  .site .how-step-symbol{width:60px;height:60px;border-radius:18px}
+  .site .how-step-symbol svg{width:29px;height:29px}
+  .site .how-section .steps h3{font-size:16px;margin-bottom:6px}
+  .site .how-section .steps p{font-size:13px}
+  .site .how-step-arrow{
+    right:auto;
+    left:50%;
+    top:auto;
+    bottom:-26px;
+    transform:translateX(-50%) rotate(90deg);
+    width:31px;height:31px;
+  }
+  .site .faq-panel{border-radius:18px;padding:29px 23px}
+  .site .faq-intro h2{font-size:30px}
+  .site .faq-intro>p{font-size:14px}
+  .site .faq-panel .faq-list summary{font-size:14px}
+  .site .faq-panel .faq-list details p{font-size:13px}
+}
+@media(max-width:410px){
+  .site .how-section .how-step{gap:13px;padding:13px}
+  .site .how-step-visual{flex-basis:94px;height:105px}
+  .site .how-step-symbol{width:54px;height:54px}
+  .site .how-section .steps p{font-size:12px}
+  .site .faq-panel{padding:25px 18px}
+  .site .faq-cta{width:100%}
+}
+@media(prefers-reduced-motion:reduce){
+  .site .faq-cta{transition:none}
+  .site .faq-cta:hover{transform:none}
+}
