@@ -106,7 +106,7 @@ def main() -> int:
                 and compiled_rule(b".site-header .brand-wordmark small",[b"font-size:12px"])
             ),
             "cabecera móvil adaptable con chat accesible": (
-                b"Abrir atención por chat" in js
+                "Abrir atención por chat".encode() in js
                 and compiled_rule(b".site-header .nav-links.is-open",[b"top:86px"])
                 and compiled_rule(b".site-header .header-contact",[b"width:44px"])
             ),
