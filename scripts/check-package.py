@@ -78,6 +78,26 @@ def main() -> int:
                 b"@media (width<=700px)" in css
                 and compiled_rule(b".site .shop-offer-card",[b"flex:0 0 100%"])
             ),
+            "hero comienza acá (y datos antiguos compatibles)": (
+                "comienza acá.".encode() in js
+                and b"hero-gradiente-contraste-chat" in info
+            ),
+            "gradiente en la portada": compiled_rule(b".site .hero",[b"linear-gradient",b"radial-gradient"]),
+            "sombra visible en la calculadora": compiled_rule(b".site .converter",[b"box-shadow",b"26px",b"65px"]),
+            "consultas rápidas con cuatro colores": all(
+                cls.encode() in css for cls in [
+                    ".site .chat-quick .chat-quick-rates",
+                    ".site .chat-quick .chat-quick-how",
+                    ".site .chat-quick .chat-quick-hours",
+                    ".site .chat-quick .chat-quick-offers"
+                ]
+            ),
+            "WhatsApp y asesor como botones distintos": (
+                b"chat-whatsapp" in js
+                and b"chat-live-agent" in js
+                and compiled_rule(b".site .chat-contact-actions .chat-live-agent",[b"background:"])
+                and compiled_rule(b".site .chat-contact-actions .chat-whatsapp",[b"background:"])
+            ),
             "ZIP compilado desde el último código fuente": fresh,
         }
         for name, ok in checks.items():
