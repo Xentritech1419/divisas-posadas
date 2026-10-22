@@ -98,6 +98,18 @@ def main() -> int:
                 and compiled_rule(b".site .chat-contact-actions .chat-live-agent",[b"background:"])
                 and compiled_rule(b".site .chat-contact-actions .chat-whatsapp",[b"background:"])
             ),
+            "marca superior: logo y nombre ampliados": (
+                b"logo-y-nombre-ampliados" in info
+                and compiled_rule(b".site-header .brand-icon",[b"width:72px",b"height:72px"])
+                and compiled_rule(b".site-header .brand-icon .custom-logo",[b"width:62px",b"height:62px"])
+                and compiled_rule(b".site-header .brand-wordmark strong",[b"font-size:clamp("])
+                and compiled_rule(b".site-header .brand-wordmark small",[b"font-size:12px"])
+            ),
+            "cabecera móvil adaptable con chat accesible": (
+                "Abrir atención por chat".encode() in js
+                and compiled_rule(b".site-header .nav-links.is-open",[b"top:86px"])
+                and compiled_rule(b".site-header .header-contact",[b"width:44px"])
+            ),
             "ZIP compilado desde el último código fuente": fresh,
         }
         for name, ok in checks.items():

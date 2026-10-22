@@ -125,4 +125,14 @@ assert(widget.includes('<MessageCircleMore size={20}'));
 assert(css.includes('.site .chat-contact-actions .chat-live-agent'));
 assert(css.includes('.site .chat-contact-actions .chat-whatsapp'));
 assert(css.includes('.site .live-chat-privacy'));
+// Cabecera: logo y tipografía mayores, menú y CTA accesibles en móvil.
+assert(landingSource.includes('aria-label="Abrir atención por chat"'));
+assert(landingSource.includes('<span>Hablemos</span>'));
+assert.match(css,/\/\* Cabecera principal más reconocible:/);
+assert.match(css,/\.site-header \.brand-icon\{[\s\S]*?width:72px;[\s\S]*?height:72px/);
+assert.match(css,/\.site-header \.brand-icon \.custom-logo\{\s*width:62px;\s*height:62px/);
+assert.match(css,/\.site-header \.brand-wordmark strong\{[\s\S]*?font-size:clamp\(23px,2\.15vw,27px\)/);
+assert.match(css,/\.site-header \.brand-wordmark small\{[\s\S]*?font-size:12px/);
+assert.match(css,/@media\(max-width:700px\)\{[\s\S]*?\.site-header \.nav-links\.is-open\{top:86px\}/);
+assert.match(css,/@media\(max-width:480px\)\{[\s\S]*?\.site-header \.header-contact span,/);
 console.log("Compra, venta, guaraní, pausa, vencimiento y asistente verificados.");

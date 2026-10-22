@@ -716,3 +716,110 @@ button.chat-human{width:100%;background:#f2fcf9;border:none;cursor:pointer}
   .site .chat-quick button{transition:none}
   .site .chat-quick button:hover{transform:none}
 }
+
+
+/* Cabecera principal más reconocible: logo y nombre protagonistas.
+   Solo afecta al encabezado público, no a los logos de administración y pie. */
+.site-header .nav-shell{
+  height:104px;
+  gap:22px;
+}
+.site-header .brand{
+  display:inline-flex;
+  align-items:center;
+  gap:17px;
+  min-width:0;
+}
+.site-header .brand-icon{
+  width:72px;
+  height:72px;
+  border-radius:21px;
+  border-color:#d5e7f0;
+  background:linear-gradient(145deg,#f8fffd,#eef5ff);
+  box-shadow:0 8px 23px rgba(44,55,104,.10);
+}
+.site-header .brand-icon .custom-logo{
+  width:62px;
+  height:62px;
+}
+.site-header .brand-wordmark{display:flex;flex-direction:column;justify-content:center;min-width:0}
+.site-header .brand-wordmark strong{
+  font-size:clamp(23px,2.15vw,27px);
+  line-height:1.18;
+  letter-spacing:-.95px;
+  font-weight:850;
+  color:#2c3768;
+}
+.site-header .brand-wordmark small{
+  display:block;
+  margin-top:6px;
+  font-size:12px;
+  line-height:1.4;
+  letter-spacing:.1px;
+  font-weight:600;
+  color:#4e6481;
+}
+.site-header .nav-links{gap:clamp(16px,2.4vw,33px);margin-right:12px}
+.site-header .nav-links a{font-size:13px;font-weight:700;color:#3e5276}
+.site-header .header-contact{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  flex:none;min-height:44px;padding-inline:16px;
+  font-size:13px;font-weight:800;
+}
+.site-header .brand:focus-visible{
+  outline:3px solid #256f96;outline-offset:4px;border-radius:8px;
+}
+@media(max-width:1130px){
+  .site-header .nav-shell{height:95px;gap:17px}
+  .site-header .brand{gap:12px}
+  .site-header .brand-icon{width:64px;height:64px;border-radius:18px}
+  .site-header .brand-icon .custom-logo{width:54px;height:54px}
+  .site-header .brand-wordmark strong{font-size:23px}
+  .site-header .brand-wordmark small{font-size:11px}
+  .site-header .nav-links{gap:17px;margin-right:5px}
+  .site-header .nav-links a{font-size:12px}
+  .site-header .header-contact{font-size:12px;min-height:42px;padding-inline:12px}
+}
+@media(max-width:900px){
+  .site-header .nav-shell{height:90px;gap:12px}
+  .site-header .brand-icon{width:60px;height:60px;border-radius:16px}
+  .site-header .brand-icon .custom-logo{width:51px;height:51px}
+  .site-header .brand-wordmark strong{font-size:21px}
+  .site-header .brand-wordmark small{font-size:10px;margin-top:4px}
+  .site-header .header-contact{gap:6px}
+}
+@media(max-width:700px){
+  .site-header .nav-shell{height:86px;gap:11px}
+  .site-header .brand{gap:10px}
+  .site-header .brand-icon{width:55px;height:55px;border-radius:16px}
+  .site-header .brand-icon .custom-logo{width:47px;height:47px}
+  .site-header .brand-wordmark strong{font-size:20px;letter-spacing:-.7px}
+  .site-header .brand-wordmark small{font-size:10px;margin-top:4px}
+  .site-header .header-contact{min-height:44px;padding-inline:11px;font-size:12px}
+  .site-header .mobile-menu{width:34px;min-width:34px;height:44px;display:grid;place-items:center}
+  .site-header .mobile-menu svg{width:23px;height:23px}
+  .site-header .nav-links.is-open{top:86px}
+  html{scroll-padding-top:101px}
+}
+@media(max-width:480px){
+  .site-header .nav-shell{gap:9px}
+  .site-header .brand{gap:9px}
+  .site-header .brand-icon{width:52px;height:52px;border-radius:15px}
+  .site-header .brand-icon .custom-logo{width:44px;height:44px}
+  .site-header .brand-wordmark strong{font-size:19px;letter-spacing:-.75px}
+  .site-header .brand-wordmark small{font-size:9.5px}
+  .site-header .header-contact{
+    width:44px;min-width:44px;min-height:44px;
+    padding:0;gap:0;
+  }
+  .site-header .header-contact span,
+  .site-header .header-contact svg:last-child{display:none}
+}
+@media(max-width:360px){
+  .site-header .brand-icon{width:46px;height:46px;border-radius:14px}
+  .site-header .brand-icon .custom-logo{width:39px;height:39px}
+  .site-header .brand-wordmark strong{font-size:17px}
+  .site-header .brand-wordmark small{font-size:9px}
+  .site-header .header-contact{width:40px;min-width:40px;min-height:40px}
+  .site-header .mobile-menu{width:30px;min-width:30px}
+}

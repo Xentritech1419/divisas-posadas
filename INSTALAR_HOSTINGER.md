@@ -248,3 +248,21 @@ Para publicar: extraer **todo el contenido** del ZIP dentro de
 `public_html` y conservar la configuración y la carpeta de datos
 privados. Comprobar la versión desde `/build-info.json` después de
 actualizar y abrir la web en incógnito si Chrome conserva los estilos antiguos.
+
+
+### Identidad del encabezado más grande
+
+El logo de **Divisas Posadas** se destaca en la barra superior
+con una tarjeta de 72 × 72 px (ícono de 62 × 62 px).
+El nombre crece hasta 27 px en escritorio y el eslogan
+**«Tu cambio, más cerca.»** a 12 px, con mejor contraste.
+
+En pantallas pequeñas se ajusta el tamaño del conjunto y,
+para conservar espacio sin perder la opción de contacto,
+el botón **Hablemos** se presenta solo con el ícono de chat
+en celulares angostos. Sigue siendo accesible con la etiqueta
+«Abrir atención por chat» y conserva todas sus funciones.
+El menú móvil queda situado debajo de la cabecera sin superponerse.
+
+No se modifica el logo del pie o del panel administrativo ni
+los datos privados de usuarios, cotizaciones u ofertas.
