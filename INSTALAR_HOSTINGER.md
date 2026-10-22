@@ -289,3 +289,20 @@ híbrido. El paquete de Hostinger se verifica automáticamente antes
 de publicarse. Hacé un respaldo antes de extraerlo en `public_html`
 y conservá `config.local.php` y la carpeta privada
 `divisas-posadas-data`.
+
+
+### Nuevo ícono lineal de «Elegí tu divisa»
+
+El primer paso de **Cambiar, así de simple** usa
+`public/icons/elegi-tu-divisa.svg`: dos monedas delineadas (euro y dólar)
+con flechas curvas de intercambio, en azul, **sin relleno ni fondo**.
+La tarjeta, círculo de color, número 01 y los pasos 02 y 03 se mantienen
+exactamente como estaban.
+
+El paquete final incluye el SVG en `icons/elegi-tu-divisa.svg`
+dentro de `public_html` y verifica su incorporación en el frontend.
+
+En Hostinger reemplazá los archivos públicos del ZIP completo y conservá
+`config.local.php` y la carpeta privada `divisas-posadas-data`.
+Si el navegador conserva la imagen anterior, abrí la página en incógnito
+o actualizá la caché.
