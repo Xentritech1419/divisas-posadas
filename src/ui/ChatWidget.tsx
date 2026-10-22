@@ -1,6 +1,6 @@
 "use client";
 import {useEffect,useRef,useState} from "react";
-import {ArrowUpRight,MessageCircle,Send,X,UserRound,RotateCcw} from "lucide-react";
+import {ArrowUpRight,MessageCircle,Send,X,UserRound,RotateCcw,ChartNoAxesCombined,Route,Clock3,BadgePercent,Headset,MessageCircleMore} from "lucide-react";
 import {type SiteContent,botReply,whatsappLink} from "@/lib/content";
 import {guestChat,getLiveStatus,makeGuestToken,type LiveMessage,type LiveThread,LiveChatError} from "@/lib/liveChat";
 import {Mark} from "./Brand";
@@ -116,15 +116,28 @@ export default function ChatWidget({content,open,onOpenChange}:{content:SiteCont
         {human&&thread?.closed&&<p className="live-chat-note">El asesor finalizó esta conversación. Podés volver al bot o solicitar una nueva atención.</p>}
         <div ref={end}/>
       </div>
-      {!human&&<div className="chat-quick">
-        {["Cotizaciones","Cómo operar","Horarios","Ofertas"].map(q=><button key={q} onClick={()=>askBot(q)}>{q}</button>)}
+      {!human&&<div className="chat-quick" role="group" aria-label="Consultas rápidas">
+        <button type="button" className="chat-quick-rates" onClick={()=>askBot("Cotizaciones")}><ChartNoAxesCombined size={18} aria-hidden="true"/><span>Cotizaciones</span></button>
+        <button type="button" className="chat-quick-how" onClick={()=>askBot("Cómo operar")}><Route size={18} aria-hidden="true"/><span>Cómo operar</span></button>
+        <button type="button" className="chat-quick-hours" onClick={()=>askBot("Horarios")}><Clock3 size={18} aria-hidden="true"/><span>Horarios</span></button>
+        <button type="button" className="chat-quick-offers" onClick={()=>askBot("Ofertas")}><BadgePercent size={18} aria-hidden="true"/><span>Ofertas</span></button>
       </div>}
       {!human&&online&&<p className="live-chat-privacy">Para que nuestro equipo te atienda, los mensajes se guardan temporalmente en el servidor.</p>}
-      {!human&&online?<button type="button" className="chat-human" disabled={connecting} onClick={()=>void startHuman()}>
-        <UserRound size={15}/>{connecting?"Conectando con un asesor…":"Hablar con un asesor en esta web"}<ArrowUpRight size={13}/>
-      </button>:(!online||!!thread?.closed)?<a className="chat-human" href={whatsapp} target="_blank" rel="noopener noreferrer">
-        <MessageCircle size={15}/> {human?"Continuar conversación por WhatsApp":"Hablar por WhatsApp"} <ArrowUpRight size={13}/>
-      </a>:<div className="chat-human chat-human-active"><UserRound size={15}/> Un asesor está atendiendo tu consulta</div>}
+      <div className="chat-contact-actions">
+        {!human&&online&&<button type="button" className="chat-human chat-live-agent" disabled={connecting} onClick={()=>void startHuman()}>
+          <Headset size={20} aria-hidden="true"/>
+          <span>{connecting?"Conectando con un asesor…":"Hablar con un asesor en esta web"}</span>
+          <ArrowUpRight size={17} aria-hidden="true"/>
+        </button>}
+        {human&&online&&!thread?.closed&&<div className="chat-human chat-human-active" role="status">
+          <Headset size={20} aria-hidden="true"/><span>Un asesor está atendiendo tu consulta</span>
+        </div>}
+        {(!human||!online||!!thread?.closed)&&<a className="chat-human chat-whatsapp" href={whatsapp} target="_blank" rel="noopener noreferrer">
+          <MessageCircleMore size={20} aria-hidden="true"/>
+          <span>{human?"Continuar conversación por WhatsApp":"Hablar por WhatsApp"}</span>
+          <ArrowUpRight size={17} aria-hidden="true"/>
+        </a>}
+      </div>
       {human&&<button type="button" className="chat-return" onClick={()=>{setHuman(false);setError("");}}>
         <RotateCcw size={13}/> Volver al asistente automático
       </button>}
