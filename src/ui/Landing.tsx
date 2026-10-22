@@ -1,6 +1,6 @@
 "use client";
 import {useState,useRef,useEffect,type CSSProperties} from "react";
-import {ArrowUpRight,ArrowLeftRight,ArrowDown,ChevronDown,MapPin,MessageCircle,Menu,X,RefreshCw,Clock3,Check,Plus,Minus,Info,Copy,CheckCheck,Mail,Sparkles} from "lucide-react";
+import {ArrowUpRight,ArrowLeftRight,ArrowDown,ChevronDown,MapPin,MessageCircle,Menu,X,RefreshCw,Check,Plus,Minus,Info,Copy,CheckCheck,Sparkles,Coins,MessagesSquare,BadgeCheck,ArrowRight,Headset} from "lucide-react";
 import {type ContentState,type ExchangeId,type Offer,type SiteContent,activeOffers,convert,formatNumber,rateNumber,getCurrency,whatsappLink,guaraniesPorPesoFormato,peso} from "@/lib/content";
 import {Brand,CurrencyIcon} from "./Brand";
 import OffersShowcase from "./OffersShowcase";
@@ -46,9 +46,46 @@ export default function Landing({initialState}:{initialState:ContentState}){
       <section className="section rates-section shell" id="cotizaciones"><div className="section-heading"><div><span className="eyebrow section-eyebrow">COTIZACIONES</span><h2>{c.copy.ratesTitle}</h2><p>{c.copy.ratesDescription==="Compará nuestros valores de compra y venta en pesos argentinos."?"Compará los valores de compra y venta. Para guaraníes mostramos cuántos guaraníes equivalen a un peso argentino.":c.copy.ratesDescription}</p></div><div className="update-stamp"><button onClick={()=>void refresh(true)} disabled={refreshing} aria-label="Actualizar cotizaciones"><RefreshCw size={15} className={refreshing?"spinning":""}/></button><span>{c.demo?"VALORES ORIENTATIVOS":"ÚLTIMA ACTUALIZACIÓN"}<b>{c.demo?"Confirmar por WhatsApp":updatedLabel(state.updatedAt)}</b></span></div></div>
       <div className="rates-toolbar"><div className="filter-tabs" role="group" aria-label="Filtrar divisas">{[["all","Todas las divisas"],["cash","Efectivo"],["digital","Saldo digital"]].map(([value,label])=><button aria-pressed={filter===value} className={filter===value?"active":""} key={value} onClick={()=>setFilter(value)}>{label}</button>)}</div><span className="rates-currency">Otras divisas: ARS por unidad · Guaraníes: ₲ por $ 1</span></div>
       {refreshError&&<p className="notice" role="status">{refreshError}</p>}<div className="rates-grid">{visibleCurrencies.map((x,i)=><article className="rate-card" style={{"--currency":x.color,"--delay":`${i*50}ms`} as CSSProperties} key={x.id}><div className="rate-card-top"><CurrencyIcon id={x.id} color={x.color}/><div><h3>{x.name}</h3><p>{x.description}</p></div><span className="currency-code">{x.code}</span></div><div className="rate-values"><div><span>Compramos <ArrowDown size={12}/></span><strong><small>{x.id==="guarani"?"₲":"$"}</small> {x.id==="guarani"?guaraniesPorPesoFormato(x.buy):rateNumber(x.buy)}</strong>{x.id==="guarani"&&<small className="guarani-unit">por $ 1 ARS</small>}</div><div><span>Vendemos <ArrowUpRight size={12}/></span><strong><small>{x.id==="guarani"?"₲":"$"}</small> {x.id==="guarani"?guaraniesPorPesoFormato(x.sell):rateNumber(x.sell)}</strong>{x.id==="guarani"&&<small className="guarani-unit">por $ 1 ARS</small>}</div></div><div className="rate-actions"><button className="rate-action-buy" onClick={()=>contactCurrency(x.id,"buy")}>Quiero comprar <ArrowUpRight size={15}/></button><button className="rate-action-sell" onClick={()=>contactCurrency(x.id,"sell")}>Quiero vender <ArrowUpRight size={15}/></button></div></article>)}</div>{visibleCurrencies.length===0&&<div className="empty-state">No hay divisas activas en esta categoría.</div>}<p className="rates-note"><Info size={14}/> Compra: recibimos tu divisa. Venta: te entregamos la divisa. {c.demo?"Valores ilustrativos, no válidos para operar.":"Confirmá la cotización antes de operar."}</p></section>
-      <section className="section shell how-section" id="como-funciona"><div className="how-title"><span className="eyebrow section-eyebrow">DE LA CONSULTA AL CAMBIO</span><h2>{c.copy.howTitle}</h2><p>Vos elegís. Nosotros te acompañamos.</p></div><div className="steps">{c.steps.map((step,i)=><article key={i}><span className="step-number">0{i+1}</span><h3>{step.title}</h3><p>{step.description}</p></article>)}</div></section>
-      <section className="faq-section shell" id="preguntas"><div><span className="eyebrow section-eyebrow">SIN DUDAS, MEJOR</span><h2>Antes de cambiar,<br/>te contamos.</h2><p>Las respuestas a las consultas más comunes.</p><button className="text-button" onClick={()=>setChatOpen(true)}>Preguntale al asistente <MessageCircle size={17}/></button></div><div className="faq-list">{c.faqs.map(f=><details key={f.id}><summary>{f.question}<Plus size={18} className="faq-plus"/><Minus size={18} className="faq-minus"/></summary><p>{f.answer}</p></details>)}</div></section>
-      <section className="contact-section shell" id="contacto"><div className="contact-panel"><div className="contact-decor" aria-hidden="true"><ArrowLeftRight/></div><div className="contact-copy"><span className="eyebrow"><MapPin size={14}/>{c.contact.location.toUpperCase()}</span><h2>{c.copy.contactTitle}</h2><p>{c.copy.contactDescription}</p><button className="button button-mint" onClick={goContact}><MessageCircle size={19}/> Hablemos por WhatsApp <ArrowUpRight size={18}/></button></div><div className="contact-details"><div><MapPin size={19}/><span><small>ENCONTRANOS EN</small>{c.contact.address||c.contact.location}{!c.contact.address&&<em>Coordiná la atención con nuestro equipo.</em>}</span></div><div><Clock3 size={19}/><span><small>HORARIOS</small>{c.contact.hours}</span></div>{c.contact.email&&<div><Mail size={19}/><span><small>ESCRIBINOS</small><a href={`mailto:${c.contact.email}`}>{c.contact.email}</a></span></div>}</div></div></section>
+      <section className="section shell how-section" id="como-funciona" aria-labelledby="how-heading">
+        <div className="how-title">
+          <span className="eyebrow section-eyebrow">DE LA CONSULTA AL CAMBIO</span>
+          <h2 id="how-heading">{c.copy.howTitle}</h2>
+          <p>Vos elegís. Nosotros te acompañamos.</p>
+          <div className="how-caption"><BadgeCheck size={18}/> Un proceso simple y acompañado de principio a fin.</div>
+        </div>
+        <div className="steps">
+          {c.steps.map((step,i)=><article className={`how-step how-step-${i+1}`} key={i}>
+            <div className="how-step-visual">
+              <span className="how-step-number">0{i+1}</span>
+              <span className="how-step-symbol" aria-hidden="true">{i===0?<Coins size={33} strokeWidth={1.8}/>:i===1?<MessagesSquare size={33} strokeWidth={1.8}/>:<BadgeCheck size={33} strokeWidth={1.8}/>}</span>
+            </div>
+            <div className="how-step-body">
+              <h3>{step.title}</h3>
+              <p>{step.description}</p>
+            </div>
+            {i<2&&<ArrowRight className="how-step-arrow" size={21} aria-hidden="true"/>}
+          </article>)}
+        </div>
+      </section>
+      <section className="faq-section shell" id="preguntas" aria-labelledby="faq-heading">
+        <div className="faq-panel">
+          <div className="faq-panel-decor" aria-hidden="true"><ArrowLeftRight/></div>
+          <div className="faq-intro">
+            <span className="eyebrow section-eyebrow"><Sparkles size={14}/> SIN DUDAS, MEJOR</span>
+            <h2 id="faq-heading">Antes de cambiar,<br/>te contamos.</h2>
+            <p>Las respuestas a las consultas más comunes.</p>
+            <button className="faq-cta" type="button" onClick={()=>setChatOpen(true)}>
+              <Headset size={19}/> Preguntale al asistente <ArrowUpRight size={17}/>
+            </button>
+          </div>
+          <div className="faq-list">
+            {c.faqs.map(f=><details key={f.id}>
+              <summary><span>{f.question}</span><span className="faq-indicator"><Plus size={18} className="faq-plus"/><Minus size={18} className="faq-minus"/></span></summary>
+              <p>{f.answer}</p>
+            </details>)}
+          </div>
+        </div>
+      </section>
     </main>
     <footer className="site-footer shell">
       <div className="footer-main">
