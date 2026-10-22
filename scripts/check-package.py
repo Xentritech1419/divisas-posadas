@@ -52,10 +52,6 @@ def main() -> int:
         except (ValueError, UnicodeDecodeError):
             build_meta = {}
         fresh = build_meta.get("buildId") == digest.hexdigest()[:16]
-        # Diagnóstico de cómo Vite reescribe las propiedades del carrusel.
-        for rule in css.split(b"}"):
-            if b".shop-offer-card" in rule or b".shop-offer-cta" in rule:
-                print("CSS OFERTAS:", repr(rule[-270:]))
         checks = {
             "HTML principal": "index.html" in names,
             "API PHP del chat": bool(php),
@@ -74,11 +70,13 @@ def main() -> int:
                 and b"ofertas-tienda-antes-cotizaciones" in info
             ),
             "tarjetas de producto con carrusel": (
-                compiled_rule(b".site .shop-offer-card",[b"flex:0 0 calc((100% - 40px)/3)"])
+                compiled_rule(b".site .shop-offer-card",[b"flex:0 0 calc(33.3333% - 13.3333px)"])
                 and compiled_rule(b".site .shop-offer-cta",[b"font-size:14px"])
+                and b"shop-offers-track" in js
             ),
             "tarjeta por vista en celular": (
-                b".site .shop-offer-card{flex:0 0 100%" in css
+                b"@media (width<=700px)" in css
+                and compiled_rule(b".site .shop-offer-card",[b"flex:0 0 100%"])
             ),
             "ZIP compilado desde el último código fuente": fresh,
         }
