@@ -40,7 +40,7 @@ def main() -> int:
             return False
         source_files = [
             "src/lib/content.ts", "src/ui/Landing.tsx", "src/ui/Admin.tsx",
-            "src/ui/ChatInbox.tsx", "src/ui/ChatWidget.tsx", "src/styles.css",
+            "src/ui/ChatInbox.tsx", "src/ui/ChatWidget.tsx", "src/ui/OffersShowcase.tsx", "src/styles.css",
             "server/api/live-chat.php"
         ]
         digest = hashlib.sha256()
@@ -62,6 +62,20 @@ def main() -> int:
             "chat confirma estado en Hostinger": b"Confirmando con Hostinger" in js,
             "chat renueva la presencia": b"CHAT_OPERATOR_TTL=120" in php,
             "versión identificable": b'"features"' in info,
+            "ofertas tipo producto antes de cotizaciones": (
+                b"shop-offers-track" in js
+                and b"shop-offer-card" in js
+                and b"Quiero esta oferta" in js
+                and b"Ofertas destacadas" in js
+                and b"ofertas-tienda-antes-cotizaciones" in info
+            ),
+            "tarjetas de producto con carrusel": (
+                compiled_rule(b".site .shop-offer-card",[b"flex:0 0 calc((100% - 40px)/3)"])
+                and compiled_rule(b".site .shop-offer-cta",[b"font-size:14px"])
+            ),
+            "tarjeta por vista en celular": (
+                b".site .shop-offer-card{flex:0 0 100%" in css
+            ),
             "ZIP compilado desde el último código fuente": fresh,
         }
         for name, ok in checks.items():
