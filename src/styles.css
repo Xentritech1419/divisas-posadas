@@ -505,3 +505,214 @@ button.chat-human{width:100%;background:#f2fcf9;border:none;cursor:pointer}
   .site .shop-offer-card,.site .shop-offer-cta{transition:none}
   .site .shop-offer-card:hover,.site .shop-offer-cta:hover{transform:none}
 }
+
+
+/* Hero y chat accesibles: gradiente propio, más contraste y acciones distinguibles.
+   Sobrescrituras al final para conservar el resto del diseño y el panel. */
+.site .hero{
+  background:
+    radial-gradient(ellipse at 12% 18%,rgba(24,229,193,.17),transparent 48%),
+    radial-gradient(ellipse at 92% 22%,rgba(66,116,207,.13),transparent 46%),
+    linear-gradient(115deg,#f0fffc 0%,#f8fbff 58%,#ecf3ff 100%);
+  border-bottom-color:#d4e7eb;
+}
+.site .hero-grid{
+  padding-top:38px;
+  padding-bottom:62px;
+  gap:clamp(22px,4vw,58px);
+}
+.site .hero-copy{transform:translateY(-17px)}
+.site .hero-copy .eyebrow{
+  font-size:11px;line-height:1.5;font-weight:750;
+  color:#1d4875;letter-spacing:1.2px;
+}
+.site .hero-copy h1{
+  font-size:clamp(43px,4.9vw,73px);
+  letter-spacing:-2.8px;
+  line-height:1.12;
+  margin-top:18px;
+  margin-bottom:19px;
+}
+.site .hero-copy h1 span{
+  background:linear-gradient(to top,rgba(24,229,193,.37) 24%,transparent 24%);
+}
+.site .hero-description{
+  max-width:570px;
+  font-size:clamp(16px,1.6vw,19px);
+  color:#455d70;
+  line-height:1.7;
+  font-weight:450;
+}
+.site .hero-link{
+  margin-top:23px;
+  font-size:15px;
+  font-weight:800;
+  color:#086b70;
+}
+.site .hero-footnote{
+  margin-top:37px;
+  font-size:12px;
+  line-height:1.7;
+  color:#526a7b;
+}
+.site .converter{
+  background:#fff;
+  border:1px solid #ccdee9;
+  border-radius:23px;
+  box-shadow:0 26px 65px rgba(35,55,98,.16),0 8px 19px rgba(35,55,98,.075);
+  position:relative;
+}
+.site .converter-heading h2{font-size:clamp(23px,2.25vw,27px)}
+.site .converter .mini-label{font-size:11px;color:#4a687d;font-weight:800}
+.site .converter-field label{font-size:13px;color:#4b6071;font-weight:700}
+.site .currency-select select{font-size:13px;color:#324861}
+.site .conversion-rate{font-size:13px;color:#435e72}
+.site .converter-note{font-size:12px;line-height:1.6;color:#596f7f}
+.site .converter-submit{font-size:15px;font-weight:800}
+.site .hero-link:focus-visible,
+.site .chat-quick button:focus-visible,
+.site .chat-human:focus-visible{
+  outline:3px solid #183b78;
+  outline-offset:3px;
+}
+
+/* Textos secundarios: legibles sin recurrir a grises pálidos. */
+.site .section-heading p,
+.site .how-title p,
+.site .faq-section>div>p{
+  color:#506779;
+  font-size:15px;
+  line-height:1.75;
+}
+.site .rates-currency{color:#4a6074;font-size:13px;line-height:1.55}
+.site .rates-note{color:#516679;font-size:13px}
+.site .rates-grid .rate-card-top p{color:#536a7d;font-size:12px}
+.site .rates-grid .rate-values span{color:#53677b;font-size:12px}
+.site .shop-offer-description{color:#52697d;font-size:13px}
+.site .shop-offer-price-block .shop-offer-currency{color:#53697c;font-size:11px}
+.site .shop-offers-footer p{color:#52677b;font-size:13px}
+.site .faq-list summary{color:#334d67;font-size:14px}
+.site .faq-list details p{color:#51677b;font-size:13px}
+.site .steps p{color:#566a7b;font-size:13px}
+.site .footer-links a{color:#4b6075;font-size:12px}
+.site .disclaimer{color:#536778;font-size:11px}
+.site .footer-bottom{color:#526778;font-size:12px}
+
+/* Acciones del asistente: cuatro categorías reconocibles, no enlaces pálidos. */
+.site .chat-window{
+  border-color:#cbdae8;
+  box-shadow:0 20px 60px rgba(29,52,95,.23);
+  width:min(405px,calc(100vw - 32px));
+}
+.site .chat-head strong{font-size:15px}
+.site .chat-head span{font-size:12px;color:#e2edff;line-height:1.5}
+.site .chat-messages{background:#f5f8fd}
+.site .message{color:#344963;font-size:14px;line-height:1.6}
+.site .message.bot{border-color:#d9e4ee}
+.site .message.user{background:#2c5db3;color:#fff}
+.site .chat-quick{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:9px;padding:13px 14px 10px;
+  background:#fff;
+}
+.site .chat-quick button{
+  display:flex;align-items:center;justify-content:flex-start;
+  gap:7px;min-width:0;min-height:43px;
+  border-radius:12px;padding:9px 10px;
+  font-size:12px;font-weight:800;line-height:1.25;
+  white-space:normal;text-align:left;
+  box-shadow:0 2px 7px rgba(41,68,106,.045);
+  transition:filter .16s ease,transform .16s ease;
+}
+.site .chat-quick button:hover{filter:brightness(.96);transform:translateY(-1px)}
+.site .chat-quick button svg{flex:none;width:18px;height:18px}
+.site .chat-quick .chat-quick-rates{
+  background:#eaf1ff;border:1px solid #bdd0f8;color:#264d9c;
+}
+.site .chat-quick .chat-quick-how{
+  background:#def8f2;border:1px solid #a9e5d8;color:#08695f;
+}
+.site .chat-quick .chat-quick-hours{
+  background:#f2ecff;border:1px solid #d4c4f4;color:#6540a1;
+}
+.site .chat-quick .chat-quick-offers{
+  background:#fff2d5;border:1px solid #efd5a0;color:#77510a;
+}
+.site .chat-contact-actions{
+  display:flex;flex-direction:column;gap:9px;
+  padding:10px 14px 13px;
+}
+.site .chat-contact-actions .chat-human{
+  display:flex;align-items:center;justify-content:center;
+  gap:10px;min-height:51px;width:100%;
+  padding:11px 12px;border-radius:13px;
+  font-size:13px;font-weight:850;line-height:1.4;
+  text-align:center;text-decoration:none;
+  border:1px solid transparent;
+  box-shadow:0 5px 14px rgba(27,59,98,.12);
+}
+.site .chat-contact-actions .chat-human svg{flex:none}
+.site .chat-contact-actions .chat-human span{flex:1}
+.site .chat-contact-actions .chat-live-agent{
+  color:#fff;background:linear-gradient(120deg,#244b98,#2c3768);
+  border-color:#263e7c;
+}
+.site .chat-contact-actions .chat-live-agent:hover{background:linear-gradient(120deg,#1c3c7e,#242f5b)}
+.site .chat-contact-actions .chat-whatsapp{
+  color:#fff;background:linear-gradient(120deg,#167c4d,#12825c);
+  border-color:#126d4d;
+}
+.site .chat-contact-actions .chat-whatsapp:hover{background:linear-gradient(120deg,#105f3b,#0c6548)}
+.site .chat-contact-actions .chat-human-active{
+  color:#19436c;background:#eaf3ff;border-color:#b6d3f4;box-shadow:none;
+}
+.site .live-chat-privacy{
+  font-size:11px;color:#435c74;
+  line-height:1.55;padding:7px 14px 0;
+}
+.site .chat-return{font-size:12px;font-weight:700;color:#435b75}
+.site .chat-form input{font-size:14px;color:#263b55;border-color:#cbd9e5}
+.site .chat-form button{color:#fff;background:#244d91}
+.site .chat-form button:disabled{opacity:.6}
+
+@media(max-width:900px){
+  .site .hero-grid{padding-top:32px;padding-bottom:50px}
+  .site .hero-copy{transform:translateY(-9px)}
+  .site .hero-copy h1{letter-spacing:-1.8px}
+  .site .hero-description{font-size:16px}
+}
+@media(max-width:700px){
+  .site .hero-grid{padding-top:24px;padding-bottom:42px;gap:25px}
+  .site .hero-copy{transform:none}
+  .site .hero-copy h1{
+    font-size:clamp(39px,9vw,52px);
+    line-height:1.12;margin-top:17px;margin-bottom:19px;
+  }
+  .site .hero-copy .eyebrow{font-size:10px}
+  .site .hero-description{font-size:16px;line-height:1.7}
+  .site .hero-footnote{font-size:12px;margin-top:28px}
+  .site .hero-link{font-size:14px}
+  .site .converter{
+    border-radius:19px;
+    box-shadow:0 17px 38px rgba(35,55,98,.15),0 4px 12px rgba(35,55,98,.06);
+  }
+  .site .converter-field label{font-size:13px}
+  .site .section-heading p{font-size:14px}
+  .site .rates-grid .rate-card-top p{font-size:12px}
+  .site .rates-grid .rate-values span{font-size:12px}
+  .site .rates-currency{font-size:12px}
+  .site .shop-offer-description{font-size:13px}
+  .site .shop-offers-footer p{font-size:12px}
+  .site .chat-window{width:calc(100vw - 32px);max-width:405px}
+  .site .chat-quick button{font-size:12px;min-height:45px}
+  .site .chat-contact-actions .chat-human{font-size:13px;min-height:52px}
+}
+@media(max-width:355px){
+  .site .chat-quick{gap:6px;padding-inline:10px}
+  .site .chat-quick button{font-size:11px;padding:8px 7px}
+  .site .chat-quick button svg{width:16px;height:16px}
+}
+@media(prefers-reduced-motion:reduce){
+  .site .chat-quick button{transition:none}
+  .site .chat-quick button:hover{transform:none}
+}
