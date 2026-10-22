@@ -8,7 +8,7 @@ await cp("server", "public_html", { recursive: true, filter: p => !p.endsWith("c
 // diferencias entre GitHub y una instalación antigua o cacheada en Hostinger.
 const sourceFiles=[
   "src/lib/content.ts","src/ui/Landing.tsx","src/ui/Admin.tsx",
-  "src/ui/ChatInbox.tsx","src/ui/ChatWidget.tsx","src/styles.css",
+  "src/ui/ChatInbox.tsx","src/ui/ChatWidget.tsx","src/ui/OffersShowcase.tsx","src/styles.css",
   "server/api/live-chat.php"
 ];
 const hash=createHash("sha256");
@@ -19,7 +19,7 @@ for(const name of sourceFiles){
 const buildId=hash.digest("hex").slice(0,16);
 await writeFile("public_html/build-info.json",JSON.stringify({
   buildId,
-  features:["guaranies-por-peso","textos-movil-ampliados","chat-en-vivo-confirmado"],
+  features:["guaranies-por-peso","textos-movil-ampliados","chat-en-vivo-confirmado","ofertas-tienda-antes-cotizaciones"],
   description:"Divisas Posadas: versión compilada para Hostinger"
 },null,2));
 const { defaultContent } = await import("../src/lib/content.ts");
