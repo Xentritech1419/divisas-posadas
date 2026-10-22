@@ -1,6 +1,6 @@
 "use client";
 import {useState,useRef,useEffect,type CSSProperties} from "react";
-import {ArrowUpRight,ArrowLeftRight,ArrowDown,ChevronDown,MapPin,MessageCircle,Menu,X,RefreshCw,Check,Plus,Minus,Info,Copy,CheckCheck,Sparkles,Coins,MessagesSquare,BadgeCheck,ArrowRight,Headset} from "lucide-react";
+import {ArrowUpRight,ArrowLeftRight,ArrowDown,ChevronDown,MapPin,MessageCircle,Menu,X,RefreshCw,Check,Plus,Minus,Info,Copy,CheckCheck,Sparkles,MessagesSquare,BadgeCheck,ArrowRight,Headset} from "lucide-react";
 import {type ContentState,type ExchangeId,type Offer,type SiteContent,activeOffers,convert,formatNumber,rateNumber,getCurrency,whatsappLink,guaraniesPorPesoFormato,peso} from "@/lib/content";
 import {Brand,CurrencyIcon} from "./Brand";
 import OffersShowcase from "./OffersShowcase";
@@ -57,7 +57,7 @@ export default function Landing({initialState}:{initialState:ContentState}){
           {c.steps.map((step,i)=><article className={`how-step how-step-${i+1}`} key={i}>
             <div className="how-step-visual">
               <span className="how-step-number">0{i+1}</span>
-              <span className="how-step-symbol" aria-hidden="true">{i===0?<Coins size={33} strokeWidth={1.8}/>:i===1?<MessagesSquare size={33} strokeWidth={1.8}/>:<BadgeCheck size={33} strokeWidth={1.8}/>}</span>
+              <span className="how-step-symbol" aria-hidden="true">{i===0?<img className="how-step-custom-icon" src="/icons/elegi-tu-divisa.svg" alt="" width={37} height={37} draggable={false}/>:i===1?<MessagesSquare size={33} strokeWidth={1.8}/>:<BadgeCheck size={33} strokeWidth={1.8}/>}</span>
             </div>
             <div className="how-step-body">
               <h3>{step.title}</h3>
