@@ -85,4 +85,23 @@ assert(!inbox.includes("heartbeat(!document.hidden)"));
 assert(inbox.includes('if(!document.hidden)void renew()'));
 assert(admin.includes('<div hidden={tab!=="messages"}><ChatInbox/></div>'));
 assert(widget.includes('open?5000:15000'));
+
+// Ofertas tipo producto: se ven antes de cotizaciones, mantienen la selección
+// de oferta real en el conversor y una sola tarjeta por vista en el celular.
+const showcaseSource=readFileSync(new URL("../src/ui/OffersShowcase.tsx",import.meta.url),"utf8");
+assert(landingSource.indexOf("<OffersShowcase content={c} offers={offers} onSelect={selectOffer}/>") <
+  landingSource.indexOf('id="cotizaciones"'));
+assert(landingSource.indexOf('["Ofertas","#ofertas"]') < landingSource.indexOf('["Cotizaciones","#cotizaciones"]'));
+assert(!landingSource.includes('className="offer-card"'));
+assert(showcaseSource.includes('id="ofertas"'));
+assert(showcaseSource.includes('className="shop-offers-track"'));
+assert(showcaseSource.includes('className="shop-offer-card"'));
+assert(showcaseSource.includes('onClick={()=>onSelect(offer)}'));
+assert(showcaseSource.includes('const gain=usual>0?(offer.receive/usual-1)*100:0'));
+assert(showcaseSource.includes('gain>0.05'));
+assert(showcaseSource.includes('offer.expiresAt'));
+assert.match(css, /\.site \.shop-offer-card\{[\s\S]*?flex:0 0 calc\(\(100% - 40px\)\/3\)/);
+assert.match(css, /@media\(max-width:1050px\)\{\s*\.site \.shop-offer-card\{flex-basis:calc\(\(100% - 20px\)\/2\)/);
+assert.match(css, /@media\(max-width:700px\)\{[\s\S]*?\.site \.shop-offer-card\{flex:0 0 100%/);
+assert.match(css, /\.site \.shop-offer-cta\{[\s\S]*?font-size:14px/);
 console.log("Compra, venta, guaraní, pausa, vencimiento y asistente verificados.");
