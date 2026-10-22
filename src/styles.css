@@ -315,3 +315,193 @@ button.chat-human{width:100%;background:#f2fcf9;border:none;cursor:pointer}
   .site .message{font-size:13px}
   .site .chat-form input{font-size:14px}
 }
+
+
+/* Ofertas tipo producto: carrusel editorial antes de las cotizaciones.
+   Los montos y condiciones provienen del panel, sin descuentos inventados. */
+.site .shop-offers-section{
+  background:linear-gradient(180deg,#f8fbfd 0%,#f3f8fa 100%);
+  border-block:1px solid #e7eef2;
+  padding-block:64px 58px;
+}
+.site .shop-offers-heading{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  gap:24px;margin-bottom:25px;
+}
+.site .shop-offers-heading .section-eyebrow{
+  display:inline-flex;align-items:center;gap:7px;font-size:11px;letter-spacing:1.15px;
+  color:#087d75;
+}
+.site .shop-offers-heading h2{
+  max-width:760px;font-size:clamp(27px,3.4vw,39px);line-height:1.16;
+  color:var(--ink);letter-spacing:-1.15px;margin-top:12px;
+}
+.site .shop-offers-heading p{
+  max-width:630px;color:#697c8c;font-size:14px;line-height:1.7;margin-top:10px;
+}
+.site .shop-offers-heading-mark{
+  display:inline-flex;align-items:center;gap:8px;flex:none;
+  background:#ddfbf4;border:1px solid #b4efe2;color:#17675e;
+  font-size:12px;font-weight:750;border-radius:99px;padding:11px 15px;
+}
+.site .shop-offers-track{
+  display:flex;gap:20px;overflow-x:auto;overflow-y:hidden;
+  scroll-snap-type:x mandatory;scroll-padding-inline:2px;
+  overscroll-behavior-x:contain;
+  scrollbar-width:thin;scrollbar-color:#b9d9d5 transparent;
+  padding:4px 2px 22px;align-items:stretch;
+}
+.site .shop-offers-track:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
+.site .shop-offer-card{
+  flex:0 0 calc((100% - 40px)/3);min-width:0;
+  display:flex;flex-direction:column;
+  background:#fff;border:1px solid #dfe9ed;border-radius:23px;
+  overflow:hidden;scroll-snap-align:start;
+  box-shadow:0 9px 26px #233e5510,0 2px 5px #233e5506;
+  transition:transform .2s ease,box-shadow .2s ease;
+}
+.site .shop-offer-card:hover{
+  transform:translateY(-3px);box-shadow:0 15px 32px #233e551b;
+}
+.site .shop-offer-visual{
+  min-height:155px;position:relative;isolation:isolate;
+  background:radial-gradient(circle at 50% 125%,#b9f8e7 0%,transparent 57%),
+    linear-gradient(127deg,#f1fff9 0%,#edf6ff 100%);
+  border-bottom:1px solid #e6f0f3;
+  display:flex;align-items:center;justify-content:center;padding:38px 14px 19px;
+  flex-direction:column;gap:10px;
+}
+.site .shop-offer-visual::after{
+  content:"";position:absolute;z-index:-1;left:50%;top:55%;
+  width:200px;height:200px;border:1px solid #c9efe99c;
+  border-radius:50%;transform:translate(-50%,-50%);
+}
+.site .shop-offer-label{
+  position:absolute;top:15px;left:17px;display:flex;align-items:center;gap:5px;
+  color:#205f73;font-size:10px;font-weight:800;letter-spacing:.7px;
+}
+.site .shop-offer-bonus{
+  position:absolute;top:11px;right:13px;
+  border-radius:50px;background:#19d5ab;color:#123d4c;
+  font-size:12px;font-weight:850;padding:8px 11px;
+  box-shadow:0 2px 8px #11b58b1a;
+}
+.site .shop-offer-icons{
+  display:flex;align-items:center;justify-content:center;gap:19px;
+}
+.site .shop-offer-icon{
+  width:59px;height:59px;border-radius:50%;
+  display:grid;place-items:center;background:#fff;
+  box-shadow:0 5px 12px #2c376817;
+}
+.site .shop-offer-icon .currency-icon{
+  width:49px;height:49px;flex:none;font-size:29px;
+}
+.site .shop-offer-exchange{
+  display:grid;place-items:center;width:31px;height:31px;
+  border-radius:50%;background:#fff;color:#176f6a;border:1px solid #d9eeea;
+}
+.site .shop-offer-visual-caption{
+  display:flex;gap:7px;align-items:center;color:#5c7083;
+  font-size:11px;font-weight:750;letter-spacing:.75px;
+}
+.site .shop-offer-content{
+  display:flex;flex-direction:column;flex:1;min-height:0;padding:20px 19px 19px;
+}
+.site .shop-offer-content h3{
+  font-size:19px;font-weight:800;line-height:1.25;letter-spacing:-.35px;
+  color:var(--ink);overflow-wrap:anywhere;
+}
+.site .shop-offer-description{
+  color:#718194;font-size:12px;line-height:1.6;margin-top:6px;
+  min-height:36px;overflow-wrap:anywhere;
+}
+.site .shop-offer-prices{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;margin-top:19px;
+}
+.site .shop-offer-price-block{
+  min-width:0;background:#f6f9fc;border:1px solid #e6edf3;
+  border-radius:13px;padding:13px 10px 12px;
+}
+.site .shop-offer-price-block>span:first-child{
+  display:block;font-size:11px;font-weight:700;color:#67798b;
+}
+.site .shop-offer-price-block strong{
+  display:block;font-size:clamp(15px,1.5vw,21px);font-weight:850;
+  line-height:1.35;color:#293d56;margin-top:6px;overflow-wrap:anywhere;
+}
+.site .shop-offer-price-block strong small{
+  font-size:11px;font-weight:750;white-space:nowrap;
+}
+.site .shop-offer-price-block.shop-offer-receive{
+  background:#eafff9;border-color:#b9ecdd;
+}
+.site .shop-offer-receive strong{color:#087d75}
+.site .shop-offer-price-block .shop-offer-currency{
+  display:block;font-size:10px;color:#7c8b9b;line-height:1.45;margin-top:4px;
+}
+.site .shop-offer-comparison{
+  font-size:11px;line-height:1.6;color:#5b7081;margin-top:11px;
+  overflow-wrap:anywhere;
+}
+.site .shop-offer-comparison b{color:#087d75}
+.site .shop-offer-actions{margin-top:auto;padding-top:19px}
+.site .shop-offer-cta{
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  width:100%;min-height:47px;padding:12px 15px;border:0;border-radius:11px;
+  background:#18e5c1;color:#173655;font-size:14px;font-weight:800;
+  box-shadow:0 5px 13px #13cba425;
+}
+.site .shop-offer-cta:hover{background:#10cfad;transform:translateY(-1px)}
+.site .shop-offer-cta:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.site .shop-offer-conditions{
+  display:flex;justify-content:center;align-items:center;gap:5px;
+  min-height:16px;font-size:10px;line-height:1.55;color:#7a8998;
+  text-align:center;margin-top:10px;
+}
+.site .shop-offer-conditions svg{flex:none}
+.site .shop-offers-footer{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:22px;margin-top:8px;
+}
+.site .shop-offer-controls{gap:10px}
+.site .shop-offer-controls .icon-button{
+  height:43px;width:43px;border:1px solid #b8e7de;
+  border-radius:50%;color:#0d4d65;background:#d8f9ee;
+}
+.site .shop-offer-controls .next{background:#18e5c1}
+.site .shop-offer-controls .icon-button:disabled{
+  opacity:.35;cursor:default;
+}
+.site .shop-offers-footer p{
+  max-width:670px;font-size:12px;line-height:1.65;
+  color:#64788a;text-align:right;
+}
+@media(max-width:1050px){
+  .site .shop-offer-card{flex-basis:calc((100% - 20px)/2)}
+}
+@media(max-width:700px){
+  .site .shop-offers-section{padding-block:45px 38px}
+  .site .shop-offers-heading{margin-bottom:20px;align-items:flex-start}
+  .site .shop-offers-heading h2{font-size:clamp(27px,7vw,33px);margin-top:9px}
+  .site .shop-offers-heading p{font-size:13px}
+  .site .shop-offers-heading-mark{display:none}
+  .site .shop-offers-track{gap:14px;padding-bottom:18px}
+  .site .shop-offer-card{flex:0 0 100%;border-radius:20px}
+  .site .shop-offer-visual{min-height:146px}
+  .site .shop-offer-content{padding:18px 17px}
+  .site .shop-offer-content h3{font-size:19px}
+  .site .shop-offer-description{font-size:13px;min-height:0}
+  .site .shop-offer-price-block strong{font-size:clamp(17px,5vw,22px)}
+  .site .shop-offer-cta{font-size:15px;min-height:50px}
+  .site .shop-offers-footer{align-items:flex-start;gap:12px}
+  .site .shop-offers-footer p{font-size:11px;text-align:left;max-width:65%}
+}
+@media(max-width:360px){
+  .site .shop-offer-prices{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){
+  .site .shop-offer-card,.site .shop-offer-cta{transition:none}
+  .site .shop-offer-card:hover,.site .shop-offer-cta:hover{transform:none}
+}
