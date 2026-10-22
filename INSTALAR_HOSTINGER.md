@@ -225,3 +225,26 @@ o en el chat.
 
 El ZIP verificado ahora comprueba que la sección tipo tienda esté presente
 junto con guaraníes por peso, tipografías ampliadas y chat en línea.
+
+
+### Mejoras de portada y del chat (diseño y legibilidad)
+
+- En la portada, **Tu próximo cambio, comienza acá.** reemplaza el
+  texto anterior. Los sitios que todavía tengan guardado el mensaje
+  original «empieza acá.» lo muestran actualizado sin sobrescribir
+  otros títulos personalizados del administrador.
+- El bloque principal se eleva ligeramente, incorpora un gradiente
+  turquesa/azul tenue y la calculadora tiene sombra y mayor presencia.
+- Los textos secundarios se muestran con mayor contraste y tamaño,
+  especialmente los importes, etiquetas, notas y descripciones.
+- En el chat, los accesos rápidos tienen colores e íconos distintos:
+  cotizaciones (azul), cómo operar (turquesa), horarios (violeta) y
+  ofertas (ámbar). La atención dentro de la web utiliza azul oscuro
+  y WhatsApp verde.
+- El diseño sigue adaptándose a celulares y conserva las cotizaciones
+  en guaraníes por $1 ARS, las tarjetas de oferta y el chat en vivo.
+
+Para publicar: extraer **todo el contenido** del ZIP dentro de
+`public_html` y conservar la configuración y la carpeta de datos
+privados. Comprobar la versión desde `/build-info.json` después de
+actualizar y abrir la web en incógnito si Chrome conserva los estilos antiguos.
