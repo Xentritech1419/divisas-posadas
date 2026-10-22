@@ -110,6 +110,27 @@ def main() -> int:
                 and compiled_rule(b".site-header .nav-links.is-open",[b"top:86px"])
                 and compiled_rule(b".site-header .header-contact",[b"width:44px"])
             ),
+            "FAQ azul sin antiguo panel de contacto": (
+                b"faq-azul-pasos-graficos" in info
+                and b"faq-panel" in js
+                and b"faq-cta" in js
+                and b"contact-section" not in js
+                and compiled_rule(b".site .faq-panel",[b"background:linear-gradient"])
+            ),
+            "preguntas legibles en fondo azul": (
+                compiled_rule(b".site .faq-panel .faq-list summary",[b"color:#f5f9ff"])
+                and compiled_rule(b".site .faq-panel .faq-list details p",[b"color:#dbe8f7"])
+            ),
+            "tres pasos representados con tarjetas e íconos": (
+                b"how-step-visual" in js
+                and b"how-step-symbol" in js
+                and b"how-step-arrow" in js
+                and compiled_rule(b".site .how-section .how-step",[b"box-shadow:"])
+            ),
+            "pasos responsivos de una columna en celular": (
+                b"@media (width<=700px)" in css
+                and compiled_rule(b".site .how-section .steps",[b"grid-template-columns:1fr"])
+            ),
             "ZIP compilado desde el último código fuente": fresh,
         }
         for name, ok in checks.items():

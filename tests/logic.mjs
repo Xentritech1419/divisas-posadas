@@ -135,4 +135,24 @@ assert.match(css,/\.site-header \.brand-wordmark strong\{[\s\S]*?font-size:clamp
 assert.match(css,/\.site-header \.brand-wordmark small\{[\s\S]*?font-size:12px/);
 assert.match(css,/@media\(max-width:700px\)\{[\s\S]*?\.site-header \.nav-links\.is-open\{top:86px\}/);
 assert.match(css,/@media\(max-width:480px\)\{[\s\S]*?\.site-header \.header-contact span,/);
+// FAQ azul reemplaza al viejo contacto y los tres pasos son tarjetas gráficas.
+assert(!landingSource.includes('className="contact-section shell"'));
+assert(!landingSource.includes('className="contact-panel"'));
+assert(landingSource.includes('className="faq-panel"'));
+assert(landingSource.includes('className="faq-panel-decor"'));
+assert(landingSource.includes('c.faqs.map(f=><details'));
+assert(landingSource.includes('onClick={()=>setChatOpen(true)}'));
+assert(landingSource.includes('className="faq-cta"'));
+assert(landingSource.includes('c.steps.map((step,i)=><article'));
+assert(landingSource.includes('className={`how-step how-step-${i+1}`}'));
+assert(landingSource.includes('<Coins size={33}'));
+assert(landingSource.includes('<MessagesSquare size={33}'));
+assert(landingSource.includes('<BadgeCheck size={33}'));
+assert(landingSource.indexOf('id="como-funciona"') < landingSource.indexOf('id="preguntas"'));
+assert.match(css,/\/\* Nueva experiencia gráfica: tres pasos con íconos/);
+assert.match(css,/\.site \.how-section \.how-step\{[\s\S]*?box-shadow:/);
+assert.match(css,/\.site \.how-step-visual\{[\s\S]*?background:linear-gradient/);
+assert.match(css,/\.site \.faq-panel\{[\s\S]*?background:linear-gradient/);
+assert.match(css,/\.site \.faq-panel \.faq-list summary\{[\s\S]*?color:#f5f9ff/);
+assert.match(css,/@media\(max-width:700px\)\{[\s\S]*?\.site \.how-section \.steps\{grid-template-columns:1fr/);
 console.log("Compra, venta, guaraní, pausa, vencimiento y asistente verificados.");

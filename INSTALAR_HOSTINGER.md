@@ -266,3 +266,26 @@ El menú móvil queda situado debajo de la cabecera sin superponerse.
 
 No se modifica el logo del pie o del panel administrativo ni
 los datos privados de usuarios, cotizaciones u ofertas.
+
+### FAQ con diseño azul y pasos gráficos
+
+La sección adicional de contacto azul fue eliminada para evitar repetir
+los botones de contacto. **Preguntas frecuentes** usa ahora ese fondo
+azul marino, esquinas redondeadas y flechas decorativas, con preguntas
+en blanco, íconos turquesa de expandir y respuestas legibles en celeste
+claro. El botón **Preguntale al asistente** sigue abriendo el chat en la
+misma web. Las preguntas y respuestas siguen siendo editables desde
+el panel de administración.
+
+La sección **Cambiar, así de simple** muestra tres tarjetas visuales
+con los pasos definidos en la administración: elegir divisa, escribir
+al equipo y coordinar el cambio. Incorporan íconos grandes, tarjetas
+individuales y una flecha entre pasos. En celular las tarjetas se
+organizan verticalmente; en escritorio, de izquierda a derecha.
+
+No se modifica el funcionamiento del conversor, las cotizaciones,
+los guaraníes por $1 ARS, las ofertas, los usuarios ni el chat
+híbrido. El paquete de Hostinger se verifica automáticamente antes
+de publicarse. Hacé un respaldo antes de extraerlo en `public_html`
+y conservá `config.local.php` y la carpeta privada
+`divisas-posadas-data`.
