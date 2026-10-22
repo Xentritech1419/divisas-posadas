@@ -1135,3 +1135,16 @@ button.chat-human{width:100%;background:#f2fcf9;border:none;cursor:pointer}
   .site .faq-cta{transition:none}
   .site .faq-cta:hover{transform:none}
 }
+
+
+/* Ícono lineal del paso 01: solo cambiamos el dibujo, no su tarjeta. */
+.site .how-step-symbol .how-step-custom-icon{
+  width:37px;
+  height:37px;
+  display:block;
+  object-fit:contain;
+  flex:none;
+}
+@media(max-width:700px){
+  .site .how-step-symbol .how-step-custom-icon{width:34px;height:34px}
+}
