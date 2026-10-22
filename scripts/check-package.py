@@ -52,6 +52,10 @@ def main() -> int:
         except (ValueError, UnicodeDecodeError):
             build_meta = {}
         fresh = build_meta.get("buildId") == digest.hexdigest()[:16]
+        # Diagnóstico de cómo Vite reescribe las propiedades del carrusel.
+        for rule in css.split(b"}"):
+            if b".shop-offer-card" in rule or b".shop-offer-cta" in rule:
+                print("CSS OFERTAS:", repr(rule[-270:]))
         checks = {
             "HTML principal": "index.html" in names,
             "API PHP del chat": bool(php),
