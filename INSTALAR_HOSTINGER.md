@@ -199,3 +199,29 @@ La verificación automática del repositorio ahora inspecciona **el ZIP real**
 y contrasta su identificador `buildId` con el código fuente. Si el paquete
 queda desactualizado o pierde estas mejoras, la compilación se marca como
 fallida y no se publica el ZIP como válido.
+
+
+### Ofertas destacadas como productos de tienda
+
+La sección **Ofertas** se muestra **antes de Cotizaciones**, inmediatamente
+después de la tira de monedas. Cada oferta activa del panel conserva su
+título, descripción, moneda de origen, importe entregado, moneda de destino,
+importe recibido y fecha de vencimiento, cuando existe.
+
+Cada tarjeta muestra las dos monedas con su ícono, los importes y el botón
+**Quiero esta oferta**, que lleva al conversor con la oferta seleccionada
+y el monto fijo. Si la cantidad recibida realmente supera el cambio
+habitual estimado para esas monedas, se muestra el porcentaje de mejora;
+**no** se inventan porcentajes ni descuentos.
+
+El carrusel muestra tres tarjetas por vista en escritorio, dos en tablet
+y **una por vista en celulares**. Los controles sirven para avanzar y
+retroceder; también permite deslizar con el dedo.
+
+**Administración:** las ofertas siguen editándose desde la pestaña
+**Ofertas** del panel. Se conservan todos los valores guardados en
+`divisas-posadas-data`. No hay migraciones ni cambios en las cotizaciones
+o en el chat.
+
+El ZIP verificado ahora comprueba que la sección tipo tienda esté presente
+junto con guaraníes por peso, tipografías ampliadas y chat en línea.
