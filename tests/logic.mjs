@@ -104,4 +104,25 @@ assert.match(css, /\.site \.shop-offer-card\{[\s\S]*?flex:0 0 calc\(\(100% - 40p
 assert.match(css, /@media\(max-width:1050px\)\{\s*\.site \.shop-offer-card\{flex-basis:calc\(\(100% - 20px\)\/2\)/);
 assert.match(css, /@media\(max-width:700px\)\{[\s\S]*?\.site \.shop-offer-card\{flex:0 0 100%/);
 assert.match(css, /\.site \.shop-offer-cta\{[\s\S]*?font-size:14px/);
+// Mejoras de accesibilidad y estilo solicitadas para portada y chat.
+assert.equal(defaultContent.copy.heroAccent,"comienza acá.");
+assert(landingSource.includes('c.copy.heroAccent.trim().toLocaleLowerCase("es-AR")==="empieza acá."?"comienza acá.":c.copy.heroAccent'));
+assert(css.includes("/* Hero y chat accesibles:"));
+assert.match(css,/\.site \.hero\{[\s\S]*?radial-gradient\([\s\S]*?linear-gradient/);
+assert.match(css,/\.site \.hero-grid\{\s*padding-top:38px/);
+assert.match(css,/\.site \.hero-copy\{transform:translateY\(-17px\)/);
+assert.match(css,/\.site \.converter\{[\s\S]*?box-shadow:0 26px 65px/);
+assert.match(css,/\.site \.hero-description\{[\s\S]*?font-size:clamp\(16px,1\.6vw,19px\)/);
+assert.match(css,/\.site \.chat-quick\{\s*display:grid;grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
+for(const name of ["rates","how","hours","offers"]){
+  assert(widget.includes(`chat-quick-${name}`));
+  assert(css.includes(`.site .chat-quick .chat-quick-${name}`));
+}
+assert(widget.includes('className="chat-human chat-live-agent"'));
+assert(widget.includes('className="chat-human chat-whatsapp"'));
+assert(widget.includes('<Headset size={20}'));
+assert(widget.includes('<MessageCircleMore size={20}'));
+assert(css.includes('.site .chat-contact-actions .chat-live-agent'));
+assert(css.includes('.site .chat-contact-actions .chat-whatsapp'));
+assert(css.includes('.site .live-chat-privacy'));
 console.log("Compra, venta, guaraní, pausa, vencimiento y asistente verificados.");
