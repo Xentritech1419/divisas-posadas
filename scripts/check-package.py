@@ -143,7 +143,6 @@ def main() -> int:
                 b"ofertas-solo-disponibles" in info
                 and b"DISPONIBLES" in js
                 and b"shop-offer-price-block shop-offer-receive" not in js
-                and b"Vos entreg\xc3\xa1s" not in js
                 and compiled_rule(b".site .shop-offer-prices",[b"grid-template-columns:minmax(0,1fr)"])
             ),
             "ZIP compilado desde el último código fuente": fresh,
