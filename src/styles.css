@@ -1150,33 +1150,9 @@ button.chat-human{width:100%;background:#f2fcf9;border:none;cursor:pointer}
 }
 
 
-/* Ofertas simplificadas: un único monto disponible, sin segundo recuadro. */
-.site .shop-offer-prices{
-  grid-template-columns:minmax(0,1fr);
-  margin-top:16px;
-}
-.site .shop-offer-prices .shop-offer-price-block{
-  padding:17px 19px;
-  border-color:#c6e8e3;
-  background:linear-gradient(115deg,#f5faff,#eefff9);
-}
-.site .shop-offer-prices .shop-offer-price-block>span:first-child{
-  color:#087e77;
-  font-size:12px;
+/* Etiqueta destacada sin alterar los dos recuadros de importe originales. */
+.site .shop-offer-prices .shop-offer-price-block:first-child>span:first-child{
   font-weight:850;
-  letter-spacing:1px;
-}
-.site .shop-offer-prices .shop-offer-price-block strong{
-  color:#293d68;
-  font-size:clamp(23px,2.2vw,29px);
-  margin-top:9px;
-}
-.site .shop-offer-prices .shop-offer-price-block strong small{
-  font-size:13px;
-}
-.site .shop-offer-prices .shop-offer-currency{
-  font-size:12px;
-}
-@media(max-width:700px){
-  .site .shop-offer-prices .shop-offer-price-block strong{font-size:25px}
+  letter-spacing:.5px;
+  color:#087e77;
 }
