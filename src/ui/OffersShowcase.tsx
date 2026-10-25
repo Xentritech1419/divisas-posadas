@@ -44,6 +44,7 @@ export default function OffersShowcase({content,offers,onSelect}:Props){
           const gain=usual>0?(offer.receive/usual-1)*100:0;
           const bonus=Number.isFinite(gain)&&gain>0.05;
           return <article key={offer.id} className="shop-offer-card"
+            aria-label={offer.title}
             style={{"--shop-offer-accent":to.color} as CSSProperties}>
             <div className="shop-offer-visual">
               <span className="shop-offer-label"><Sparkles size={13}/> OFERTA ESPECIAL</span>
@@ -57,18 +58,12 @@ export default function OffersShowcase({content,offers,onSelect}:Props){
             </div>
 
             <div className="shop-offer-content">
-              <h3>{offer.title}</h3>
               {offer.description&&<p className="shop-offer-description">{offer.description}</p>}
               <div className="shop-offer-prices">
                 <div className="shop-offer-price-block">
-                  <span>Vos entregás</span>
+                  <span>DISPONIBLES</span>
                   <strong>{formatNumber(offer.amount,Number.isInteger(offer.amount)?0:2)} <small>{from.code}</small></strong>
                   <span className="shop-offer-currency">{from.name}</span>
-                </div>
-                <div className="shop-offer-price-block shop-offer-receive">
-                  <span>Vos recibís</span>
-                  <strong>{formatNumber(offer.receive,Number.isInteger(offer.receive)?0:2)} <small>{to.code}</small></strong>
-                  <span className="shop-offer-currency">{to.name}</span>
                 </div>
               </div>
               {bonus&&<p className="shop-offer-comparison">

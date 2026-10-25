@@ -99,6 +99,16 @@ assert(showcaseSource.includes('className="shop-offer-card"'));
 assert(showcaseSource.includes('onClick={()=>onSelect(offer)}'));
 assert(showcaseSource.includes('const gain=usual>0?(offer.receive/usual-1)*100:0'));
 assert(showcaseSource.includes('gain>0.05'));
+assert(showcaseSource.includes('<span>DISPONIBLES</span>'));
+assert(!showcaseSource.includes('<span>Vos entregás</span>'));
+assert(!showcaseSource.includes('<span>Vos recibís</span>'));
+assert(!showcaseSource.includes('<h3>{offer.title}</h3>'));
+assert(!showcaseSource.includes('className="shop-offer-price-block shop-offer-receive"'));
+assert(showcaseSource.includes('aria-label={offer.title}'));
+assert(showcaseSource.includes('formatNumber(offer.amount,Number.isInteger(offer.amount)?0:2)'));
+assert(showcaseSource.includes('onClick={()=>onSelect(offer)}'));
+assert.match(css,/\.site \.shop-offer-prices\{\s*grid-template-columns:minmax\(0,1fr\)/);
+
 assert(showcaseSource.includes('offer.expiresAt'));
 assert.match(css, /\.site \.shop-offer-card\{[\s\S]*?flex:0 0 calc\(\(100% - 40px\)\/3\)/);
 assert.match(css, /@media\(max-width:1050px\)\{\s*\.site \.shop-offer-card\{flex-basis:calc\(\(100% - 20px\)\/2\)/);

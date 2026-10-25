@@ -306,3 +306,16 @@ En Hostinger reemplazá los archivos públicos del ZIP completo y conservá
 `config.local.php` y la carpeta privada `divisas-posadas-data`.
 Si el navegador conserva la imagen anterior, abrí la página en incógnito
 o actualizá la caché.
+
+
+### Ofertas simplificadas: DISPONIBLES
+
+Las tarjetas de ofertas ahora muestran **un solo recuadro**, con el encabezado
+**DISPONIBLES**, el monto y la divisa de origen. Se eliminan del diseño público
+los títulos grandes de cada oferta y el recuadro lateral **Vos recibís**.
+El título interno queda como etiqueta de accesibilidad y puede seguirse
+editando desde el panel. No se pierden los montos recibidos ni se altera
+el cálculo de ofertas, el beneficio porcentual o el botón **Quiero esta oferta**.
+
+Las cotizaciones, los guaraníes por peso, el chat, el estilo de las tarjetas
+y los demás datos guardados permanecen sin cambios.
