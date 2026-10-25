@@ -61,7 +61,7 @@ export default function OffersShowcase({content,offers,onSelect}:Props){
               {offer.description&&<p className="shop-offer-description">{offer.description}</p>}
               <div className="shop-offer-prices">
                 <div className="shop-offer-price-block">
-                  <span>Vos entregás</span>
+                  <span className="shop-offer-price-spacer" aria-hidden="true"></span>
                   <strong>{formatNumber(offer.amount,Number.isInteger(offer.amount)?0:2)} <small>{from.code}</small></strong>
                   <span className="shop-offer-currency">{from.name}</span>
                 </div>
