@@ -308,14 +308,16 @@ Si el navegador conserva la imagen anterior, abrí la página en incógnito
 o actualizá la caché.
 
 
-### Ofertas simplificadas: DISPONIBLES
+### Ofertas: DISPONIBLES y Vos recibís
 
-Las tarjetas de ofertas ahora muestran **un solo recuadro**, con el encabezado
-**DISPONIBLES**, el monto y la divisa de origen. Se eliminan del diseño público
-los títulos grandes de cada oferta y el recuadro lateral **Vos recibís**.
-El título interno queda como etiqueta de accesibilidad y puede seguirse
-editando desde el panel. No se pierden los montos recibidos ni se altera
-el cálculo de ofertas, el beneficio porcentual o el botón **Quiero esta oferta**.
+Las tarjetas mantienen **dos recuadros**: a la izquierda **DISPONIBLES**
+con el importe y la moneda de origen, y a la derecha **Vos recibís**
+con el importe y la moneda de destino, sobre su fondo verde original.
+El título grande de la oferta continúa oculto en la tarjeta pública,
+pero se conserva internamente como etiqueta accesible y sigue siendo
+editable desde el panel.
 
-Las cotizaciones, los guaraníes por peso, el chat, el estilo de las tarjetas
-y los demás datos guardados permanecen sin cambios.
+Los valores, ofertas guardadas, porcentaje de beneficio y botón
+**Quiero esta oferta** mantienen su funcionalidad. Esta corrección
+restaura exactamente el recuadro derecho que se había quitado por error.
+

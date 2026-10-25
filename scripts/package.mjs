@@ -19,7 +19,7 @@ for(const name of sourceFiles){
 const buildId=hash.digest("hex").slice(0,16);
 await writeFile("public_html/build-info.json",JSON.stringify({
   buildId,
-  features:["guaranies-por-peso","textos-movil-ampliados","chat-en-vivo-confirmado","ofertas-tienda-antes-cotizaciones","hero-gradiente-contraste-chat","logo-y-nombre-ampliados","faq-azul-pasos-graficos","icono-lineal-elegi-divisa","ofertas-solo-disponibles"],
+  features:["guaranies-por-peso","textos-movil-ampliados","chat-en-vivo-confirmado","ofertas-tienda-antes-cotizaciones","hero-gradiente-contraste-chat","logo-y-nombre-ampliados","faq-azul-pasos-graficos","icono-lineal-elegi-divisa","ofertas-disponibles-y-recibis"],
   description:"Divisas Posadas: versión compilada para Hostinger"
 },null,2));
 const { defaultContent } = await import("../src/lib/content.ts");

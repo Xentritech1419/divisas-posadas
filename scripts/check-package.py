@@ -139,11 +139,12 @@ def main() -> int:
                 and b"/icons/elegi-tu-divisa.svg" in js
                 and compiled_rule(b".site .how-step-symbol .how-step-custom-icon",[b"width:37px",b"height:37px"])
             ),
-            "ofertas simplificadas: solo importe DISPONIBLES": (
-                b"ofertas-solo-disponibles" in info
+            "ofertas: DISPONIBLES y Vos recibís con ambos importes": (
+                b"ofertas-disponibles-y-recibis" in info
                 and b"DISPONIBLES" in js
-                and b"shop-offer-price-block shop-offer-receive" not in js
-                and compiled_rule(b".site .shop-offer-prices",[b"grid-template-columns:minmax(0,1fr)"])
+                and "Vos recibís".encode() in js
+                and b"shop-offer-price-block shop-offer-receive" in js
+                and compiled_rule(b".site .shop-offer-prices",[b"grid-template-columns:repeat(2,minmax(0,1fr))"])
             ),
             "ZIP compilado desde el último código fuente": fresh,
         }
