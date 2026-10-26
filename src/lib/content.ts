@@ -29,8 +29,14 @@ export type ContentState={content:SiteContent;revision:number;updatedAt:string|n
 // Normaliza únicamente la marca anterior. Conserva todas las cotizaciones,
 // ofertas, usuarios y demás datos existentes en Hostinger sin tocar el servidor.
 export function currentBrandState(state:ContentState):ContentState{
-  if(state.content.brand.name.trim().toLocaleLowerCase("es-AR")!=="divisas posadas")return state;
-  return {...state,content:{...state.content,brand:{...state.content.brand,name:"Cambios Posadas"}}};
+  const oldBrand=state.content.brand.name.trim().toLocaleLowerCase("es-AR")==="divisas posadas";
+  const oldGreeting=state.content.bot.welcome.includes("Soy el asistente automático de Cambios Posadas.");
+  if(!oldBrand&&!oldGreeting)return state;
+  return {...state,content:{
+    ...state.content,
+    brand:oldBrand?{...state.content.brand,name:"Cambios Posadas"}:state.content.brand,
+    bot:oldGreeting?{...state.content.bot,welcome:state.content.bot.welcome.replace("Divisas Posadas","Cambios Posadas")}:state.content.bot
+  }};
 }
 
 export const defaultContent:SiteContent={
