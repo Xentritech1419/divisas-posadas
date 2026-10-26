@@ -30,7 +30,7 @@ export type ContentState={content:SiteContent;revision:number;updatedAt:string|n
 // ofertas, usuarios y demás datos existentes en Hostinger sin tocar el servidor.
 export function currentBrandState(state:ContentState):ContentState{
   const oldBrand=state.content.brand.name.trim().toLocaleLowerCase("es-AR")==="divisas posadas";
-  const oldGreeting=state.content.bot.welcome.includes("Soy el asistente automático de Cambios Posadas.");
+  const oldGreeting=state.content.bot.welcome.includes("Soy el asistente automático de Divisas Posadas.");
   if(!oldBrand&&!oldGreeting)return state;
   return {...state,content:{
     ...state.content,
