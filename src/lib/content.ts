@@ -65,7 +65,7 @@ export const defaultContent:SiteContent={
     {id:"dolar",question:"¿Qué diferencia hay entre Dólar Azul y Dólar Verde?",answer:"En nuestra lista aparecen como dos categorías de dólares en efectivo, con cotizaciones separadas. Consultanos qué billetes corresponden a cada categoría y sus condiciones de recepción.",keywords:"azul,verde,billete,billetes,diferencia"},
     {id:"ofertas",question:"¿Cómo aprovecho una oferta?",answer:"Elegí una oferta para cargar su monto en el conversor y consultanos por WhatsApp. El beneficio se aplica al monto y a las condiciones indicadas, sujeto a confirmación de disponibilidad.",keywords:"oferta,promocion,promoción,descuento"},
   ],
-  bot:{name:"Asistente DP",welcome:"¡Hola! Soy el asistente automático de Divisas Posadas. Te ayudo con las cotizaciones y las consultas frecuentes. ¿Qué necesitás?",fallback:"Puedo ayudarte con cotizaciones, ofertas, horarios, ubicación y cómo operar. Para una consulta específica, escribile a nuestro equipo por WhatsApp."},
+  bot:{name:"Asistente DP",welcome:"¡Hola! Soy el asistente automático de Cambios Posadas. Te ayudo con las cotizaciones y las consultas frecuentes. ¿Qué necesitás?",fallback:"Puedo ayudarte con cotizaciones, ofertas, horarios, ubicación y cómo operar. Para una consulta específica, escribile a nuestro equipo por WhatsApp."},
 };
 export const peso={id:"ars" as const,name:"Pesos argentinos",code:"ARS",symbol:"$",color:"#618CB2",active:true,buy:1,sell:1,description:"Argentina"};
 export function getCurrency(content:SiteContent,id:ExchangeId){return id==="ars"?peso:content.currencies.find(c=>c.id===id)!;}
