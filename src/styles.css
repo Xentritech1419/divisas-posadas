@@ -1156,3 +1156,60 @@ button.chat-human{width:100%;background:#f2fcf9;border:none;cursor:pointer}
   letter-spacing:.5px;
   color:#087e77;
 }
+
+
+/* Páginas públicas de Cambios Posadas: Inicio / Cotizaciones / Cómo funciona. */
+.site .secondary-page-heading{
+  margin-top:40px;
+  padding:clamp(28px,4vw,49px) clamp(26px,4vw,54px);
+  border:1px solid #d9ede9;
+  border-radius:24px;
+  background:linear-gradient(115deg,#effcf8 0%,#f3f8ff 100%);
+  box-shadow:0 12px 32px rgba(25,60,94,.055);
+}
+.site .secondary-page-heading .eyebrow{
+  display:block;
+  margin-bottom:13px;
+  font-size:11px;
+  font-weight:800;
+  color:#087e77;
+}
+.site .secondary-page-heading h1{
+  color:#293d68;
+  font-size:clamp(32px,4.1vw,48px);
+  font-weight:850;
+  line-height:1.14;
+  letter-spacing:-1.3px;
+}
+.site .secondary-page-heading p{
+  max-width:710px;
+  margin-top:15px;
+  font-size:15px;
+  line-height:1.75;
+  color:#50667e;
+}
+.site .secondary-page-heading+.rates-section{
+  padding-top:37px;
+}
+.site .secondary-page-heading+.how-section{
+  padding-top:42px;
+}
+.site-header .nav-links a[aria-current="page"]{
+  color:#087e77;
+  font-weight:850;
+}
+@media(max-width:700px){
+  .site .secondary-page-heading{
+    margin-top:18px;
+    padding:28px 23px;
+    border-radius:17px;
+  }
+  .site .secondary-page-heading h1{font-size:34px}
+  .site .secondary-page-heading p{font-size:13px}
+  .site .secondary-page-heading+.rates-section{padding-top:26px}
+  .site .secondary-page-heading+.how-section{padding-top:28px}
+  .site-header .nav-links.is-open{
+    flex-wrap:wrap;
+    gap:13px 20px;
+  }
+}
