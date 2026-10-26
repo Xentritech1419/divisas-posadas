@@ -43,7 +43,7 @@ function App() {
   const [state, setState] = useState<ContentState | null>(null);
   const [access, setAccess] = useState<Session | null>(null);
   const [error, setError] = useState("");
-  const pathname=window.location.pathname.replace(/\\/+$/,"")||"/";
+  const pathname=window.location.pathname.replace(/\/+$/,"")||"/";
   const isAdmin=pathname==="/admin";
   const page:PublicPage|null=pathname==="/"
     ?"home":pathname==="/cotizaciones"?"rates":pathname==="/como-funciona"?"how":null;
