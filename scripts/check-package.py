@@ -39,9 +39,12 @@ def main() -> int:
                     return True
             return False
         source_files = [
-            "src/lib/content.ts", "src/ui/Landing.tsx", "src/ui/Admin.tsx",
-            "src/ui/ChatInbox.tsx", "src/ui/ChatWidget.tsx", "src/ui/OffersShowcase.tsx", "src/styles.css",
-            "server/api/live-chat.php", "public/icons/elegi-tu-divisa.svg"
+            "index.html", "src/main.tsx", "src/lib/content.ts", "src/ui/Landing.tsx",
+            "src/ui/Admin.tsx", "src/ui/Brand.tsx", "src/ui/ChatInbox.tsx",
+            "src/ui/ChatWidget.tsx", "src/ui/OffersShowcase.tsx", "src/styles.css",
+            "server/api/live-chat.php", "server/.htaccess",
+            "public/icons/elegi-tu-divisa.svg", "public/logo-divisas-posadas.svg",
+            "public/logo-asistente-divisas-posadas.svg"
         ]
         digest = hashlib.sha256()
         for filename in source_files:
@@ -145,6 +148,18 @@ def main() -> int:
                 and "Vos recibís".encode() in js
                 and b"shop-offer-price-block shop-offer-receive" in js
                 and compiled_rule(b".site .shop-offer-prices",[b"grid-template-columns:repeat(2,minmax(0,1fr))"])
+            ),
+            "tres páginas de Cambios Posadas sin franja ni footer": (
+                b"paginas-cambios-posadas" in info
+                and b"Cambios Posadas" in js
+                and b"/cotizaciones" in js
+                and b"/como-funciona" in js
+                and b"secondary-page-heading" in js
+                and b"currency-ribbon" not in js
+                and b"site-footer" not in js
+                and compiled_rule(b".site .secondary-page-heading",[b"margin-top:40px"])
+                and b"Cambios Posadas" in archive.read("index.html")
+                and b"RewriteRule ^ index.html [L]" in archive.read(".htaccess")
             ),
             "ZIP compilado desde el último código fuente": fresh,
         }
