@@ -1,4 +1,4 @@
-# Instalar Divisas Posadas en Hostinger Premium
+# Instalar Cambios Posadas en Hostinger Premium
 
 ## 1. Crear el sitio para probarlo
 
@@ -321,3 +321,33 @@ Los valores, ofertas guardadas, porcentaje de beneficio y botón
 **Quiero esta oferta** mantienen su funcionalidad. Esta corrección
 restaura exactamente el recuadro derecho que se había quitado por error.
 
+
+
+## Nueva estructura pública: tres páginas
+
+El nombre público del sitio es **Cambios Posadas**. El nombre anterior
+«Divisas Posadas» se actualiza también cuando había quedado guardado en el
+panel, sin perder cotizaciones, ofertas, configuraciones ni conversaciones.
+Los nombres personalizados distintos se respetan.
+
+La web pública ahora se divide en:
+- **Inicio** (`/`): portada, calculadora y ofertas.
+- **Cotizaciones** (`/cotizaciones`): listado completo con compra, venta, filtros y WhatsApp.
+- **Cómo funciona** (`/como-funciona`): tarjetas «De la consulta al cambio» y preguntas frecuentes «Sin dudas, mejor».
+
+Se quitó la banda «Tu mundo, en divisas» y el footer de todas las páginas.
+El encabezado y chat se mantienen en las tres páginas.
+
+En las ofertas se muestran los dos recuadros: **DISPONIBLES** y **Vos recibís**,
+cada uno con su monto y moneda, sin el título grande que duplicaba el monto.
+
+### Importante en Hostinger
+
+El ZIP incluye `.htaccess`. **No lo omitas**, porque permite abrir
+`/cotizaciones` y `/como-funciona` directamente, además de proteger rutas
+internas. Después de actualizar, probá esas dos páginas escribiendo la dirección
+en el navegador. Si ves una página antigua, abrila en incógnito o limpiá caché.
+
+Si ya tenés la web funcionando, hacé un respaldo antes de reemplazar archivos,
+y **conservá `config.local.php` y la carpeta privada de datos
+`divisas-posadas-data`**. No reinicies la configuración ni los usuarios.
