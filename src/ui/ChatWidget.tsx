@@ -104,7 +104,7 @@ export default function ChatWidget({content,open,onOpenChange}:{content:SiteCont
     {open&&<aside className="chat-window" id="chat-window" aria-label="Atención automática y humana">
       <div className="chat-head">
         <Mark className="chat-mark"/>
-        <div><strong>{human?"Atención de Divisas Posadas":content.bot.name}</strong>
+        <div><strong>{human?"Atención de Cambios Posadas":content.bot.name}</strong>
           <span>{human?(online?"Asesor en línea":"Sin asesores disponibles"):(online?"Asesor disponible · chat en vivo":"Respuestas automáticas · WhatsApp")}</span>
         </div>
         <button onClick={()=>onOpenChange(false)} aria-label="Cerrar chat"><X size={19}/></button>
