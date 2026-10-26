@@ -25,9 +25,17 @@ export type Currency=SiteContent["currencies"][number];
 export type Offer=SiteContent["offers"][number];
 export type ExchangeId=CurrencyId|"ars";
 export type ContentState={content:SiteContent;revision:number;updatedAt:string|null};
+
+// Normaliza únicamente la marca anterior. Conserva todas las cotizaciones,
+// ofertas, usuarios y demás datos existentes en Hostinger sin tocar el servidor.
+export function currentBrandState(state:ContentState):ContentState{
+  if(state.content.brand.name.trim().toLocaleLowerCase("es-AR")!=="divisas posadas")return state;
+  return {...state,content:{...state.content,brand:{...state.content.brand,name:"Cambios Posadas"}}};
+}
+
 export const defaultContent:SiteContent={
   demo:true,
-  brand:{name:"Divisas Posadas",tagline:"Tu cambio, más cerca.",logoUrl:brandLogoUrl,primary:brandPalette.primary,dark:brandPalette.dark},
+  brand:{name:"Cambios Posadas",tagline:"Tu cambio, más cerca.",logoUrl:brandLogoUrl,primary:brandPalette.primary,dark:brandPalette.dark},
   copy:{eyebrow:"DIVISAS EN POSADAS, MISIONES",heroTitle:"Tu próximo cambio,",heroAccent:"comienza acá.",heroDescription:"Dólares, euros, reales, guaraníes y saldo USDT. Consultá las cotizaciones, hacé tus cuentas y coordiná con nosotros.",ratesTitle:"Cada divisa. Todo claro.",ratesDescription:"Compará nuestros valores de compra y venta: guaraníes por cada peso argentino y las demás divisas en pesos.",offersTitle:"Un buen cambio empieza con una oferta.",offersDescription:"Encontrá una propuesta para vos y consultá su disponibilidad.",howTitle:"Cambiar, así de simple.",contactTitle:"Hablemos de tu próximo cambio.",contactDescription:"¿Viajás, necesitás divisas o querés cambiar tu saldo USDT? Contanos qué necesitás y coordinamos los detalles.",disclaimer:"Las cotizaciones son orientativas y están sujetas a confirmación, disponibilidad y condiciones de la operación. El conversor no reserva una cotización ni realiza transferencias."},
   contact:{whatsapp:"5493764271559",location:"Posadas, Misiones",address:"",hours:"Consultá nuestros horarios de atención",email:""},
   currencies:[
