@@ -25,9 +25,23 @@ export type Currency=SiteContent["currencies"][number];
 export type Offer=SiteContent["offers"][number];
 export type ExchangeId=CurrencyId|"ars";
 export type ContentState={content:SiteContent;revision:number;updatedAt:string|null};
+
+// Normaliza únicamente la marca anterior. Conserva todas las cotizaciones,
+// ofertas, usuarios y demás datos existentes en Hostinger sin tocar el servidor.
+export function currentBrandState(state:ContentState):ContentState{
+  const oldBrand=state.content.brand.name.trim().toLocaleLowerCase("es-AR")==="divisas posadas";
+  const oldGreeting=state.content.bot.welcome.includes("Soy el asistente automático de Divisas Posadas.");
+  if(!oldBrand&&!oldGreeting)return state;
+  return {...state,content:{
+    ...state.content,
+    brand:oldBrand?{...state.content.brand,name:"Cambios Posadas"}:state.content.brand,
+    bot:oldGreeting?{...state.content.bot,welcome:state.content.bot.welcome.replace("Divisas Posadas","Cambios Posadas")}:state.content.bot
+  }};
+}
+
 export const defaultContent:SiteContent={
   demo:true,
-  brand:{name:"Divisas Posadas",tagline:"Tu cambio, más cerca.",logoUrl:brandLogoUrl,primary:brandPalette.primary,dark:brandPalette.dark},
+  brand:{name:"Cambios Posadas",tagline:"Tu cambio, más cerca.",logoUrl:brandLogoUrl,primary:brandPalette.primary,dark:brandPalette.dark},
   copy:{eyebrow:"DIVISAS EN POSADAS, MISIONES",heroTitle:"Tu próximo cambio,",heroAccent:"comienza acá.",heroDescription:"Dólares, euros, reales, guaraníes y saldo USDT. Consultá las cotizaciones, hacé tus cuentas y coordiná con nosotros.",ratesTitle:"Cada divisa. Todo claro.",ratesDescription:"Compará nuestros valores de compra y venta: guaraníes por cada peso argentino y las demás divisas en pesos.",offersTitle:"Un buen cambio empieza con una oferta.",offersDescription:"Encontrá una propuesta para vos y consultá su disponibilidad.",howTitle:"Cambiar, así de simple.",contactTitle:"Hablemos de tu próximo cambio.",contactDescription:"¿Viajás, necesitás divisas o querés cambiar tu saldo USDT? Contanos qué necesitás y coordinamos los detalles.",disclaimer:"Las cotizaciones son orientativas y están sujetas a confirmación, disponibilidad y condiciones de la operación. El conversor no reserva una cotización ni realiza transferencias."},
   contact:{whatsapp:"5493764271559",location:"Posadas, Misiones",address:"",hours:"Consultá nuestros horarios de atención",email:""},
   currencies:[
@@ -51,7 +65,7 @@ export const defaultContent:SiteContent={
     {id:"dolar",question:"¿Qué diferencia hay entre Dólar Azul y Dólar Verde?",answer:"En nuestra lista aparecen como dos categorías de dólares en efectivo, con cotizaciones separadas. Consultanos qué billetes corresponden a cada categoría y sus condiciones de recepción.",keywords:"azul,verde,billete,billetes,diferencia"},
     {id:"ofertas",question:"¿Cómo aprovecho una oferta?",answer:"Elegí una oferta para cargar su monto en el conversor y consultanos por WhatsApp. El beneficio se aplica al monto y a las condiciones indicadas, sujeto a confirmación de disponibilidad.",keywords:"oferta,promocion,promoción,descuento"},
   ],
-  bot:{name:"Asistente DP",welcome:"¡Hola! Soy el asistente automático de Divisas Posadas. Te ayudo con las cotizaciones y las consultas frecuentes. ¿Qué necesitás?",fallback:"Puedo ayudarte con cotizaciones, ofertas, horarios, ubicación y cómo operar. Para una consulta específica, escribile a nuestro equipo por WhatsApp."},
+  bot:{name:"Asistente DP",welcome:"¡Hola! Soy el asistente automático de Cambios Posadas. Te ayudo con las cotizaciones y las consultas frecuentes. ¿Qué necesitás?",fallback:"Puedo ayudarte con cotizaciones, ofertas, horarios, ubicación y cómo operar. Para una consulta específica, escribile a nuestro equipo por WhatsApp."},
 };
 export const peso={id:"ars" as const,name:"Pesos argentinos",code:"ARS",symbol:"$",color:"#618CB2",active:true,buy:1,sell:1,description:"Argentina"};
 export function getCurrency(content:SiteContent,id:ExchangeId){return id==="ars"?peso:content.currencies.find(c=>c.id===id)!;}
