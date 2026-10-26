@@ -123,6 +123,11 @@ assert(headSource.includes('<title>Cambios Posadas | Tu cambio, más cerca</titl
 const htaccess=readFileSync(new URL("../server/.htaccess",import.meta.url),"utf8");
 assert(htaccess.includes('RewriteRule ^ index.html [L]'));
 assert(css.includes('.site .secondary-page-heading{'));
+assert(!landingSource.includes('<span className="eyebrow section-eyebrow">COTIZACIONES</span>'));
+assert(landingSource.includes('<div className="section-heading"><div><h2>{c.copy.ratesTitle}</h2>'));
+assert(landingSource.includes('<h1>Cotizaciones</h1>'));
+assert(landingSource.includes('<span className="eyebrow section-eyebrow">DE LA CONSULTA AL CAMBIO</span>'));
+
 assert(!landingSource.includes('className="offer-card"'));
 assert(showcaseSource.includes('id="ofertas"'));
 assert(showcaseSource.includes('className="shop-offers-track"'));

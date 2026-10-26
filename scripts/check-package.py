@@ -161,6 +161,11 @@ def main() -> int:
                 and b"Cambios Posadas" in archive.read("index.html")
                 and b"RewriteRule ^ index.html [L]" in archive.read(".htaccess")
             ),
+            "cotizaciones sin etiqueta redundante sobre el título": (
+                b"cotizaciones-sin-eyebrow-redundante" in info
+                and b"secondary-page-heading" in js
+                and b"rates-section" in js
+            ),
             "ZIP compilado desde el último código fuente": fresh,
         }
         for name, ok in checks.items():
