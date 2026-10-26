@@ -1,7 +1,7 @@
 {
   "demo": true,
   "brand": {
-    "name": "Divisas Posadas",
+    "name": "Cambios Posadas",
     "tagline": "Tu cambio, más cerca.",
     "logoUrl": "/logo-divisas-posadas.svg",
     "primary": "#18E5C1",
@@ -179,7 +179,7 @@
   ],
   "bot": {
     "name": "Asistente DP",
-    "welcome": "¡Hola! Soy el asistente automático de Divisas Posadas. Te ayudo con las cotizaciones y las consultas frecuentes. ¿Qué necesitás?",
+    "welcome": "¡Hola! Soy el asistente automático de Cambios Posadas. Te ayudo con las cotizaciones y las consultas frecuentes. ¿Qué necesitás?",
     "fallback": "Puedo ayudarte con cotizaciones, ofertas, horarios, ubicación y cómo operar. Para una consulta específica, escribile a nuestro equipo por WhatsApp."
   }
 }
