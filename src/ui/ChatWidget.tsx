@@ -26,6 +26,7 @@ export default function ChatWidget({content,open,onOpenChange}:{content:SiteCont
     ...chatHistory.slice(-8).map(m=>`${m.role==="user"?"Cliente":"Asistente"}: ${m.text.slice(0,190)}`)
   ].join("\n").slice(0,1500);
   const whatsapp=whatsappLink(content,whatsappMessage);
+  const hasWhatsapp=Boolean(content.contact.whatsapp.trim());
 
   useEffect(()=>{
     let active=true;
@@ -76,7 +77,7 @@ export default function ChatWidget({content,open,onOpenChange}:{content:SiteCont
   async function submit(text:string){
     const cleaned=text.trim();if(!cleaned||sending)return;
     if(!human){askBot(cleaned);return;}
-    if(!online||thread?.closed){setError("No hay un asesor atendiendo ahora. Podés continuar por WhatsApp.");return;}
+    if(!online||thread?.closed){setError("No hay un asesor atendiendo ahora. Podés volver al asistente automático.");return;}
     setSending(true);setError("");
     try{
       const result=await guestChat(visitorToken(),"send",{text:cleaned});
@@ -105,14 +106,14 @@ export default function ChatWidget({content,open,onOpenChange}:{content:SiteCont
       <div className="chat-head">
         <Mark className="chat-mark"/>
         <div><strong>{human?"Atención de Cambios Posadas":content.bot.name}</strong>
-          <span>{human?(online?"Asesor en línea":"Sin asesores disponibles"):(online?"Asesor disponible · chat en vivo":"Respuestas automáticas · WhatsApp")}</span>
+          <span>{human?(online?"Asesor en línea":"Sin asesores disponibles"):(online?"Asesor disponible · chat en vivo":"Respuestas automáticas")}</span>
         </div>
         <button onClick={()=>onOpenChange(false)} aria-label="Cerrar chat"><X size={19}/></button>
       </div>
       <div className="chat-messages" aria-live="polite">
         {!human&&<div className="message bot">{content.bot.welcome}</div>}
         {human?thread?.messages.map(shownMessage):history.map((m,i)=><div className={`message ${m.role}`} key={i}>{m.text}</div>)}
-        {human&&thread&&!thread.closed&&<p className="live-chat-note">{online?"Estás conversando con nuestro equipo.":"El equipo no está en línea. Podés continuar la consulta por WhatsApp."}</p>}
+        {human&&thread&&!thread.closed&&<p className="live-chat-note">{online?"Estás conversando con nuestro equipo.":"El equipo no está en línea. Podés volver al asistente automático."}</p>}
         {human&&thread?.closed&&<p className="live-chat-note">El asesor finalizó esta conversación. Podés volver al bot o solicitar una nueva atención.</p>}
         <div ref={end}/>
       </div>
@@ -132,7 +133,7 @@ export default function ChatWidget({content,open,onOpenChange}:{content:SiteCont
         {human&&online&&!thread?.closed&&<div className="chat-human chat-human-active" role="status">
           <Headset size={20} aria-hidden="true"/><span>Un asesor está atendiendo tu consulta</span>
         </div>}
-        {(!human||!online||!!thread?.closed)&&<a className="chat-human chat-whatsapp" href={whatsapp} target="_blank" rel="noopener noreferrer">
+        {hasWhatsapp&&(!human||!online||!!thread?.closed)&&<a className="chat-human chat-whatsapp" href={whatsapp} target="_blank" rel="noopener noreferrer">
           <MessageCircleMore size={20} aria-hidden="true"/>
           <span>{human?"Continuar conversación por WhatsApp":"Hablar por WhatsApp"}</span>
           <ArrowUpRight size={17} aria-hidden="true"/>
