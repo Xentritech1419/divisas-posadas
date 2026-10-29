@@ -60,13 +60,14 @@ export default function OffersShowcase({content,offers,onSelect}:Props){
             <div className="shop-offer-content">
               {offer.description&&<p className="shop-offer-description">{offer.description}</p>}
               <div className="shop-offer-prices">
-                <div className="shop-offer-price-block">
-                  <span>DISPONIBLES</span>
+                <div className="shop-offer-price-block shop-offer-send">
+                  <span className="shop-offer-availability">Disponible</span>
+                  <span>ENVIÁS</span>
                   <strong>{formatNumber(offer.amount,Number.isInteger(offer.amount)?0:2)} <small>{from.code}</small></strong>
                   <span className="shop-offer-currency">{from.name}</span>
                 </div>
                 <div className="shop-offer-price-block shop-offer-receive">
-                  <span>Vos recibís</span>
+                  <span>RECIBÍS</span>
                   <strong>{formatNumber(offer.receive,Number.isInteger(offer.receive)?0:2)} <small>{to.code}</small></strong>
                   <span className="shop-offer-currency">{to.name}</span>
                 </div>
