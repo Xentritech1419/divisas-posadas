@@ -98,7 +98,7 @@ export function arsPorGuarani(guaraniesPorPesoIngresado:number){
 }
 export function activeOffers(content:SiteContent,now=Date.now()){return content.offers.filter(o=>o.active&&(!o.expiresAt||new Date(o.expiresAt).getTime()>now)&&getCurrency(content,o.from)?.active&&getCurrency(content,o.to)?.active);}
 export const operationWhatsapp="5493764271559";
-export function whatsappLink(content:SiteContent,message:string){const number=content.contact.whatsapp||operationWhatsapp;return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;}
+export function whatsappLink(content:SiteContent,message:string){const number=content.contact.whatsapp.trim();if(!number)return "";return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;}
 const normalize=(s:string)=>s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
 export function botReply(content:SiteContent,message:string){
   const q=normalize(message);
