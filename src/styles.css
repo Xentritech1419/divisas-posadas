@@ -1213,14 +1213,3 @@ button.chat-human{width:100%;background:#f2fcf9;border:none;cursor:pointer}
     gap:13px 20px;
   }
 }
-
-/* Ofertas: disponibilidad encima del recuadro de envío. */
-.site .shop-offer-prices{margin-top:36px}
-.site .shop-offer-price-block.shop-offer-send{position:relative}
-.site .shop-offer-price-block.shop-offer-send>.shop-offer-availability{
-  position:absolute;bottom:calc(100% + 6px);left:2px;
-  color:#087e77;font-size:11px;font-weight:800;letter-spacing:.3px;
-}
-.site .shop-offer-price-block.shop-offer-send>span:nth-child(2){
-  display:block;color:#087e77;font-size:11px;font-weight:850;letter-spacing:.5px;
-}
